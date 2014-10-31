@@ -94,7 +94,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
 
 
-        message("Start");
+        message("Initiate AI: "+ai.getAiName());
        pack();
 
 
