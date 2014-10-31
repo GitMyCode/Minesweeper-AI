@@ -1,9 +1,12 @@
 package root;
 
+import com.sun.java.util.jar.pack.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Constructor;
 
 /**
  * Created by MB on 10/29/2014.
@@ -18,19 +21,26 @@ public class BoardGameView extends JFrame implements ActionListener{
     private JPanel containter;
     private JLabel flagRemaining;
 
+    private JButton reset;
+    private JButton start;
     GridView gv;
-
+    GridController gridController;
     public Grid grid;
+    private ArtificialPlayer ai;
+
 
     int nbligne=0;
     int nbcol=0;
+    int deplayTime = 100;
 
 
 
-    public BoardGameView (int nbligne, int nbcol, int nbMine){
+    public BoardGameView (int nbligne, int nbcol, int nbMine,String aiName,int delay){
         setSize(WIDTH + 300, HEIGHT + 100);
 
+        ai=getAI(aiName);
 
+        this.deplayTime = delay;
         this.nbcol = nbcol;
         this.nbligne = nbligne;
         cadre = new Box(BoxLayout.Y_AXIS);
@@ -45,11 +55,34 @@ public class BoardGameView extends JFrame implements ActionListener{
 
         grid = new Grid(nbligne,nbcol,nbMine);
         gv.setGrid(grid);
-        GridController gc = new GridControllerImpl(grid,gv,flagRemaining);
-        gv.setController(gc);
+        gridController = new GridControllerImpl(grid,gv,flagRemaining);
+        gv.setController(gridController);
+
+        reset = new JButton("Reset");
+        start = new JButton("Start");
+        reset.addActionListener(this);
+        start.addActionListener(this);
+        add(reset,BorderLayout.EAST);
+        add(start,BorderLayout.EAST);
+
 
         pack();
 
+
+
+    }
+
+    public ArtificialPlayer getAI(String name){
+        ArtificialPlayer returnAi = null;
+        try{
+            Class c = Class.forName(name);
+            Constructor<?> constructor = c.getConstructor();
+            returnAi =(ArtificialPlayer) constructor.newInstance();
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return returnAi;
     }
 
 
@@ -114,7 +147,35 @@ public class BoardGameView extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed (ActionEvent actionEvent) {
-        System.out.println("dsfsdf");
+
+        if(actionEvent.getActionCommand() == "Start"){
+            startGame();
+        }else if(actionEvent.getActionCommand() == "Reset") {
+
+
+        }
+
+
+
+    }
+
+    private void startGame(){
+        final GameRunner runner = new GameRunner(ai,grid,gridController,deplayTime);
+        Runnable task = new Runnable(){
+            @Override
+            public void run(){
+                try{
+                    System.gc();
+                    runner.run();
+                    System.gc();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread t = new Thread(task);
+        t.start();
+
     }
 
 

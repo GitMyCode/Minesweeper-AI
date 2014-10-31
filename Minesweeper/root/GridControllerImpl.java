@@ -3,6 +3,7 @@ package root;
 import root.ENUM.COUP;
 
 import javax.swing.*;
+import java.util.Set;
 
 /**
  * Created by MB on 10/29/2014.
@@ -36,6 +37,14 @@ public class GridControllerImpl implements GridController {
     public void caseClicked (int indexCase) {
 
         System.out.println("dsfsdf");
+    }
+
+    @Override
+    public void movesSetPlay (Set<Move> moves) {
+        for(Move m : moves){
+            gridBoard.set(m.index,m.coup);
+        }
+        gridView.repaint();
     }
 
 
