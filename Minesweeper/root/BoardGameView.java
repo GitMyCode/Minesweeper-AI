@@ -1,5 +1,7 @@
 package root;
 
+import javafx.scene.control.RadioButton;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,6 +29,10 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     private JButton reset;
     private JButton start;
+
+    private JRadioButton rbInfinit;
+    private JRadioButton rbStopAfterGame;
+    private ButtonGroup buttonGroup;
     private JButton infinit;
 
     GridView gv;
@@ -75,18 +81,41 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         gv.setController(gridController);
 
         menu = new JPanel(new GridBagLayout());
-        Dimension menuDim = new Dimension(100,100);
+/*        Dimension menuDim = new Dimension(200,100);
         menu.setPreferredSize(menuDim);
-        menu.setMaximumSize(menuDim);
+        menu.setMaximumSize(menuDim);*/
         reset = new JButton("Reset");
         start = new JButton("Start");
         infinit = new JButton("Infinit play");
         reset.addActionListener(this);
         start.addActionListener(this);
         infinit.addActionListener(this);
-        GLOBAL.addItem(menu, reset, 0, 0, 1, 1, GridBagConstraints.EAST);
-        GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.EAST);
-        GLOBAL.addItem(menu, infinit, 0, 2, 1, 1, GridBagConstraints.EAST);
+
+        rbInfinit = new JRadioButton("Continue after game");
+        rbStopAfterGame = new JRadioButton("Stop after game");
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(rbInfinit); buttonGroup.add(rbStopAfterGame);
+        rbInfinit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed (ActionEvent actionEvent) {
+                updateGameLoopChoice();
+            }
+        });
+        rbStopAfterGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed (ActionEvent actionEvent) {
+                updateGameLoopChoice();
+            }
+        });
+
+
+
+
+        GLOBAL.addItem(menu, reset, 0, 0, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.WEST);
+       // GLOBAL.addItem(menu, infinit, 0, 2, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, rbInfinit, 0, 3, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, rbStopAfterGame, 0, 4, 1, 1, GridBagConstraints.WEST);
         add(menu,BorderLayout.EAST);
 
 
@@ -230,8 +259,6 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
                             runner.run();
                             System.gc();
 
-
-
                         }catch(Exception e){
                             e.printStackTrace();
                         }
@@ -292,5 +319,13 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         winsTotal.setText(String.valueOf(nbWins));
     }
 
+    public void updateGameLoopChoice(){
+        if(rbInfinit.isSelected()){
+            infinitGame = true;
+        }else {
+            infinitGame= false;
+        }
+
+    }
 
 }

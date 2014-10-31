@@ -65,11 +65,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.4632196">
       <split-first>
         <leaf>
-          <file leaf-file-name="WindowMinesweeper.java" pinned="false" current="false" current-in-tab="false">
+          <file leaf-file-name="WindowMinesweeper.java" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/root/WindowMinesweeper.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="1054" max-vertical-offset="2312">
-                  <caret line="95" column="38" selection-start-line="95" selection-start-column="38" selection-end-line="95" selection-end-column="38" />
+                <state vertical-scroll-proportion="0.65891474" vertical-offset="1003" max-vertical-offset="2312">
+                  <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -150,11 +150,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Grid.java" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="Grid.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/root/Grid.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.7023256" vertical-offset="431" max-vertical-offset="4981">
-                  <caret line="62" column="33" selection-start-line="62" selection-start-column="33" selection-end-line="62" selection-end-column="33" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="431" max-vertical-offset="4981">
+                  <caret line="53" column="64" selection-start-line="53" selection-start-column="64" selection-end-line="53" selection-end-column="64" />
                   <folding />
                 </state>
               </provider>
@@ -177,11 +177,15 @@
           <file leaf-file-name="BoardGameView.java" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.11077844" vertical-offset="4159" max-vertical-offset="5066">
-                  <caret line="253" column="0" selection-start-line="253" selection-start-column="0" selection-end-line="253" selection-end-column="0" />
+                <state vertical-scroll-proportion="0.61976045" vertical-offset="1456" max-vertical-offset="5627">
+                  <caret line="116" column="74" selection-start-line="116" selection-start-column="74" selection-end-line="116" selection-end-column="74" />
                   <folding>
-                    <element signature="e#6791#7194#0" expanded="true" />
-                    <element signature="e#7174#7175#0" expanded="true" />
+                    <element signature="e#2736#2912#0" expanded="true" />
+                    <element signature="e#2901#2902#0" expanded="true" />
+                    <element signature="e#2957#3133#0" expanded="true" />
+                    <element signature="e#3122#3123#0" expanded="true" />
+                    <element signature="e#7793#8194#0" expanded="true" />
+                    <element signature="e#8174#8175#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -260,8 +264,8 @@
         <option value="$PROJECT_DIR$/root/ai/RandomAi.java" />
         <option value="$PROJECT_DIR$/root/OutputObserver.java" />
         <option value="$PROJECT_DIR$/root/GameRunner.java" />
-        <option value="$PROJECT_DIR$/root/BoardGameView.java" />
         <option value="$PROJECT_DIR$/root/Grid.java" />
+        <option value="$PROJECT_DIR$/root/BoardGameView.java" />
       </list>
     </option>
   </component>
@@ -731,12 +735,12 @@
       <created>1414710122348</created>
       <updated>1414710122348</updated>
       <workItem from="1414710125092" duration="21711000" />
-      <workItem from="1414769293540" duration="16276000" />
+      <workItem from="1414769293540" duration="19465000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37987000" />
+    <option name="totallyTimeSpent" value="41176000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
@@ -765,7 +769,7 @@
       <window_info id="Debug with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="JProfiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17004265" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25561497" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25561497" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -874,8 +878,12 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3842">
           <caret line="146" column="0" selection-start-line="146" selection-start-column="0" selection-end-line="146" selection-end-column="0" />
           <folding>
-            <element signature="e#6791#7194#0" expanded="true" />
-            <element signature="e#7174#7175#0" expanded="true" />
+            <element signature="e#2736#2912#0" expanded="true" />
+            <element signature="e#2901#2902#0" expanded="true" />
+            <element signature="e#2957#3133#0" expanded="true" />
+            <element signature="e#3122#3123#0" expanded="true" />
+            <element signature="e#7793#8194#0" expanded="true" />
+            <element signature="e#8174#8175#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1010,18 +1018,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/root/WindowMinesweeper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1054" max-vertical-offset="2312">
-          <caret line="95" column="38" selection-start-line="95" selection-start-column="38" selection-end-line="95" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/root/OutputObserver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="374">
           <caret line="0" column="9" selection-start-line="0" selection-start-column="9" selection-end-line="0" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/Grid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="431" max-vertical-offset="4981">
+          <caret line="53" column="64" selection-start-line="53" selection-start-column="64" selection-end-line="53" selection-end-column="64" />
           <folding />
         </state>
       </provider>
@@ -1039,19 +1047,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11077844" vertical-offset="4159" max-vertical-offset="5066">
-          <caret line="253" column="0" selection-start-line="253" selection-start-column="0" selection-end-line="253" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.61976045" vertical-offset="1456" max-vertical-offset="5627">
+          <caret line="116" column="74" selection-start-line="116" selection-start-column="74" selection-end-line="116" selection-end-column="74" />
           <folding>
-            <element signature="e#6791#7194#0" expanded="true" />
-            <element signature="e#7174#7175#0" expanded="true" />
+            <element signature="e#2736#2912#0" expanded="true" />
+            <element signature="e#2901#2902#0" expanded="true" />
+            <element signature="e#2957#3133#0" expanded="true" />
+            <element signature="e#3122#3123#0" expanded="true" />
+            <element signature="e#7793#8194#0" expanded="true" />
+            <element signature="e#8174#8175#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/root/Grid.java">
+    <entry file="file://$PROJECT_DIR$/root/WindowMinesweeper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7023256" vertical-offset="431" max-vertical-offset="4981">
-          <caret line="62" column="33" selection-start-line="62" selection-start-column="33" selection-end-line="62" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.65891474" vertical-offset="1003" max-vertical-offset="2312">
+          <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
           <folding />
         </state>
       </provider>
