@@ -1,7 +1,5 @@
 package root;
 
-import com.sun.java.util.jar.pack.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,8 +16,9 @@ public class BoardGameView extends JFrame implements ActionListener{
     private Rule les_y;
     private Rule les_x;
     private Box cadre;
-    private JPanel containter;
+    private JPanel containterField;
     private JLabel flagRemaining;
+    private JPanel menu;
 
     private JButton reset;
     private JButton start;
@@ -27,6 +26,11 @@ public class BoardGameView extends JFrame implements ActionListener{
     GridController gridController;
     public Grid grid;
     private ArtificialPlayer ai;
+
+    /*Object for running game*/
+    private GameRunner runner = null;
+    private Runnable task = null;
+    private Thread t = null;
 
 
     int nbligne=0;
@@ -58,12 +62,17 @@ public class BoardGameView extends JFrame implements ActionListener{
         gridController = new GridControllerImpl(grid,gv,flagRemaining);
         gv.setController(gridController);
 
+        menu = new JPanel(new GridBagLayout());
+        Dimension menuDim = new Dimension(100,100);
+        menu.setPreferredSize(menuDim);
+        menu.setMaximumSize(menuDim);
         reset = new JButton("Reset");
         start = new JButton("Start");
         reset.addActionListener(this);
         start.addActionListener(this);
-        add(reset,BorderLayout.EAST);
-        add(start,BorderLayout.EAST);
+        GLOBAL.addItem(menu, reset, 0, 0, 1, 1, GridBagConstraints.EAST);
+        GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.EAST);
+        add(menu,BorderLayout.EAST);
 
 
         pack();
@@ -109,17 +118,17 @@ public class BoardGameView extends JFrame implements ActionListener{
 
 
 
-        containter = new JPanel(new GridBagLayout());
+        containterField = new JPanel(new GridBagLayout());
         Dimension dim_container = new Dimension(width+40,height+30);
-        containter.setMaximumSize(dim_container);
-        containter.setMinimumSize(dim_container);
-        containter.setPreferredSize(dim_container);
-        //containter.setBackground(Color.red);
+        containterField.setMaximumSize(dim_container);
+        containterField.setMinimumSize(dim_container);
+        containterField.setPreferredSize(dim_container);
+        //containterField.setBackground(Color.red);
 
 
-        GLOBAL.addItem(containter, les_y, 1, 0, 0, 7, GridBagConstraints.NORTHWEST);
+        GLOBAL.addItem(containterField, les_y, 1, 0, 0, 7, GridBagConstraints.NORTHWEST);
 
-        GLOBAL.addItem(containter, les_x, 0, 1, 0, 7, GridBagConstraints.WEST);
+        GLOBAL.addItem(containterField, les_x, 0, 1, 0, 7, GridBagConstraints.WEST);
 
 
         gv = new GridView(row,col,width,height);
@@ -128,7 +137,7 @@ public class BoardGameView extends JFrame implements ActionListener{
 
 
 
-        GLOBAL.addItem(containter, gv, 1, 2, 0, 0, GridBagConstraints.CENTER);
+        GLOBAL.addItem(containterField, gv, 1, 2, 0, 0, GridBagConstraints.CENTER);
 
 
         Dimension dim_cadre = new Dimension(width+30,height+30);
@@ -137,7 +146,7 @@ public class BoardGameView extends JFrame implements ActionListener{
         cadre.setMaximumSize(dim_cadre);
 
 
-        cadre.add(containter);
+        cadre.add(containterField);
         cadre.add(Box.createVerticalGlue());
         cadre.add(Box.createHorizontalGlue());
 
@@ -151,6 +160,11 @@ public class BoardGameView extends JFrame implements ActionListener{
         if(actionEvent.getActionCommand() == "Start"){
             startGame();
         }else if(actionEvent.getActionCommand() == "Reset") {
+            grid.resetGrid();
+
+            t.interrupt();
+            runner = null;
+            gv.repaint();
 
 
         }
@@ -160,21 +174,27 @@ public class BoardGameView extends JFrame implements ActionListener{
     }
 
     private void startGame(){
-        final GameRunner runner = new GameRunner(ai,grid,gridController,deplayTime);
-        Runnable task = new Runnable(){
-            @Override
-            public void run(){
-                try{
-                    System.gc();
-                    runner.run();
-                    System.gc();
-                }catch(Exception e){
-                    e.printStackTrace();
+        if(runner ==null){
+            runner = new GameRunner(ai,grid,gridController,deplayTime);
+            task = new Runnable(){
+                @Override
+                public void run(){
+                        try{
+                            System.gc();
+                            runner.run();
+                            System.gc();
+
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+
+
                 }
-            }
-        };
-        Thread t = new Thread(task);
-        t.start();
+            };
+            t = new Thread(task);
+            t.start();
+        }
+
 
     }
 

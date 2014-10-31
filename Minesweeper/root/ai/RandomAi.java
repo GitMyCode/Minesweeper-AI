@@ -44,6 +44,6 @@ public class RandomAi implements ArtificialPlayer {
 
     @Override
     public String getAiType () {
-        return null;
+        return "Random";
     }
 }

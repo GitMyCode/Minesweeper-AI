@@ -30,6 +30,8 @@ public class GameRunner implements Runnable {
         timer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed (ActionEvent actionEvent) {
+
+
                 Set<Move> aiMoves = ai.getAiPlay(grid);
                 controller.movesSetPlay(aiMoves);
                 if(grid.gameFinish()){
