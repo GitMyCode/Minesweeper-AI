@@ -157,11 +157,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Grid.java" pinned="false" current="false" current-in-tab="true">
+          <file leaf-file-name="Grid.java" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/root/Grid.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.2943038" vertical-offset="3129" max-vertical-offset="4641">
-                  <caret line="207" column="37" selection-start-line="207" selection-start-column="37" selection-end-line="207" selection-end-column="37" />
+                <state vertical-scroll-proportion="0.7246835" vertical-offset="596" max-vertical-offset="4726">
+                  <caret line="74" column="47" selection-start-line="74" selection-start-column="47" selection-end-line="74" selection-end-column="47" />
                   <folding />
                 </state>
               </provider>
@@ -171,7 +171,7 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="BoardGameView.java" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="BoardGameView.java" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.8143712" vertical-offset="1020" max-vertical-offset="3944">
@@ -254,8 +254,8 @@
         <option value="$PROJECT_DIR$/root/ArtificialPlayer.java" />
         <option value="$PROJECT_DIR$/root/Dir.java" />
         <option value="$PROJECT_DIR$/root/ai/RandomAi.java" />
-        <option value="$PROJECT_DIR$/root/Grid.java" />
         <option value="$PROJECT_DIR$/root/BoardGameView.java" />
+        <option value="$PROJECT_DIR$/root/Grid.java" />
       </list>
     </option>
   </component>
@@ -725,12 +725,12 @@
       <created>1414710122348</created>
       <updated>1414710122348</updated>
       <workItem from="1414710125092" duration="21711000" />
-      <workItem from="1414769293540" duration="9537000" />
+      <workItem from="1414769293540" duration="9628000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31248000" />
+    <option name="totallyTimeSpent" value="31339000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
@@ -1013,14 +1013,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/root/Grid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2943038" vertical-offset="3129" max-vertical-offset="4641">
-          <caret line="207" column="37" selection-start-line="207" selection-start-column="37" selection-end-line="207" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/root/GridView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="794" max-vertical-offset="1887">
@@ -1033,6 +1025,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8143712" vertical-offset="1020" max-vertical-offset="3944">
           <caret line="96" column="46" selection-start-line="96" selection-start-column="46" selection-end-line="96" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/Grid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7246835" vertical-offset="596" max-vertical-offset="4726">
+          <caret line="74" column="47" selection-start-line="74" selection-start-column="47" selection-end-line="74" selection-end-column="47" />
           <folding />
         </state>
       </provider>

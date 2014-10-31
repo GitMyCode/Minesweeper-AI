@@ -71,7 +71,12 @@ public class Grid {
         CASE c = gridPlayerView[index];
         switch (c){
             case UNDISCOVERED:
-                return EnumSet.of(COUP.SHOW,COUP.FLAG);
+                if(nbFlagRemaining==0){
+                    return EnumSet.of(COUP.SHOW);
+                }else {
+                    return EnumSet.of(COUP.SHOW,COUP.FLAG);
+                }
+
             case FLAGED:
                 return EnumSet.of(COUP.UNFLAG);
             default:
