@@ -21,7 +21,7 @@ public enum CASE {
     EIGHT(8),
     MINE(9),
     UNDISCOVERED(10),
-    FLAG(11),
+    FLAGED(11),
     ERROR_FLAG(12);
 
     CASE(int i){

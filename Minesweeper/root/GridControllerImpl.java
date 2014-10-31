@@ -44,6 +44,7 @@ public class GridControllerImpl implements GridController {
         for(Move m : moves){
             gridBoard.set(m.index,m.coup);
         }
+        flagRemain.setText(String.valueOf(gridBoard.getNbFlagRemaining()));
         gridView.repaint();
     }
 

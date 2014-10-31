@@ -89,17 +89,17 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="RandomAi.java" pinned="false" current="false" current-in-tab="false">
+          <file leaf-file-name="RandomAi.java" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/root/ai/RandomAi.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="935">
-                  <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+                <state vertical-scroll-proportion="-0.39689922" vertical-offset="579" max-vertical-offset="1224">
+                  <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#466#475#0" expanded="true" />
-                    <element signature="e#781#787#0" expanded="true" />
-                    <element signature="e#903#904#0" expanded="true" />
-                    <element signature="e#934#935#0" expanded="true" />
+                    <element signature="e#532#541#0" expanded="true" />
+                    <element signature="e#1097#1103#0" expanded="true" />
+                    <element signature="e#1222#1223#0" expanded="true" />
+                    <element signature="e#1253#1254#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -109,17 +109,17 @@
             <entry file="file://$PROJECT_DIR$/root/ENUM/CASE.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="918">
-                  <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+                  <caret line="10" column="18" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="GameRunner.java" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="GameRunner.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/root/GameRunner.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.76434106" vertical-offset="153" max-vertical-offset="918">
-                  <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="918">
+                  <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
                   <folding>
                     <element signature="imports" expanded="true" />
                     <element signature="e#686#1022#0" expanded="true" />
@@ -132,8 +132,8 @@
           <file leaf-file-name="GridControllerImpl.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/root/GridControllerImpl.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="171" max-vertical-offset="969">
-                  <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="222" max-vertical-offset="986">
+                  <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
                   <folding />
                 </state>
               </provider>
@@ -146,8 +146,8 @@
           <file leaf-file-name="BoardGameView.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="1167" max-vertical-offset="3553">
-                  <caret line="175" column="28" selection-start-line="175" selection-start-column="28" selection-end-line="175" selection-end-column="28" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3553">
+                  <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
                   <folding>
                     <element signature="imports" expanded="true" />
                     <element signature="e#4805#5189#0" expanded="true" />
@@ -157,28 +157,37 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ClassFinder.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/root/ClassFinder.java">
+          <file leaf-file-name="Grid.java" pinned="false" current="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/root/Grid.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="1071">
-                  <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
+                <state vertical-scroll-proportion="0.8143712" vertical-offset="2244" max-vertical-offset="4386">
+                  <caret line="174" column="22" selection-start-line="174" selection-start-column="22" selection-end-line="174" selection-end-column="22" />
                   <folding>
-                    <element signature="imports" expanded="true" />
-                    <element signature="e#1144#1154#0" expanded="true" />
-                    <element signature="e#1522#1532#0" expanded="true" />
+                    <element signature="e#1451#1452#0" expanded="true" />
+                    <element signature="e#1489#1490#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Grid.java" pinned="false" current="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/root/Grid.java">
+          <file leaf-file-name="COUP.java" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/root/ENUM/COUP.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="1.2290419" vertical-offset="828" max-vertical-offset="3672">
-                  <caret line="110" column="45" selection-start-line="110" selection-start-column="45" selection-end-line="110" selection-end-column="45" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+                  <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Dir.java" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/root/Dir.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0" vertical-offset="887" max-vertical-offset="3502">
+                  <caret line="70" column="37" selection-start-line="70" selection-start-column="37" selection-end-line="70" selection-end-column="37" />
                   <folding>
-                    <element signature="e#1368#1369#0" expanded="true" />
-                    <element signature="e#1406#1407#0" expanded="true" />
+                    <element signature="e#2287#2288#0" expanded="true" />
+                    <element signature="e#2338#2339#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -204,15 +213,16 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/ai/RandomAi.java" />
-        <option value="$PROJECT_DIR$/root/ENUM/CASE.java" />
         <option value="$PROJECT_DIR$/root/GridController.java" />
-        <option value="$PROJECT_DIR$/root/GridControllerImpl.java" />
         <option value="$PROJECT_DIR$/root/ClassFinder.java" />
         <option value="$PROJECT_DIR$/root/WindowMinesweeper.java" />
-        <option value="$PROJECT_DIR$/root/ai/RandomAi.java" />
-        <option value="$PROJECT_DIR$/root/Grid.java" />
         <option value="$PROJECT_DIR$/root/BoardGameView.java" />
         <option value="$PROJECT_DIR$/root/GameRunner.java" />
+        <option value="$PROJECT_DIR$/root/GridControllerImpl.java" />
+        <option value="$PROJECT_DIR$/root/ENUM/CASE.java" />
+        <option value="$PROJECT_DIR$/root/ENUM/COUP.java" />
+        <option value="$PROJECT_DIR$/root/ai/RandomAi.java" />
+        <option value="$PROJECT_DIR$/root/Grid.java" />
       </list>
     </option>
   </component>
@@ -675,12 +685,12 @@
       <changelist id="747b0285-9b0f-4fc1-a56c-bc0c12e9915d" name="Default" comment="" />
       <created>1414710122348</created>
       <updated>1414710122348</updated>
-      <workItem from="1414710125092" duration="9945000" />
+      <workItem from="1414710125092" duration="14213000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9945000" />
+    <option name="totallyTimeSpent" value="14213000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="0" />
@@ -746,14 +756,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/root/ENUM/CASE.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="918">
-          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/root/ArtificialPlayer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
@@ -780,68 +782,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/root/GridControllerImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="171" max-vertical-offset="969">
-          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/root/ai/RandomAi.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="935">
-          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#466#475#0" expanded="true" />
-            <element signature="e#781#787#0" expanded="true" />
-            <element signature="e#903#904#0" expanded="true" />
-            <element signature="e#934#935#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/root/GLOBAL.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="629">
           <caret line="20" column="28" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/root/ClassFinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="1071">
-          <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1144#1154#0" expanded="true" />
-            <element signature="e#1522#1532#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1167" max-vertical-offset="3553">
-          <caret line="175" column="28" selection-start-line="175" selection-start-column="28" selection-end-line="175" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4805#5189#0" expanded="true" />
-            <element signature="e#5174#5175#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/root/Grid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2290419" vertical-offset="828" max-vertical-offset="3672">
-          <caret line="110" column="45" selection-start-line="110" selection-start-column="45" selection-end-line="110" selection-end-column="45" />
-          <folding>
-            <element signature="e#1368#1369#0" expanded="true" />
-            <element signature="e#1406#1407#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -857,14 +802,98 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/root/ClassFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.18167938" vertical-offset="306" max-vertical-offset="1071">
+          <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1144#1154#0" expanded="true" />
+            <element signature="e#1522#1532#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/GridControllerImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="222" max-vertical-offset="986">
+          <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/root/GameRunner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.76434106" vertical-offset="153" max-vertical-offset="918">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="918">
+          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#686#1022#0" expanded="true" />
             <element signature="e#1011#1012#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/Dir.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="887" max-vertical-offset="3502">
+          <caret line="70" column="37" selection-start-line="70" selection-start-column="37" selection-end-line="70" selection-end-column="37" />
+          <folding>
+            <element signature="e#2287#2288#0" expanded="true" />
+            <element signature="e#2338#2339#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/ENUM/CASE.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="918">
+          <caret line="10" column="18" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/ENUM/COUP.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+          <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3553">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4805#5189#0" expanded="true" />
+            <element signature="e#5174#5175#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/Grid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8143712" vertical-offset="2244" max-vertical-offset="4386">
+          <caret line="174" column="22" selection-start-line="174" selection-start-column="22" selection-end-line="174" selection-end-column="22" />
+          <folding>
+            <element signature="e#1451#1452#0" expanded="true" />
+            <element signature="e#1489#1490#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/ai/RandomAi.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.39689922" vertical-offset="579" max-vertical-offset="1224">
+          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#532#541#0" expanded="true" />
+            <element signature="e#1097#1103#0" expanded="true" />
+            <element signature="e#1222#1223#0" expanded="true" />
+            <element signature="e#1253#1254#0" expanded="true" />
           </folding>
         </state>
       </provider>

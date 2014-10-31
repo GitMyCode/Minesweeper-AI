@@ -3,10 +3,7 @@ package root;
 import root.ENUM.CASE;
 import root.ENUM.COUP;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
+import java.util.*;
 
 
 /**
@@ -21,8 +18,12 @@ public class Grid {
     public int nbcol;
     public int nbligne;
     public int length;
-    private int nbMines;
+    private final int NBMINES;
+
+    protected int nbMinesRemaining;
     protected int nbFlagRemaining;
+    protected boolean lost= false;
+    protected boolean win = false;
 
 
     byte[] gridSpace;
@@ -35,8 +36,9 @@ public class Grid {
         this.nbcol = nbcol;
         this.nbligne = nbligne;
         this.length = nbcol*nbligne;
-        this.nbMines = nbMines;
+        this.NBMINES = nbMines;
         this.nbFlagRemaining = nbMines;
+        this.nbMinesRemaining = nbMines;
 
 
 
@@ -59,13 +61,23 @@ public class Grid {
             }
         }
         calculate();
-        int i=0;
     }
 
     public int getNbFlagRemaining(){
         return nbFlagRemaining;
     }
 
+    public Set<COUP> getLegalCaseMove(int index){
+        CASE c = gridPlayerView[index];
+        switch (c){
+            case UNDISCOVERED:
+                return EnumSet.of(COUP.SHOW,COUP.FLAG);
+            case FLAGED:
+                return EnumSet.of(COUP.UNFLAG);
+            default:
+                return EnumSet.of(COUP.INVALID);
+        }
+    }
 
     public CASE[] getCpyPlayerView(){
         CASE[] cpy;
@@ -100,19 +112,34 @@ public class Grid {
                 playUNFlag(index);
                 break;
             case SHOW:
-                undiscoveredCase(index);
+                playUndiscoveredCase(index);
                 break;
 
         }
     }
 
     protected void resetGrid(){
+
+        lost = false;
+        win  = false;
+        nbFlagRemaining = NBMINES;
+
         for(int i =0; i< length; i++){
             gridPlayerView[i] = UNDISCOVERED;
         }
     }
 
     protected boolean gameFinish(){
+        if(lost)
+            return true;
+        if(win)
+            return true;
+
+        if(nbMinesRemaining==0 && nbFlagRemaining==0){
+            win = true;
+
+            return true;
+        }
 
         for(CASE c: gridPlayerView){
             if(c == UNDISCOVERED){
@@ -129,34 +156,46 @@ public class Grid {
         CASE theCase = gridPlayerView[index];
         if(theCase == UNDISCOVERED){
             nbFlagRemaining--;
-            gridPlayerView[index] = FLAG;
+            gridPlayerView[index] = FLAGED;
             if(gridSpaceEnum[index] == MINE){
-                nbMines--;
+                nbFlagRemaining--;
             }
         }
     }
 
     private void playUNFlag(int index){
 
-        if(gridPlayerView[index] == FLAG){
+        if(gridPlayerView[index] == FLAGED){
             nbFlagRemaining++;
             gridPlayerView[index] = UNDISCOVERED;
         }
 
     }
 
-    private void undiscoveredCase(int index){
+    private void playUndiscoveredCase (int index){
+
 
         gridPlayerView[index] = gridSpaceEnum[index];
+        if(gridSpaceEnum[index]==MINE){
+            lost = true;
+        }
+
+
         if(gridSpaceEnum[index] == EMPTY){
             for(Dir D : Dir.values()){
                 int indexVoisin = index + stepDir(D);
                 if(inGrid(D,index) && gridPlayerView[indexVoisin].equals(UNDISCOVERED) ){
-                    undiscoveredCase(indexVoisin);
+                    playUndiscoveredCase(indexVoisin);
                 }
             }
         }
     }
+
+
+
+
+
+
     private boolean inGrid(Dir D, int index){
 
         for(Dir d : D.getCompDir()){
