@@ -106,12 +106,11 @@ public class Grid {
         }
     }
 
-
-
-
-
-
-
+    protected void resetGrid(){
+        for(int i =0; i< length; i++){
+            gridPlayerView[i] = UNDISCOVERED;
+        }
+    }
 
     protected boolean gameFinish(){
 
