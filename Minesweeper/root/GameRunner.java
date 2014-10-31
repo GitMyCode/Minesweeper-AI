@@ -17,7 +17,6 @@ public class GameRunner implements Runnable {
     private GridController controller;
     private int delayTime = 100;
 
-
     public GameRunner(ArtificialPlayer ai,Grid g,GridController controller,int delay){
         this.ai = ai;
         this.grid = g;
@@ -39,10 +38,14 @@ public class GameRunner implements Runnable {
                 if(grid.gameFinish()){
                     if(grid.lost){
                         outputObserver.message("Lost!");
+                        outputObserver.updateLost();
                         grid.showAllCase();
+
                     }else if(grid.win){
                         outputObserver.message("Win!");
+                        outputObserver.updateWins();
                     }
+                    outputObserver.callback();
                     timer.stop();
                 }
 
