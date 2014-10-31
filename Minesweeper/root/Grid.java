@@ -43,24 +43,35 @@ public class Grid {
 
 
         gridSpace = new byte[nbcol*nbligne];
-        underneathValues = new CASE[nbcol*nbligne];
         gridPlayerView = new CASE[nbcol*nbligne];
 
 
-        Arrays.fill(underneathValues, EMPTY);
-        Arrays.fill(gridPlayerView, UNDISCOVERED);
+
+        Arrays.fill(gridPlayerView,UNDISCOVERED);
         Arrays.fill(gridSpace, (byte) UNDISCOVERED.indexValue);
 
 
+        underneathValues = createRdmGrid(nbligne,nbcol,nbMines);
+        /*placeMinesRmd(underneathValues,nbMines);
+        calculateCasesValues(underneathValues);*/
+    }
+
+    private CASE[] createRdmGrid(int nbligne,int nbcol, int nbMines){
+        CASE[] grid = new CASE[nbcol*nbligne];
+        Arrays.fill(grid,EMPTY);
+        placeMinesRmd(grid,nbMines);
+        calculateCasesValues(grid);
+        return grid;
+    }
+    private void placeMinesRmd(CASE[] grid,int nbMines){
         for(int i=0; i<nbMines;i++){
-            int putMineThere = ran.nextInt(underneathValues.length);
-            if(underneathValues[putMineThere] == MINE){
+            int putMineThere = ran.nextInt(grid.length);
+            if(grid[putMineThere] == MINE){
                 i--;
             }else {
-                underneathValues[putMineThere] = MINE;
+                grid[putMineThere] = MINE;
             }
         }
-        calculate();
     }
 
     public int getNbFlagRemaining(){
@@ -127,6 +138,9 @@ public class Grid {
         for(int i =0; i< length; i++){
             gridPlayerView[i] = UNDISCOVERED;
         }
+        underneathValues = createRdmGrid(nbligne,nbcol,NBMINES);
+
+
     }
 
     protected boolean gameFinish(){
@@ -263,19 +277,19 @@ public class Grid {
 
 
 
-    private void calculate(){
+    private void calculateCasesValues (CASE[] grid){
 
-        for(int i=0; i< underneathValues.length; i++){
+        for(int i=0; i< grid.length; i++){
             int value =0;
 
-            if(underneathValues[i] != MINE){
+            if(grid[i] != MINE){
                 for(Dir D : Dir.values()){
                     int index = i+stepDir(D);
-                    if(isStepThisDirInGrid(D, i) && underneathValues[index] == MINE){
+                    if(isStepThisDirInGrid(D, i) && grid[index] == MINE){
                         value++;
                     }
                 }
-                underneathValues[i]= CASE.caseFromInt(value);
+                grid[i]= CASE.caseFromInt(value);
             }
         }
     }

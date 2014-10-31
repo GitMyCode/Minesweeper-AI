@@ -17,11 +17,18 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private Rule les_x;
     private Box cadre;
     private JPanel containterField;
+
+    /*Game statistic*/
     private JLabel flagRemaining;
+    private JLabel winsTotal;
+    private JLabel lostTotal;
+
     private JPanel menu;
 
     private JButton reset;
     private JButton start;
+    private JButton infinit;
+
     GridView gv;
     GridController gridController;
     public Grid grid;
@@ -34,11 +41,13 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private Runnable task = null;
     private Thread t = null;
 
-
+    boolean infinitGame=false;
     int nbligne=0;
     int nbcol=0;
     int nbMines;
     int deplayTime = 100;
+    int nbLost =0;
+    int nbWins =0;
 
 
 
@@ -71,25 +80,41 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         menu.setMaximumSize(menuDim);
         reset = new JButton("Reset");
         start = new JButton("Start");
+        infinit = new JButton("Infinit play");
         reset.addActionListener(this);
         start.addActionListener(this);
+        infinit.addActionListener(this);
         GLOBAL.addItem(menu, reset, 0, 0, 1, 1, GridBagConstraints.EAST);
         GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.EAST);
+        GLOBAL.addItem(menu, infinit, 0, 2, 1, 1, GridBagConstraints.EAST);
         add(menu,BorderLayout.EAST);
 
 
-        JPanel buttomPanel = new JPanel();
-
+        JPanel buttomPanel = new JPanel(new GridBagLayout());
+        JPanel buttomPanelScore = new JPanel(new GridBagLayout());
+        JPanel buttomPanelMessage = new JPanel(new GridBagLayout());
         JScrollPane pane = new JScrollPane();
         //buttomPanel.setBackground(Color.cyan);
         messageTextArea = new JTextArea();
-        messageTextArea.setColumns(nbcol + GLOBAL.CELL_SIZE);
+        messageTextArea.setColumns(nbcol + GLOBAL.CELL_SIZE-5);
         messageTextArea.setEditable(false);
         messageTextArea.setRows(5);
         pane.setViewportView(messageTextArea);
 
-        GLOBAL.addItem(buttomPanel,flagRemaining,0,0,1,1,GridBagConstraints.NORTH);
-        GLOBAL.addItem(buttomPanel,pane,1,0,1,1,GridBagConstraints.SOUTH);
+
+
+        GLOBAL.addItem(buttomPanelScore,new JLabel("Nb flag: "),0,0,1,1,GridBagConstraints.WEST);
+        GLOBAL.addItem(buttomPanelScore,flagRemaining,1,0,1,1,GridBagConstraints.EAST);
+
+        GLOBAL.addItem(buttomPanelScore,new JLabel("Nb lost: "),0,1,1,1,GridBagConstraints.WEST);
+        GLOBAL.addItem(buttomPanelScore,lostTotal = new JLabel("0"),1,1,1,1,GridBagConstraints.EAST);
+
+        GLOBAL.addItem(buttomPanelScore,new JLabel("Nb wins: "),0,2,1,1,GridBagConstraints.WEST);
+        GLOBAL.addItem(buttomPanelScore,winsTotal = new JLabel("0"),1,2,1,1,GridBagConstraints.EAST);
+
+
+        GLOBAL.addItem(buttomPanel, buttomPanelScore, 0, 0, 3, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(buttomPanel, pane, 1, 0, 3, 1, GridBagConstraints.EAST);
         add(buttomPanel,BorderLayout.SOUTH);
 
 
@@ -180,16 +205,11 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         if(actionEvent.getActionCommand() == "Start"){
             startGame();
         }else if(actionEvent.getActionCommand() == "Reset") {
-            grid.resetGrid();
+            resetGame();
+        }else if(actionEvent.getActionCommand() == "Infinit play"){
 
-            if(t !=null){
-                t.interrupt();
-            }
-            runner = null;
-            gv.repaint();
-            flagRemaining.setText(String.valueOf(nbMines));
-            message("Reset");
-
+            infinitGame = true;
+            startGame();
 
         }
 
@@ -198,27 +218,38 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     }
 
     private void startGame(){
-        if(runner ==null){
-            runner = new GameRunner(ai,grid,gridController,deplayTime);
-            runner.setOutputObserver(this);
-            task = new Runnable(){
-                @Override
-                public void run(){
+        try{
+            if(runner ==null){
+                runner = new GameRunner(ai,grid,gridController,deplayTime);
+                runner.setOutputObserver(this);
+                task = new Runnable(){
+                    @Override
+                    public void run(){
                         try{
                             System.gc();
                             runner.run();
                             System.gc();
+
+
 
                         }catch(Exception e){
                             e.printStackTrace();
                         }
 
 
-                }
-            };
-            t = new Thread(task);
-            t.start();
+                    }
+
+                };
+
+                t = new Thread(task);
+                t.start();
+            }
+
+        }catch (Exception e){
+            System.out.println(e);
         }
+
+
 
 
     }
@@ -227,6 +258,38 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     public void message(String msg) {
         messageTextArea.append(msg + "\n");
         messageTextArea.setCaretPosition(messageTextArea.getText().length());
+    }
+
+    public void resetGame(){
+        grid.resetGrid();
+
+        if(t !=null){
+            t.interrupt();
+        }
+        runner = null;
+        gv.repaint();
+        flagRemaining.setText(String.valueOf(nbMines));
+        message("Reset");
+    }
+
+    @Override
+    public void callback () {
+        if(infinitGame){
+            resetGame();
+            startGame();
+        }
+    }
+
+    @Override
+    public void updateLost () {
+        nbLost++;
+        lostTotal.setText(String.valueOf(nbLost));
+    }
+
+    @Override
+    public void updateWins () {
+        nbWins++;
+        winsTotal.setText(String.valueOf(nbWins));
     }
 
 
