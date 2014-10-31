@@ -7,7 +7,8 @@ public enum  COUP {
 
     SHOW,
     FLAG,
-    UNFLAG
+    UNFLAG,
+    INVALID
 
 
 }
