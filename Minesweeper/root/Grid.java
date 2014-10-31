@@ -122,6 +122,7 @@ public class Grid {
         lost = false;
         win  = false;
         nbFlagRemaining = NBMINES;
+        nbMinesRemaining= NBMINES;
 
         for(int i =0; i< length; i++){
             gridPlayerView[i] = UNDISCOVERED;
