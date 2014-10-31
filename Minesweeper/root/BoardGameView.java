@@ -108,8 +108,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     public void createGridView(int row,int col){
 
 
-        int width = (col*15) ; //pour expert : 480
-        int height = (row * 15); //pour expert :280
+        int width = (col*GLOBAL.CELL_SIZE) ; //pour expert : 480
+        int height = (row * GLOBAL.CELL_SIZE); //pour expert :280
 
         les_y = new Rule(1,col);
         Dimension dim_y = new Dimension(width+20,7);

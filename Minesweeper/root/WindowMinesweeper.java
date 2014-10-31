@@ -15,8 +15,8 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
 
     int ROW = 20;
     int COL = 20;
-    private final int WIDTH = (COL*15) ; //pour expert : 480
-    private final int HEIGHT = (ROW * 15); //poru expert :280
+    private final int WIDTH = (COL*GLOBAL.CELL_SIZE) ; //pour expert : 480
+    private final int HEIGHT = (ROW * GLOBAL.CELL_SIZE); //poru expert :280
 
     JButton create;
     JLabel label_choice_row;
