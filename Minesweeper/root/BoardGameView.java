@@ -9,7 +9,7 @@ import java.lang.reflect.Constructor;
 /**
  * Created by MB on 10/29/2014.
  */
-public class BoardGameView extends JFrame implements ActionListener{
+public class BoardGameView extends JFrame implements ActionListener, OutputObserver{
 
 
     private JPanel gridPanel;
@@ -27,6 +27,8 @@ public class BoardGameView extends JFrame implements ActionListener{
     public Grid grid;
     private ArtificialPlayer ai;
 
+    private JTextArea messageTextArea ;
+
     /*Object for running game*/
     private GameRunner runner = null;
     private Runnable task = null;
@@ -43,7 +45,7 @@ public class BoardGameView extends JFrame implements ActionListener{
         setSize(WIDTH + 300, HEIGHT + 100);
 
         ai=getAI(aiName);
-
+        setTitle(aiName);
         this.deplayTime = delay;
         this.nbcol = nbcol;
         this.nbligne = nbligne;
@@ -74,7 +76,15 @@ public class BoardGameView extends JFrame implements ActionListener{
         GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.EAST);
         add(menu,BorderLayout.EAST);
 
+        JScrollPane pane = new JScrollPane();
+        messageTextArea = new JTextArea();
+        messageTextArea.setColumns(nbcol);
+        messageTextArea.setEditable(false);
+        messageTextArea.setRows(5);
+        pane.setViewportView(messageTextArea);
+        getContentPane().add(pane,BorderLayout.SOUTH);
 
+        message("Start");
         pack();
 
 
@@ -165,6 +175,7 @@ public class BoardGameView extends JFrame implements ActionListener{
             t.interrupt();
             runner = null;
             gv.repaint();
+            message("Reset");
 
 
         }
@@ -176,6 +187,7 @@ public class BoardGameView extends JFrame implements ActionListener{
     private void startGame(){
         if(runner ==null){
             runner = new GameRunner(ai,grid,gridController,deplayTime);
+            runner.setOutputObserver(this);
             task = new Runnable(){
                 @Override
                 public void run(){
@@ -198,6 +210,11 @@ public class BoardGameView extends JFrame implements ActionListener{
 
     }
 
+    /* De connect5 auteur Éric beaudry */
+    public void message(String msg) {
+        messageTextArea.append(msg + "\n");
+        messageTextArea.setCaretPosition(messageTextArea.getText().length());
+    }
 
 
 }

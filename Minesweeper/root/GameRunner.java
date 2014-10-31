@@ -11,6 +11,8 @@ import java.util.Set;
 public class GameRunner implements Runnable {
 
     private ArtificialPlayer ai;
+    protected OutputObserver outputObserver= null;
+
     private Grid grid;
     private GridController controller;
     private int delayTime = 100;
@@ -35,6 +37,12 @@ public class GameRunner implements Runnable {
                 Set<Move> aiMoves = ai.getAiPlay(grid);
                 controller.movesSetPlay(aiMoves);
                 if(grid.gameFinish()){
+                    if(grid.lost){
+                        outputObserver.message("Lost!");
+                        grid.showAllCase();
+                    }else if(grid.win){
+                        outputObserver.message("Win!");
+                    }
                     timer.stop();
                 }
 
@@ -45,4 +53,8 @@ public class GameRunner implements Runnable {
 
 
     }
+    public void setOutputObserver(OutputObserver outputObserver){
+        this.outputObserver = outputObserver;
+    }
+
 }

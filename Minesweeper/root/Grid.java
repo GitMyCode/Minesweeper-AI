@@ -85,21 +85,14 @@ public class Grid {
         return cpy;
     }
 
+    protected void showAllCase(){
+        for(int i=0; i< length; i++) {
+            if (gridPlayerView[i] == FLAGED && gridSpaceEnum[i] == MINE){
 
-
-    private void calculate(){
-
-        for(int i=0; i<gridSpaceEnum.length; i++){
-            int value =0;
-
-            if(gridSpaceEnum[i] != MINE){
-                for(Dir D : Dir.values()){
-                    int index = i+stepDir(D);
-                    if(inGrid(D,i) && gridSpaceEnum[index] == MINE){
-                        value++;
-                    }
-                }
-                gridSpaceEnum[i]= CASE.caseFromInt(value);
+            }else if(gridPlayerView[i] == FLAGED && gridSpaceEnum[i] !=MINE){
+                gridPlayerView[i] = ERROR_FLAG;
+            }else {
+                gridPlayerView[i] = gridSpaceEnum[i];
             }
         }
     }
@@ -196,6 +189,8 @@ public class Grid {
 
 
 
+
+
     private boolean inGrid(Dir D, int index){
 
         for(Dir d : D.getCompDir()){
@@ -255,7 +250,22 @@ public class Grid {
 
 
 
+    private void calculate(){
 
+        for(int i=0; i<gridSpaceEnum.length; i++){
+            int value =0;
+
+            if(gridSpaceEnum[i] != MINE){
+                for(Dir D : Dir.values()){
+                    int index = i+stepDir(D);
+                    if(inGrid(D,i) && gridSpaceEnum[index] == MINE){
+                        value++;
+                    }
+                }
+                gridSpaceEnum[i]= CASE.caseFromInt(value);
+            }
+        }
+    }
 
 
 
