@@ -12,7 +12,7 @@ public class GLOBAL {
     static int NBCOL;
     static int NBLIGNE;
 
-    public static final int CELL_SIZE = 15;
+    public static final int CELL_SIZE = 16;
 
     public static void addItem(JPanel p, JComponent c, int x, int y, int width, int height, int align) {
         GridBagConstraints gc = new GridBagConstraints();
