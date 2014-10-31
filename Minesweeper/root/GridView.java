@@ -1,5 +1,7 @@
 package root;
 
+import root.ENUM.COUP;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -20,6 +22,7 @@ public class GridView extends JPanel {
 
     Grid grid;
     GridController controller;
+
 
     public GridView(int nbligne,int nbcol,int width, int height){
         this.nbcol = nbcol;
@@ -77,8 +80,32 @@ public class GridView extends JPanel {
                 int l = e.getY() / GLOBAL.CELL_SIZE;
                 int c = e.getX() / GLOBAL.CELL_SIZE;
 
-                if(l<nbligne && c< nbcol)
-                    controller.caseClicked(l, c);
+                if(l<nbligne && c< nbcol){
+                    int index = l*nbcol+c;
+                    if(e.getButton() == MouseEvent.BUTTON3){
+                        if(grid.gridPlayerView[index]==FLAGED){
+                            controller.movePlay(new Move(index,COUP.UNFLAG));
+                        }else {
+                            controller.movePlay(new Move(index,COUP.FLAG));
+                        }
+                    }else{
+                        controller.movePlay(new Move(index,COUP.SHOW));
+                    }
+
+                    if(grid.gameFinish()){
+                    if(grid.lost){
+                        //outputObserver.message("Lost!");
+                        grid.showAllCase();
+                    }else if(grid.win){
+                        //outputObserver.message("Win!");
+                    }
+                }
+
+
+                }
+
+
+
             }
         }
     }

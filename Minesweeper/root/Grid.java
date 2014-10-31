@@ -27,7 +27,7 @@ public class Grid {
 
 
     byte[] gridSpace;
-    protected CASE[] gridSpaceEnum;
+    protected CASE[] underneathValues;
     CASE[] gridPlayerView;
 
     Random ran = new Random();
@@ -43,21 +43,21 @@ public class Grid {
 
 
         gridSpace = new byte[nbcol*nbligne];
-        gridSpaceEnum = new CASE[nbcol*nbligne];
+        underneathValues = new CASE[nbcol*nbligne];
         gridPlayerView = new CASE[nbcol*nbligne];
 
 
-        Arrays.fill(gridSpaceEnum, EMPTY);
+        Arrays.fill(underneathValues, EMPTY);
         Arrays.fill(gridPlayerView, UNDISCOVERED);
         Arrays.fill(gridSpace, (byte) UNDISCOVERED.indexValue);
 
 
         for(int i=0; i<nbMines;i++){
-            int putMineThere = ran.nextInt(gridSpaceEnum.length);
-            if(gridSpaceEnum[putMineThere] == MINE){
+            int putMineThere = ran.nextInt(underneathValues.length);
+            if(underneathValues[putMineThere] == MINE){
                 i--;
             }else {
-                gridSpaceEnum[putMineThere] = MINE;
+                underneathValues[putMineThere] = MINE;
             }
         }
         calculate();
@@ -87,13 +87,13 @@ public class Grid {
 
     protected void showAllCase(){
         for(int i=0; i< length; i++) {
-            if (gridPlayerView[i] == FLAGED && gridSpaceEnum[i] == MINE){
+            if (gridPlayerView[i] == FLAGED && underneathValues[i] == MINE){
                 gridPlayerView[i] = DEFUSED;
-            }else if(gridPlayerView[i] == FLAGED && gridSpaceEnum[i] !=MINE){
+            }else if(gridPlayerView[i] == FLAGED && underneathValues[i] !=MINE){
                 gridPlayerView[i] = ERROR_FLAG;
             }else if(gridPlayerView[i] == BLOW) {
             }else {
-                gridPlayerView[i] = gridSpaceEnum[i];
+                gridPlayerView[i] = underneathValues[i];
             }
         }
     }
@@ -151,8 +151,8 @@ public class Grid {
         if(theCase == UNDISCOVERED){
             nbFlagRemaining--;
             gridPlayerView[index] = FLAGED;
-            if(gridSpaceEnum[index] == MINE){
-                nbFlagRemaining--;
+            if(underneathValues[index] == MINE){
+                nbMinesRemaining--;
             }
         }
     }
@@ -168,22 +168,27 @@ public class Grid {
 
     private void playUndiscoveredCase (int index){
 
+        if(gridPlayerView[index] == UNDISCOVERED){
 
-        gridPlayerView[index] = gridSpaceEnum[index];
-        if(gridSpaceEnum[index]==MINE){
-            gridPlayerView[index] = BLOW;
-            lost = true;
-        }
+            gridPlayerView[index] = underneathValues[index];
+            if(underneathValues[index]==MINE){
+                gridPlayerView[index] = BLOW;
+                lost = true;
+            }
 
 
-        if(gridSpaceEnum[index] == EMPTY){
-            for(Dir D : Dir.values()){
-                int indexVoisin = index + stepDir(D);
-                if(inGrid(D,index) && gridPlayerView[indexVoisin].equals(UNDISCOVERED) ){
-                    playUndiscoveredCase(indexVoisin);
+            if(underneathValues[index] == EMPTY){
+                for(Dir D : Dir.values()){
+                    int indexVoisin = index + stepDir(D);
+                    if(inGrid(D,index) && gridPlayerView[indexVoisin].equals(UNDISCOVERED) ){
+                        playUndiscoveredCase(indexVoisin);
+                    }
                 }
             }
+
         }
+
+
     }
 
 
@@ -254,17 +259,17 @@ public class Grid {
 
     private void calculate(){
 
-        for(int i=0; i<gridSpaceEnum.length; i++){
+        for(int i=0; i< underneathValues.length; i++){
             int value =0;
 
-            if(gridSpaceEnum[i] != MINE){
+            if(underneathValues[i] != MINE){
                 for(Dir D : Dir.values()){
                     int index = i+stepDir(D);
-                    if(inGrid(D,i) && gridSpaceEnum[index] == MINE){
+                    if(inGrid(D,i) && underneathValues[index] == MINE){
                         value++;
                     }
                 }
-                gridSpaceEnum[i]= CASE.caseFromInt(value);
+                underneathValues[i]= CASE.caseFromInt(value);
             }
         }
     }

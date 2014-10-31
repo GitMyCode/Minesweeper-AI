@@ -12,6 +12,7 @@ public interface GridController extends EventListener {
     public void caseClicked(int indexCase);
 
     public void movesSetPlay(Set<Move> moves);
+    public void movePlay(Move move);
 
 
 

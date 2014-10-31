@@ -48,6 +48,12 @@ public class GridControllerImpl implements GridController {
         gridView.repaint();
     }
 
+    @Override
+    public void movePlay (Move move) {
+        gridBoard.play(move.index, move.coup);
+        flagRemain.setText(String.valueOf(gridBoard.getNbFlagRemaining()));
+        gridView.repaint();
+    }
 
     public void setGridModel(Grid g){
         gridBoard = g;
