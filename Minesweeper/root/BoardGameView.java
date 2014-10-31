@@ -37,6 +37,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     int nbligne=0;
     int nbcol=0;
+    int nbMines;
     int deplayTime = 100;
 
 
@@ -45,10 +46,11 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         setSize(WIDTH + 300, HEIGHT + 100);
 
         ai=getAI(aiName);
-        setTitle(aiName);
+        setTitle(ai.getAiName());
         this.deplayTime = delay;
         this.nbcol = nbcol;
         this.nbligne = nbligne;
+        this.nbMines = nbMine;
         cadre = new Box(BoxLayout.Y_AXIS);
         cadre.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         cadre.add(Box.createVerticalGlue());
@@ -75,19 +77,25 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.EAST);
         add(menu,BorderLayout.EAST);
 
+
+        JPanel buttomPanel = new JPanel();
+
         JScrollPane pane = new JScrollPane();
+        //buttomPanel.setBackground(Color.cyan);
         messageTextArea = new JTextArea();
-        messageTextArea.setColumns(nbcol);
+        messageTextArea.setColumns(nbcol + GLOBAL.CELL_SIZE);
         messageTextArea.setEditable(false);
         messageTextArea.setRows(5);
         pane.setViewportView(messageTextArea);
-        getContentPane().add(pane,BorderLayout.SOUTH);
+
+        GLOBAL.addItem(buttomPanel,flagRemaining,0,0,1,1,GridBagConstraints.NORTH);
+        GLOBAL.addItem(buttomPanel,pane,1,0,1,1,GridBagConstraints.SOUTH);
+        add(buttomPanel,BorderLayout.SOUTH);
 
 
-        add(flagRemaining,BorderLayout.SOUTH);
 
         message("Start");
-        pack();
+       pack();
 
 
 
@@ -162,7 +170,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         cadre.add(Box.createVerticalGlue());
         cadre.add(Box.createHorizontalGlue());
 
-        add(cadre);
+        add(cadre,BorderLayout.CENTER);
     }
 
 
@@ -179,6 +187,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             }
             runner = null;
             gv.repaint();
+            flagRemaining.setText(String.valueOf(nbMines));
             message("Reset");
 
 
