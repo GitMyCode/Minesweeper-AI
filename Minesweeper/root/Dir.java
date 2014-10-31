@@ -10,8 +10,6 @@ public enum Dir {
 
     DOWN{
         @Override public Dir opp() { return TOP; }
-        @Override public int v() { return GLOBAL.NBCOL; }
-        @Override public boolean boundaries(int index, int limit) { return checkBounderies(EnumSet.of(Cardinal.SUD), index, limit); }
 
         @Override
         public Set<Dir> getCompDir () {
@@ -21,8 +19,6 @@ public enum Dir {
 
     TOP{
         @Override public Dir opp() { return DOWN; }
-        @Override public int v() { return 0 - DOWN.v(); }
-        @Override public boolean boundaries(int index, int limit) { return checkBounderies(EnumSet.of(Cardinal.NORD), index, limit); }
 
         @Override
         public Set<Dir> getCompDir () {
@@ -31,8 +27,7 @@ public enum Dir {
     },
 
     LEFT{
-        @Override public Dir opp() { return RIGHT; }  @Override public int v() { return -1; }
-        @Override public boolean boundaries(int index, int limit) { return checkBounderies(EnumSet.of(Cardinal.OUEST), index, limit); }
+        @Override public Dir opp() { return RIGHT; }
         @Override
         public Set<Dir> getCompDir () {
             return EnumSet.of(LEFT);
@@ -42,8 +37,6 @@ public enum Dir {
 
     RIGHT(){
         @Override public Dir opp() { return LEFT; }
-        @Override public int v() { return 1; }
-        @Override public boolean boundaries(int index, int limit) { return checkBounderies(EnumSet.of(Cardinal.EST), index, limit); }
 
         @Override
         public Set<Dir> getCompDir () {
@@ -53,8 +46,6 @@ public enum Dir {
 
     DOWNLEFT(){
         @Override public Dir opp() { return TOPRIGHT; }
-        @Override public int v() { return DOWN.v() + LEFT.v(); }
-        @Override public boolean boundaries(int index, int limit) { return DOWN.boundaries(index, limit) && LEFT.boundaries(index, limit); }
 
         @Override
         public Set<Dir> getCompDir () {
@@ -62,10 +53,8 @@ public enum Dir {
         }
     },
 
-    TOPLEFT(Cardinal.OUEST){
+    TOPLEFT(){
         @Override public Dir opp() { return DOWNRIGHT; }
-        @Override public int v() { return TOP.v() + LEFT.v(); }
-        @Override public boolean boundaries(int index, int limit) { return TOP.boundaries(index, limit)&& LEFT.boundaries(index, limit); }
 
         @Override
         public Set<Dir> getCompDir () {
@@ -73,10 +62,8 @@ public enum Dir {
         }
     },
 
-    DOWNRIGHT(Cardinal.EST){
+    DOWNRIGHT(){
         @Override public Dir opp() { return TOPLEFT; }
-        @Override public int v() { return DOWN.v() + RIGHT.v(); }
-        @Override public boolean boundaries(int index, int limit) { return DOWN.boundaries(index, limit)&&RIGHT.boundaries(index,limit); }
 
         @Override
         public Set<Dir> getCompDir () {
@@ -84,10 +71,8 @@ public enum Dir {
         }
     },
 
-    TOPRIGHT(Cardinal.EST){
+    TOPRIGHT(){
         @Override public Dir opp() { return DOWNLEFT; }
-        @Override public int v() { return TOP.v() + RIGHT.v(); }
-        @Override public boolean boundaries(int index, int limit) { return TOP.boundaries(index, limit)&& RIGHT.boundaries(index, limit); }
 
         @Override
         public Set<Dir> getCompDir () {
@@ -96,7 +81,6 @@ public enum Dir {
     };
 
     public int nbcol;
-    public Cardinal cardinal = null;
 
     public static final Set<Dir> direction4 = new HashSet<Dir>();
     public static final Set<Dir> direction8 = new HashSet<Dir>();
@@ -113,71 +97,16 @@ public enum Dir {
 
     Dir(){ }
 
-    Dir(Cardinal side){
-        this.cardinal = side;
-    }
 
     abstract public Set<Dir> getCompDir();
-    abstract public int v(); // index pour déplacer vers la direction
     abstract public Dir opp(); // direction opposee
-    abstract public boolean boundaries (int index, int limit);
 
-    public int step (int step){
-        return this.v() * step;
-    }
 
-    private static boolean checkBounderies(Set<Cardinal> cardinaux, int index, int limit){
-        for(Cardinal c: cardinaux){
-            if(! c.validLimit(index, limit)){
-                return false;
-            }
-        }
-        return true;
-    }
 
     /***
      * Valide la limite pour N, O, S, E
      */
-    public enum Cardinal{
-        NORD{
-            @Override boolean validLimit (int index, int limit) {
-                if(index < 0 || index >= GLOBAL.NBCOL * GLOBAL.NBLIGNE)
-                    return false;
 
-                return  (index + TOP.v() * (limit - 1)) >= 0;
-            }
-        },
-        SUD{
-            @Override boolean validLimit (int index, int limit) {
-                int length = GLOBAL.NBCOL * GLOBAL.NBLIGNE;
-                if(index < 0 || index >= length)
-                    return false;
-                return (index + DOWN.v() * (limit - 1)) < length;
-            }
-        },
-        OUEST{
-            @Override
-            boolean validLimit (int index, int limit) {
-                if(index < 0 || index >= GLOBAL.NBCOL * GLOBAL.NBLIGNE)
-                    return false;
-                if(!(((index%GLOBAL.NBCOL + 1) >= limit))) { return false; }
-                return true;
-            }
-        },
-        EST{
-            @Override
-            boolean validLimit (int index, int limit) {
-                if(index < 0 || index >= GLOBAL.NBCOL * GLOBAL.NBLIGNE)
-                    return false;
-                if(!((GLOBAL.NBCOL - (index%GLOBAL.NBCOL)) >= limit)){ return false; }
-                return true;
-            }
-        };
-
-        /*Check if we can get a sequence of 'limit' from the point of the index */
-        abstract boolean validLimit (int index, int limit);
-
-    }
 
     public enum Axes{
         VERTICAL(TOP, DOWN, 0),

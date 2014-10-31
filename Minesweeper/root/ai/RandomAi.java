@@ -39,6 +39,7 @@ public class RandomAi implements ArtificialPlayer {
         }
 
 
+
         int index = legalMoves.get(ran.nextInt(legalMoves.size()));
 
         Set<COUP> coupSet = g.getLegalCaseCoup(index);

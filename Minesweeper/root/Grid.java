@@ -180,7 +180,7 @@ public class Grid {
             if(underneathValues[index] == EMPTY){
                 for(Dir D : Dir.values()){
                     int indexVoisin = index + stepDir(D);
-                    if(inGrid(D,index) && gridPlayerView[indexVoisin].equals(UNDISCOVERED) ){
+                    if(isStepThisDirInGrid(D, index) && gridPlayerView[indexVoisin].equals(UNDISCOVERED) ){
                         playUndiscoveredCase(indexVoisin);
                     }
                 }
@@ -192,13 +192,7 @@ public class Grid {
     }
 
 
-
-
-
-
-
-
-    private boolean inGrid(Dir D, int index){
+    public boolean isStepThisDirInGrid (Dir D, int index){
 
         for(Dir d : D.getCompDir()){
             switch (d){
@@ -233,8 +227,14 @@ public class Grid {
 
 
 
-
-    private int stepDir(Dir D){
+    /*
+    * WARNING: YOU must check if the next position is in the grid before this methode
+    *           Use if(isStepInThisDirInGrid(RIGHT,currentPosition)){}
+    * Return the distance to add to get to the next case in this direction
+    *          nextplace = current position  + stepFor direction
+    * exemple: index =       40              +  stepDir(RIGHT) = 41;
+    * */
+    public int stepDir(Dir D){
         int step=0;
         for(Dir d : D.getCompDir()){
             step += step(d);
@@ -265,7 +265,7 @@ public class Grid {
             if(underneathValues[i] != MINE){
                 for(Dir D : Dir.values()){
                     int index = i+stepDir(D);
-                    if(inGrid(D,i) && underneathValues[index] == MINE){
+                    if(isStepThisDirInGrid(D, i) && underneathValues[index] == MINE){
                         value++;
                     }
                 }
