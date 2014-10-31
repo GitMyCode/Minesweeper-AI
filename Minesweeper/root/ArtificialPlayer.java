@@ -9,6 +9,6 @@ public interface ArtificialPlayer {
 
 
     public Set<Move> getAiPlay(Grid g);
-    public String getAiType();
+    public String getAiName ();
 
 }
