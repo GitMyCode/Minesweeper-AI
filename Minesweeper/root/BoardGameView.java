@@ -57,7 +57,6 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
         createGridView(nbligne, nbcol);
         flagRemaining = new JLabel(""+nbMine);
-        add(flagRemaining,BorderLayout.SOUTH);
 
         grid = new Grid(nbligne,nbcol,nbMine);
         gv.setGrid(grid);
@@ -83,6 +82,9 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         messageTextArea.setRows(5);
         pane.setViewportView(messageTextArea);
         getContentPane().add(pane,BorderLayout.SOUTH);
+
+
+        add(flagRemaining,BorderLayout.SOUTH);
 
         message("Start");
         pack();
@@ -172,7 +174,9 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         }else if(actionEvent.getActionCommand() == "Reset") {
             grid.resetGrid();
 
-            t.interrupt();
+            if(t !=null){
+                t.interrupt();
+            }
             runner = null;
             gv.repaint();
             message("Reset");
