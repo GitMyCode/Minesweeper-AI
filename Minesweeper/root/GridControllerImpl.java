@@ -25,7 +25,7 @@ public class GridControllerImpl implements GridController {
         int index = ligne* gridBoard.nbcol + colonne;
         //gridBoard.gridSpace[index] = 1;
 
-        gridBoard.set(index, COUP.SHOW);
+        gridBoard.play(index, COUP.SHOW);
 
 
         flagRemain.setText(String.valueOf(gridBoard.nbFlagRemaining));
@@ -42,7 +42,7 @@ public class GridControllerImpl implements GridController {
     @Override
     public void movesSetPlay (Set<Move> moves) {
         for(Move m : moves){
-            gridBoard.set(m.index,m.coup);
+            gridBoard.play(m.index, m.coup);
         }
         flagRemain.setText(String.valueOf(gridBoard.getNbFlagRemaining()));
         gridView.repaint();
