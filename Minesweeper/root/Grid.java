@@ -67,7 +67,7 @@ public class Grid {
         return nbFlagRemaining;
     }
 
-    public Set<COUP> getLegalCaseMove(int index){
+    public Set<COUP> getLegalCaseCoup (int index){
         CASE c = gridPlayerView[index];
         switch (c){
             case UNDISCOVERED:
@@ -88,15 +88,16 @@ public class Grid {
     protected void showAllCase(){
         for(int i=0; i< length; i++) {
             if (gridPlayerView[i] == FLAGED && gridSpaceEnum[i] == MINE){
-
+                gridPlayerView[i] = DEFUSED;
             }else if(gridPlayerView[i] == FLAGED && gridSpaceEnum[i] !=MINE){
                 gridPlayerView[i] = ERROR_FLAG;
+            }else if(gridPlayerView[i] == BLOW) {
             }else {
                 gridPlayerView[i] = gridSpaceEnum[i];
             }
         }
     }
-    protected void set(int index, COUP coup){
+    protected void play (int index, COUP coup){
         switch (coup){
             case FLAG:
                 playFlag(index);
@@ -170,6 +171,7 @@ public class Grid {
 
         gridPlayerView[index] = gridSpaceEnum[index];
         if(gridSpaceEnum[index]==MINE){
+            gridPlayerView[index] = BLOW;
             lost = true;
         }
 
