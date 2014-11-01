@@ -7,6 +7,8 @@ import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
 
 /**
@@ -55,18 +57,19 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     int deplayTime = 100;
     int nbLost =0;
     int nbWins =0;
+    int thinkLimit=1000;
 
 
 
-    public BoardGameView (int nbligne, int nbcol, int nbMine,String aiName,int delay){
+    public BoardGameView (int nbligne, int nbcol, int nbMine,String aiName,int delay,int thinkLimit){
         setSize(WIDTH + 300, HEIGHT + 100);
-
         ai=getAI(aiName);
         setTitle(ai.getAiName());
         this.deplayTime = delay;
         this.nbcol = nbcol;
         this.nbligne = nbligne;
         this.nbMines = nbMine;
+        this.thinkLimit = thinkLimit;
         cadre = new Box(BoxLayout.Y_AXIS);
         cadre.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         cadre.add(Box.createVerticalGlue());
@@ -153,6 +156,15 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
        pack();
 
 
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing (WindowEvent windowEvent) {
+                super.windowClosing(windowEvent);
+                closingCleanUp();
+
+
+            }
+        });
 
     }
 
@@ -210,8 +222,6 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         gv.repaint();
         gv.setBackground(Color.cyan);
 
-
-
         GLOBAL.addItem(containterField, gv, 1, 2, 0, 0, GridBagConstraints.CENTER);
 
 
@@ -250,7 +260,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private void startGame(){
         try{
             if(runner ==null){
-                runner = new GameRunner(ai,grid,gridController,deplayTime);
+                runner = new GameRunner(ai,grid,gridController,deplayTime,thinkLimit);
                 runner.setOutputObserver(this);
                 task = new Runnable(){
                     @Override
@@ -340,6 +350,20 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             infinitGame= false;
         }
 
+    }
+
+
+    private void closingCleanUp(){
+        System.out.println("closing");
+        if(t != null){
+            t.interrupt();
+        }
+        if(task !=null){
+            task = null;
+        }
+        if(runner!=null){
+            runner = null;
+        }
     }
 
 }

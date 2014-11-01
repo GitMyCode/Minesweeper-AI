@@ -29,6 +29,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
     JTextField choiceRow;
     JTextField choiceMines;
     JTextField choiceTimer;
+    JTextField choiceMaxTime;
     JPanel panelCreation;
     JComboBox choixAI;
     List<Class<?>> classes;
@@ -62,9 +63,13 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         choiceTimer.setMinimumSize(dim_jtext);
         labelTimer  = new JLabel("Time delay");
 
+        choiceMaxTime = new JTextField("1000");
+        choiceTimer.setPreferredSize(dim_jtext);
+        choiceTimer.setMinimumSize(dim_jtext);
+
         panelCreation = new JPanel(new GridBagLayout());
         panelCreation.setBackground(Color.orange);
-        Dimension panel_creation_dim = new Dimension(200,200);
+        Dimension panel_creation_dim = new Dimension(250,200);
         panelCreation.setPreferredSize(panel_creation_dim);
         panelCreation.setMinimumSize(panel_creation_dim);
         panelCreation.setMaximumSize(panel_creation_dim);
@@ -91,6 +96,10 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         GLOBAL.addItem(panelCreation, labelTimer, 0, 5, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(panelCreation, choiceTimer, 1, 5, 1, 1, GridBagConstraints.EAST);
 
+        GLOBAL.addItem(panelCreation, new JLabel("Think limite"), 0, 6, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(panelCreation, choiceMaxTime, 1, 6, 1, 1, GridBagConstraints.EAST);
+
+
 
         add(panelCreation,BorderLayout.NORTH);
         add(create,BorderLayout.SOUTH);
@@ -114,7 +123,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
     }
 
     public void createBoard(final int lignes,final int cols,final int mines,
-                            final String aiName,final int timeDelay){
+                            final String aiName,final int timeDelay, final int thinkLimit){
         GLOBAL.NBCOL= cols;
         GLOBAL.NBLIGNE = lignes;
 
@@ -124,7 +133,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
                 (new Runnable() {
                     @Override
                     public void run() {
-                        new BoardGameView(lignes,cols,mines,aiName,timeDelay).setVisible(true);
+                        new BoardGameView(lignes,cols,mines,aiName,timeDelay,thinkLimit).setVisible(true);
 
                     }
                 })
@@ -148,9 +157,10 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
             int mines = Integer.parseInt(text_mine) ;
             String aiName = (String)choixAI.getSelectedItem();
             int time = Integer.parseInt(choiceTimer.getText());
+            int thinkLimite = Integer.parseInt(choiceMaxTime.getText());
 
 
-            createBoard(row, col, mines, aiName,time);
+            createBoard(row, col, mines, aiName,time,thinkLimite);
         }
 
 

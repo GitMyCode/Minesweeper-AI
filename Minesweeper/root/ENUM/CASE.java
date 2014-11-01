@@ -96,4 +96,11 @@ public enum CASE {
         return dbi;
     }
 
+
+    @Override
+    public String toString () {
+        return String.valueOf(indexValue);
+    }
+
+
 }
