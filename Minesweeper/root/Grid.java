@@ -59,7 +59,7 @@ public class Grid {
     private CASE[] createRdmGrid(int nbligne,int nbcol, int nbMines){
         CASE[] grid = new CASE[nbcol*nbligne];
         Arrays.fill(grid,EMPTY);
-        placeMinesRmd(grid,nbMines);
+        placeMinesRmd(grid, nbMines);
         calculateCasesValues(grid);
         return grid;
     }
@@ -72,6 +72,17 @@ public class Grid {
                 grid[putMineThere] = MINE;
             }
         }
+    }
+
+    public List<Integer> getSurroundingIndex(int index){
+        List<Integer> list = new ArrayList<Integer>();
+        for(Dir D : Dir.direction8){
+            if(isStepThisDirInGrid(D,index)){
+                list.add((index+stepDir(D)));
+
+            }
+        }
+        return list;
     }
 
     public int getNbFlagRemaining(){
