@@ -27,6 +27,35 @@ public class GameRunner implements Runnable {
 
     @Override
     public void run () {
+
+
+
+        while (!grid.gameFinish()){
+            Set<Move> aiMoves = ai.getAiPlay(grid);
+            controller.movesSetPlay(aiMoves);
+
+            try{
+                Thread.sleep(delayTime);
+            }catch(InterruptedException ie){ie.printStackTrace();}
+        }
+        if(grid.lost){
+            SendMsg("Lost!");
+            outputObserver.updateLost();
+            grid.showAllCase();
+
+        }else if(grid.win){
+            SendMsg("Win!");
+            outputObserver.updateWins();
+        }
+        try{
+            Thread.sleep(100);
+        }catch(InterruptedException ie){ie.printStackTrace();}
+
+        outputObserver.callback();
+
+
+/*
+
         final Timer timer = new Timer(delayTime,null);
         timer.addActionListener(new ActionListener() {
             @Override
@@ -54,7 +83,12 @@ public class GameRunner implements Runnable {
 
         timer.start();
 
+*/
 
+    }
+
+    private synchronized void SendMsg(String msg){
+        outputObserver.message(msg);
     }
     public void setOutputObserver(OutputObserver outputObserver){
         this.outputObserver = outputObserver;

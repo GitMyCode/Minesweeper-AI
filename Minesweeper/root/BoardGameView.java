@@ -3,6 +3,7 @@ package root;
 import javafx.scene.control.RadioButton;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -116,7 +117,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
        // GLOBAL.addItem(menu, infinit, 0, 2, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(menu, rbInfinit, 0, 3, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(menu, rbStopAfterGame, 0, 4, 1, 1, GridBagConstraints.WEST);
-        add(menu,BorderLayout.EAST);
+        add(menu, BorderLayout.EAST);
 
 
         JPanel buttomPanel = new JPanel(new GridBagLayout());
@@ -282,9 +283,22 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     }
 
     /* De connect5 auteur Éric beaudry */
-    public void message(String msg) {
+    public synchronized void message(final String msg) {
         messageTextArea.append(msg + "\n");
-        messageTextArea.setCaretPosition(messageTextArea.getText().length());
+        messageTextArea.setCaretPosition(messageTextArea.getDocument().getLength());
+        /*Runnable  runnable = new Runnable() {
+            public void run(){
+
+
+                if (messageTextArea.getDocument().getLength() > 50000) {
+                    try {
+                        messageTextArea.getDocument().remove(0, 5000);
+                    } catch (BadLocationException e) {
+                    }
+                }
+            }
+        };
+        SwingUtilities.invokeLater(runnable);*/
     }
 
     public void resetGame(){
