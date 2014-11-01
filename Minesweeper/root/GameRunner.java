@@ -28,9 +28,6 @@ public class GameRunner implements Runnable {
     @Override
     public void run () {
 
-        try{
-            Thread.sleep(100);
-        }catch(InterruptedException ie){ie.printStackTrace();}
 
 
         while (!grid.gameFinish()){
@@ -50,7 +47,12 @@ public class GameRunner implements Runnable {
             SendMsg("Win!");
             outputObserver.updateWins();
         }
+        try{
+            Thread.sleep(100);
+        }catch(InterruptedException ie){ie.printStackTrace();}
+
         outputObserver.callback();
+
 
 /*
 
