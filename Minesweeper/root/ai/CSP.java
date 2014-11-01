@@ -54,7 +54,8 @@ public class CSP implements ArtificialPlayer{
 
 
 
-        int bestChance =Integer.MAX_VALUE;
+        if(sureMoves.isEmpty()){
+            int bestChance =Integer.MAX_VALUE;
         for(Integer b : bordure){
             for(Integer sur : gameGrid.getSurroundingIndex(b)){
                 if(copyGrid[sur] == UNDISCOVERED && !possibleMine.containsKey(sur)){
@@ -71,6 +72,8 @@ public class CSP implements ArtificialPlayer{
                 }
             }
         }
+        }
+
 /*
         if(sureMoves.isEmpty() && bestChance != Integer.MAX_VALUE){
 
@@ -114,11 +117,11 @@ public class CSP implements ArtificialPlayer{
 
                 List<Integer> voisins = gameGrid.getSurroundingIndex(i);
                 boolean isSurrounded= true;
-                List<Integer> t = new ArrayList<Integer>();
+                List<Integer> unknownNeighbors = new ArrayList<Integer>();
                 int nbFlaged =0;
                 for(Integer v : voisins){
                     if(grid[v] == UNDISCOVERED){
-                        t.add(v);
+                        unknownNeighbors.add(v);
                     }else if(grid[v] == FLAGED){
                         nbFlaged++;
                     }
@@ -128,13 +131,16 @@ public class CSP implements ArtificialPlayer{
                 }
                 if(nbFlaged == grid[i].indexValue){
                     bordure.remove((Object) i);
-                    if(t.size()!=0){
-                        for(Integer v2 : t){
+                    if(unknownNeighbors.size()!=0){
+                        for(Integer v2 : unknownNeighbors){
+                            if(grid[v2] != UNDISCOVERED){
+                                System.out.println("nooop ");
+                            }
                             sureMoves.add(new Move(v2,COUP.SHOW));
                         }
                     }
                 }else if(!isSurrounded){
-                    undiscoveredFrontier.addAll(t);
+                    undiscoveredFrontier.addAll(unknownNeighbors);
                 }else{
                     bordure.remove((Object)i);
                 }
@@ -142,7 +148,14 @@ public class CSP implements ArtificialPlayer{
             }
         }
 
-        recurseCSP(grid,bordure,0);
+        if(sureMoves.isEmpty()){
+            recurseCSP(grid,bordure,0);
+
+
+        }else{
+            System.out.println("sureMove");
+        }
+
 
 
     }

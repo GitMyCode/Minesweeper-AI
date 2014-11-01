@@ -62,7 +62,7 @@
     <favorites_list name="Minesweeper" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5634328">
+    <splitter split-orientation="horizontal" split-proportion="0.5490405">
       <split-first>
         <leaf>
           <file leaf-file-name="WindowMinesweeper.java" pinned="false" current="false" current-in-tab="false">
@@ -91,18 +91,18 @@
           <file leaf-file-name="CSP.java" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/root/ai/CSP.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-2.0757341" vertical-offset="1836" max-vertical-offset="5219">
-                  <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+                <state vertical-scroll-proportion="-0.5780525" vertical-offset="3128" max-vertical-offset="5440">
+                  <caret line="162" column="19" selection-start-line="162" selection-start-column="19" selection-end-line="162" selection-end-column="19" />
                   <folding>
                     <element signature="imports" expanded="true" />
                     <element signature="e#1018#1027#0" expanded="true" />
-                    <element signature="e#2263#2272#0" expanded="true" />
-                    <element signature="e#2833#2834#0" expanded="true" />
-                    <element signature="e#2868#2869#0" expanded="true" />
-                    <element signature="e#3281#3290#0" expanded="true" />
-                    <element signature="e#5088#5097#0" expanded="true" />
-                    <element signature="e#7757#7758#0" expanded="true" />
-                    <element signature="e#7848#7849#0" expanded="true" />
+                    <element signature="e#2311#2320#0" expanded="true" />
+                    <element signature="e#2881#2882#0" expanded="true" />
+                    <element signature="e#2916#2917#0" expanded="true" />
+                    <element signature="e#3344#3353#0" expanded="true" />
+                    <element signature="e#5470#5479#0" expanded="true" />
+                    <element signature="e#8139#8140#0" expanded="true" />
+                    <element signature="e#8230#8231#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -124,9 +124,11 @@
           <file leaf-file-name="Util.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/root/ai/utilCSP/Util.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
-                  <caret line="14" column="28" selection-start-line="14" selection-start-column="28" selection-end-line="14" selection-end-column="28" />
-                  <folding />
+                <state vertical-scroll-proportion="0.0" vertical-offset="391" max-vertical-offset="1292">
+                  <caret line="52" column="28" selection-start-line="52" selection-start-column="28" selection-end-line="52" selection-end-column="28" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -185,11 +187,11 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="BoardGameView.java" pinned="false" current="false" current-in-tab="true">
+          <file leaf-file-name="BoardGameView.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.9814529" vertical-offset="5145" max-vertical-offset="6052">
-                  <caret line="359" column="8" selection-start-line="359" selection-start-column="8" selection-end-line="359" selection-end-column="8" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="5145" max-vertical-offset="6052">
+                  <caret line="335" column="0" selection-start-line="335" selection-start-column="0" selection-end-line="335" selection-end-column="0" />
                   <folding>
                     <element signature="e#5200#5419#0" expanded="true" />
                     <element signature="e#5408#5409#0" expanded="true" />
@@ -200,15 +202,12 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="CASE.java" pinned="false" current="false" current-in-tab="false">
+          <file leaf-file-name="CASE.java" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/root/ENUM/CASE.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="812" max-vertical-offset="1683">
-                  <caret line="101" column="42" selection-start-line="101" selection-start-column="42" selection-end-line="101" selection-end-column="42" />
-                  <folding>
-                    <element signature="e#2610#2611#0" expanded="true" />
-                    <element signature="e#2659#2660#0" expanded="true" />
-                  </folding>
+                <state vertical-scroll-proportion="1.8630137" vertical-offset="0" max-vertical-offset="1615">
+                  <caret line="85" column="44" selection-start-line="85" selection-start-column="44" selection-end-line="85" selection-end-column="44" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -292,23 +291,22 @@
         <option value="$PROJECT_DIR$/root/OutputObserver.java" />
         <option value="$PROJECT_DIR$/root/Grid.java" />
         <option value="$PROJECT_DIR$/root/Move.java" />
-        <option value="$PROJECT_DIR$/root/ai/utilCSP/Util.java" />
-        <option value="$PROJECT_DIR$/root/ENUM/CASE.java" />
         <option value="$PROJECT_DIR$/root/ai/utilCSP/TimeOver.java" />
         <option value="$PROJECT_DIR$/root/WindowMinesweeper.java" />
         <option value="$PROJECT_DIR$/root/ArtificialPlayer.java" />
-        <option value="$PROJECT_DIR$/root/ai/CSP.java" />
         <option value="$PROJECT_DIR$/root/ai/RandomAi.java" />
         <option value="$PROJECT_DIR$/root/BoardGameView.java" />
         <option value="$PROJECT_DIR$/root/GameRunner.java" />
         <option value="$PROJECT_DIR$/root/GridControllerImpl.java" />
+        <option value="$PROJECT_DIR$/root/ENUM/CASE.java" />
+        <option value="$PROJECT_DIR$/root/ai/utilCSP/Util.java" />
+        <option value="$PROJECT_DIR$/root/ai/CSP.java" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="-14" />
     <option name="width" value="1936" />
     <option name="height" value="1066" />
   </component>
@@ -794,15 +792,15 @@
       <updated>1414710122348</updated>
       <workItem from="1414710125092" duration="21711000" />
       <workItem from="1414769293540" duration="39985000" />
-      <workItem from="1414819323975" duration="10331000" />
+      <workItem from="1414819323975" duration="14216000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72027000" />
+    <option name="totallyTimeSpent" value="75912000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1066" extended-state="0" />
+    <frame x="-14" y="0" width="1936" height="1066" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -812,10 +810,10 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32834226" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42032087" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32834226" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32834226" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
@@ -854,18 +852,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/root/ai/CSP.java</url>
-          <line>144</line>
-          <properties />
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="51" />
+      <option name="time" value="52" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -899,13 +889,13 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1018#1027#0" expanded="true" />
-            <element signature="e#2263#2272#0" expanded="true" />
-            <element signature="e#2833#2834#0" expanded="true" />
-            <element signature="e#2868#2869#0" expanded="true" />
-            <element signature="e#3281#3290#0" expanded="true" />
-            <element signature="e#5088#5097#0" expanded="true" />
-            <element signature="e#7757#7758#0" expanded="true" />
-            <element signature="e#7848#7849#0" expanded="true" />
+            <element signature="e#2311#2320#0" expanded="true" />
+            <element signature="e#2881#2882#0" expanded="true" />
+            <element signature="e#2916#2917#0" expanded="true" />
+            <element signature="e#3344#3353#0" expanded="true" />
+            <element signature="e#5470#5479#0" expanded="true" />
+            <element signature="e#8139#8140#0" expanded="true" />
+            <element signature="e#8230#8231#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -975,10 +965,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="731" max-vertical-offset="1785">
           <caret line="43" column="14" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
-          <folding>
-            <element signature="e#2610#2611#0" expanded="true" />
-            <element signature="e#2659#2660#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1061,10 +1048,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="184" max-vertical-offset="1479">
           <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding>
-            <element signature="e#2610#2611#0" expanded="true" />
-            <element signature="e#2659#2660#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1216,25 +1200,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/root/ai/utilCSP/Util.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
-          <caret line="14" column="28" selection-start-line="14" selection-start-column="28" selection-end-line="14" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/root/ENUM/CASE.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="812" max-vertical-offset="1683">
-          <caret line="101" column="42" selection-start-line="101" selection-start-column="42" selection-end-line="101" selection-end-column="42" />
-          <folding>
-            <element signature="e#2610#2611#0" expanded="true" />
-            <element signature="e#2659#2660#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/root/ai/utilCSP/TimeOver.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
@@ -1259,19 +1224,6 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1054">
           <caret line="0" column="9" selection-start-line="0" selection-start-column="9" selection-end-line="0" selection-end-column="9" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9814529" vertical-offset="5145" max-vertical-offset="6052">
-          <caret line="359" column="8" selection-start-line="359" selection-start-column="8" selection-end-line="359" selection-end-column="8" />
-          <folding>
-            <element signature="e#5200#5419#0" expanded="true" />
-            <element signature="e#5408#5409#0" expanded="true" />
-            <element signature="e#8251#8652#0" expanded="true" />
-            <element signature="e#8632#8633#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1302,20 +1254,51 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="5145" max-vertical-offset="6052">
+          <caret line="335" column="0" selection-start-line="335" selection-start-column="0" selection-end-line="335" selection-end-column="0" />
+          <folding>
+            <element signature="e#5200#5419#0" expanded="true" />
+            <element signature="e#5408#5409#0" expanded="true" />
+            <element signature="e#8251#8652#0" expanded="true" />
+            <element signature="e#8632#8633#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/ENUM/CASE.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.8630137" vertical-offset="0" max-vertical-offset="1615">
+          <caret line="85" column="44" selection-start-line="85" selection-start-column="44" selection-end-line="85" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/ai/utilCSP/Util.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="391" max-vertical-offset="1292">
+          <caret line="52" column="28" selection-start-line="52" selection-start-column="28" selection-end-line="52" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/root/ai/CSP.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.0757341" vertical-offset="1836" max-vertical-offset="5219">
-          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        <state vertical-scroll-proportion="-0.5780525" vertical-offset="3128" max-vertical-offset="5440">
+          <caret line="162" column="19" selection-start-line="162" selection-start-column="19" selection-end-line="162" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1018#1027#0" expanded="true" />
-            <element signature="e#2263#2272#0" expanded="true" />
-            <element signature="e#2833#2834#0" expanded="true" />
-            <element signature="e#2868#2869#0" expanded="true" />
-            <element signature="e#3281#3290#0" expanded="true" />
-            <element signature="e#5088#5097#0" expanded="true" />
-            <element signature="e#7757#7758#0" expanded="true" />
-            <element signature="e#7848#7849#0" expanded="true" />
+            <element signature="e#2311#2320#0" expanded="true" />
+            <element signature="e#2881#2882#0" expanded="true" />
+            <element signature="e#2916#2917#0" expanded="true" />
+            <element signature="e#3344#3353#0" expanded="true" />
+            <element signature="e#5470#5479#0" expanded="true" />
+            <element signature="e#8139#8140#0" expanded="true" />
+            <element signature="e#8230#8231#0" expanded="true" />
           </folding>
         </state>
       </provider>

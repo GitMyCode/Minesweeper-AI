@@ -97,10 +97,6 @@ public enum CASE {
     }
 
 
-    @Override
-    public String toString () {
-        return String.valueOf(indexValue);
-    }
 
 
 }
