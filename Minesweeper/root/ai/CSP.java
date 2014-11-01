@@ -7,10 +7,7 @@ import root.Grid;
 import root.Move;
 import static root.ENUM.CASE.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by MB on 10/31/2014.
@@ -21,25 +18,40 @@ public class CSP implements ArtificialPlayer{
     Grid gameGrid;
     Set<Move> sureMoves;
     List<Integer> bordure;
-    Set<Integer> possibleMine;
-
+    Set<Integer> undiscoveredFrontier;
+    Map<Integer,Integer> possibleMine;
+    Integer  nbPossibilite =0;
     @Override
     public Set<Move> getAiPlay (Grid g) {
-
+        nbPossibilite =0;
         gameGrid = g;
         CASE[] copyGrid = g.getCpyPlayerView();
         sureMoves = new HashSet<Move>();
-        possibleMine = new HashSet<Integer>();
+        possibleMine = new HashMap<Integer, Integer>();
+        undiscoveredFrontier = new HashSet<Integer>();
         getSureCoup(g);
 
         for(Integer b : bordure){
             for(Integer sur : gameGrid.getSurroundingIndex(b)){
-                if(copyGrid[sur] == UNDISCOVERED && !possibleMine.contains(sur)){
+                if(copyGrid[sur] == UNDISCOVERED && !possibleMine.containsKey(sur)){
                     sureMoves.add(new Move(sur, COUP.SHOW));
+                }else if (copyGrid[sur] == UNDISCOVERED && possibleMine.get(sur) ==nbPossibilite){
+                    sureMoves.add(new Move(sur, COUP.FLAG));
                 }
             }
         }
 
+        if(sureMoves.isEmpty()){
+            List<Integer> legalMoves = new ArrayList<Integer>();
+            for(int i=0; i< g.length; i++){
+                if(copyGrid[i] == UNDISCOVERED){
+                    legalMoves.add(i);
+                }
+            }
+            Random ran = new Random();
+            int index = legalMoves.get(ran.nextInt(legalMoves.size()));
+            sureMoves.add(new Move(index,COUP.SHOW));
+        }
 
         return sureMoves;
     }
@@ -59,6 +71,13 @@ public class CSP implements ArtificialPlayer{
         for(int i=0; i< grid.length; i++){
             if(CASE.isIndicatorCase(grid[i])){
                 bordure.add(i);
+
+                List<Integer> voisins = gameGrid.getSurroundingIndex(i);
+                for(Integer v : voisins){
+                    if(grid[v] == UNDISCOVERED){
+                        undiscoveredFrontier.add(v);
+                    }
+                }
             }
         }
 
@@ -74,13 +93,14 @@ public class CSP implements ArtificialPlayer{
             return false;
         }
         if(index >= bordure.size()){
-            for(Integer c : bordure){
-                for(Integer sur : gameGrid.getSurroundingIndex(c)){
-                    if(grid[sur]==FLAGED){
-                        possibleMine.add(sur);
-                    }
+
+            for(Integer i : undiscoveredFrontier){
+                if(grid[i] == FLAGED){
+                    int lastTimeFlaged = (possibleMine.containsKey(i))? possibleMine.get(i)+1 : 1;
+                    possibleMine.put(i, lastTimeFlaged);
                 }
             }
+            nbPossibilite++;
             return true;
         }
 
