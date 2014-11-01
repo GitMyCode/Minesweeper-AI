@@ -25,7 +25,7 @@ public class RandomAi implements ArtificialPlayer {
 
 
     @Override
-    public Set<Move> getAiPlay (Grid g) {
+    public Set<Move> getAiPlay (Grid g,int thinkLimit) {
 
         CASE[] myView = g.getCpyPlayerView();
         Random ran = new Random();

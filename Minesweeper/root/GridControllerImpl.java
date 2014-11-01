@@ -23,7 +23,6 @@ public class GridControllerImpl implements GridController {
     @Override
     public void caseClicked (int ligne, int colonne) {
         int index = ligne* gridBoard.nbcol + colonne;
-        //gridBoard.gridSpace[index] = 1;
 
         gridBoard.play(index, COUP.SHOW);
 

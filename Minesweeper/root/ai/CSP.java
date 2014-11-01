@@ -5,7 +5,10 @@ import root.ENUM.CASE;
 import root.ENUM.COUP;
 import root.Grid;
 import root.Move;
+import root.ai.utilCSP.TimeOver;
+
 import static root.ENUM.CASE.*;
+import static root.ENUM.COUP.*;
 
 import java.util.*;
 
@@ -15,28 +18,43 @@ import java.util.*;
 public class CSP implements ArtificialPlayer{
 
 
+    /*Timer*/
+    public long timer;
+    public long remain;
+    public boolean END = false;
+    public final int LIMITE = 10;
+
+
     Grid gameGrid;
     Set<Move> sureMoves;
-    List<Integer> bordure;
+
     Set<Integer> undiscoveredFrontier;
     Map<Integer,Integer> possibleMine;
     Integer  nbPossibilite =0;
     @Override
-    public Set<Move> getAiPlay (Grid g) {
+    public Set<Move> getAiPlay (Grid g,int thinkLimit) {
         gameGrid = g;
         CASE[] copyGrid = g.getCpyPlayerView();
+        startTimer(thinkLimit);
 
 
         nbPossibilite =0;
         sureMoves = new HashSet<Move>();
         possibleMine = new HashMap<Integer, Integer>();
         undiscoveredFrontier = new HashSet<Integer>();
-        bordure = new ArrayList<Integer>();
+        List<Integer> bordure= new ArrayList<Integer>();
+
+
+        try {
+            getSureCoup(g,bordure);
+        }catch (TimeOver e){
+
+        }
 
 
 
-        getSureCoup(g);
 
+        int bestChance =Integer.MAX_VALUE;
         for(Integer b : bordure){
             for(Integer sur : gameGrid.getSurroundingIndex(b)){
                 if(copyGrid[sur] == UNDISCOVERED && !possibleMine.containsKey(sur)){
@@ -47,8 +65,19 @@ public class CSP implements ArtificialPlayer{
                     }
                     sureMoves.add(new Move(sur, COUP.FLAG));
                 }
+
+                if(copyGrid[sur]== UNDISCOVERED && possibleMine.containsKey(sur) && possibleMine.get(sur)< bestChance){
+                    bestChance = possibleMine.get(sur);
+                }
             }
         }
+/*
+        if(sureMoves.isEmpty() && bestChance != Integer.MAX_VALUE){
+
+            System.out.println("best chance: "+ bestChance);
+            sureMoves.add(new Move(bestChance,SHOW));
+            return sureMoves;
+        }*/
 
         if(sureMoves.isEmpty()){
             List<Integer> legalMoves = new ArrayList<Integer>();
@@ -73,7 +102,7 @@ public class CSP implements ArtificialPlayer{
         return "CSP-Martin";
     }
 
-    public void getSureCoup(Grid g){
+    public void getSureCoup(Grid g,List<Integer> bordure) throws TimeOver{
 
         CASE[] grid = g.getCpyPlayerView();
 
@@ -98,7 +127,7 @@ public class CSP implements ArtificialPlayer{
                     }
                 }
                 if(nbFlaged == grid[i].indexValue){
-                    bordure.remove((Object)i);
+                    bordure.remove((Object) i);
                     if(t.size()!=0){
                         for(Integer v2 : t){
                             sureMoves.add(new Move(v2,COUP.SHOW));
@@ -118,8 +147,12 @@ public class CSP implements ArtificialPlayer{
 
     }
 
-    public boolean recurseCSP(CASE[] grid,List<Integer> bordure,int index){
+    public boolean recurseCSP(CASE[] grid,List<Integer> bordure,int index) throws TimeOver{
 
+        if(timeUp()){
+            System.out.println("Time over");
+            throw new TimeOver("Time Over");
+        }
 
         if(!allFlagOkey(grid,bordure,index)){
             return false;
@@ -223,6 +256,46 @@ public class CSP implements ArtificialPlayer{
             combinaisonFlag(index+1, nbFlag, nbCase, combinaison, listeC);
         }
     }
+
+    public void startTimer(int delai){
+        END = false;
+        timer = System.currentTimeMillis();
+        remain = delai;
+    }
+
+
+   public String showTimeRemain(){
+        return ("Time: " + (remain - (System.currentTimeMillis() - timer)) + " ms");
+    }
+
+    /**
+     * @return Retourne le temps restant
+     */
+    public long timeRemaining(){
+        long passed = (System.currentTimeMillis() - timer);
+        return remain - passed;
+    }
+
+    /***
+     * Indique si le temps est écoulé
+     * @return true si temps écoulé
+     */
+    public boolean timeUp(){
+        if(END){
+            return true;
+        }
+
+        if(timeRemaining() < LIMITE){
+            END = true;
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+
 
     
 }

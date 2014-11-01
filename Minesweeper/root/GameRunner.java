@@ -16,29 +16,36 @@ public class GameRunner implements Runnable {
     private Grid grid;
     private GridController controller;
     private int delayTime = 100;
+    private int thinkLimit = 1000;
 
-    public GameRunner(ArtificialPlayer ai,Grid g,GridController controller,int delay){
+    public GameRunner(ArtificialPlayer ai,Grid g,GridController controller,int delay,int thinkLimit){
         this.ai = ai;
         this.grid = g;
         this.controller = controller;
         this.delayTime = delay;
+        this.thinkLimit = thinkLimit;
     }
 
 
     @Override
     public void run () {
 
+        while (!grid.gameFinish() && !Thread.currentThread().isInterrupted()){
 
-
-        while (!grid.gameFinish()){
-
-            Set<Move> aiMoves = ai.getAiPlay(grid);
+            Set<Move> aiMoves = ai.getAiPlay(grid,thinkLimit);
             controller.movesSetPlay(aiMoves);
             System.gc();
             try{
-                Thread.sleep(delayTime);
-            }catch(InterruptedException ie){ie.printStackTrace();}
+                if(!Thread.currentThread().isInterrupted()){
+                    Thread.sleep(delayTime);
+                }
+            }catch(InterruptedException ie){
+                Thread.currentThread().interrupt();
+                return;
+            }
         }
+
+        /*After game*/
         if(grid.lost){
             SendMsg("Lost!");
             outputObserver.updateLost();
@@ -48,43 +55,17 @@ public class GameRunner implements Runnable {
             SendMsg("Win!");
             outputObserver.updateWins();
         }
-        try{
-            Thread.sleep(100);
-        }catch(InterruptedException ie){ie.printStackTrace();}
+        if(!Thread.currentThread().isInterrupted()){
+            try{
+                Thread.sleep(100);
+            }catch(InterruptedException ie){
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
 
         outputObserver.callback();
 
-
-/*
-
-        final Timer timer = new Timer(delayTime,null);
-        timer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed (ActionEvent actionEvent) {
-
-
-                Set<Move> aiMoves = ai.getAiPlay(grid);
-                controller.movesSetPlay(aiMoves);
-                if(grid.gameFinish()){
-                    if(grid.lost){
-                        outputObserver.message("Lost!");
-                        outputObserver.updateLost();
-                        grid.showAllCase();
-
-                    }else if(grid.win){
-                        outputObserver.message("Win!");
-                        outputObserver.updateWins();
-                    }
-                    outputObserver.callback();
-                    timer.stop();
-                }
-
-            }
-        });
-
-        timer.start();
-
-*/
 
     }
 
