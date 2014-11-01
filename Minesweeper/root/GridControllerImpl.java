@@ -34,13 +34,13 @@ public class GridControllerImpl implements GridController {
     }
 
     @Override
-    public void caseClicked (int indexCase) {
+    public synchronized void caseClicked (int indexCase) {
 
         System.out.println("dsfsdf");
     }
 
     @Override
-    public void movesSetPlay (Set<Move> moves) {
+    public synchronized void movesSetPlay (Set<Move> moves) {
         for(Move m : moves){
             gridBoard.play(m.index, m.coup);
         }
@@ -49,7 +49,7 @@ public class GridControllerImpl implements GridController {
     }
 
     @Override
-    public void movePlay (Move move) {
+    public synchronized void movePlay (Move move) {
         gridBoard.play(move.index, move.coup);
         flagRemain.setText(String.valueOf(gridBoard.getNbFlagRemaining()));
         gridView.repaint();
