@@ -71,6 +71,9 @@ public enum CASE {
             intToTypeMap.put(type.indexValue, type);
         }
     }
+    public static boolean isIndicatorCase(CASE c){
+        return (c.indexValue >= 1 && c.indexValue <=8);
+    }
     public static CASE caseFromInt(int i ){
         return intToTypeMap.get(i);
     }
