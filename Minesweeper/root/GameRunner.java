@@ -31,9 +31,10 @@ public class GameRunner implements Runnable {
 
 
         while (!grid.gameFinish()){
+
             Set<Move> aiMoves = ai.getAiPlay(grid);
             controller.movesSetPlay(aiMoves);
-
+            System.gc();
             try{
                 Thread.sleep(delayTime);
             }catch(InterruptedException ie){ie.printStackTrace();}

@@ -86,15 +86,25 @@ public class CSP implements ArtificialPlayer{
                 List<Integer> voisins = gameGrid.getSurroundingIndex(i);
                 boolean isSurrounded= true;
                 List<Integer> t = new ArrayList<Integer>();
+                int nbFlaged =0;
                 for(Integer v : voisins){
                     if(grid[v] == UNDISCOVERED){
                         t.add(v);
-                    }else {
+                    }else if(grid[v] == FLAGED){
+                        nbFlaged++;
+                    }
+                    else {
                         isSurrounded = false;
                     }
                 }
-
-                if(!isSurrounded){
+                if(nbFlaged == grid[i].indexValue){
+                    bordure.remove((Object)i);
+                    if(t.size()!=0){
+                        for(Integer v2 : t){
+                            sureMoves.add(new Move(v2,COUP.SHOW));
+                        }
+                    }
+                }else if(!isSurrounded){
                     undiscoveredFrontier.addAll(t);
                 }else{
                     bordure.remove((Object)i);
@@ -146,9 +156,18 @@ public class CSP implements ArtificialPlayer{
 
         nbFlagToPlace+= grid[variableToSatisfy].indexValue;
         if(nbFlagToPlace <0){return false;}
-        CASE[] cpyG = grid.clone();
-        if(nbFlagToPlace==0){return recurseCSP(cpyG,bordure,index+1);}
+        if(nbFlagToPlace==0){
+            CASE[] cpyG = grid.clone();
+            return recurseCSP(cpyG,bordure,index+1);}
+        if(undiscovered.size() == nbFlagToPlace){
 
+            CASE[] cpyG = grid.clone();
+            for(Integer i : undiscovered){
+                cpyG[i]= FLAGED;
+                sureMoves.add(new Move(i,COUP.FLAG));
+            }
+            return recurseCSP(cpyG,bordure,index+1);
+        }
 
         int[] combinaison = new int[nbFlagToPlace];
         ArrayList<int[]> listC = new ArrayList<int[]>();
