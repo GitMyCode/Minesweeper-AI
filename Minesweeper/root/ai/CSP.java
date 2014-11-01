@@ -23,19 +23,28 @@ public class CSP implements ArtificialPlayer{
     Integer  nbPossibilite =0;
     @Override
     public Set<Move> getAiPlay (Grid g) {
-        nbPossibilite =0;
         gameGrid = g;
         CASE[] copyGrid = g.getCpyPlayerView();
+
+
+        nbPossibilite =0;
         sureMoves = new HashSet<Move>();
         possibleMine = new HashMap<Integer, Integer>();
         undiscoveredFrontier = new HashSet<Integer>();
+        bordure = new ArrayList<Integer>();
+
+
+
         getSureCoup(g);
 
         for(Integer b : bordure){
             for(Integer sur : gameGrid.getSurroundingIndex(b)){
                 if(copyGrid[sur] == UNDISCOVERED && !possibleMine.containsKey(sur)){
                     sureMoves.add(new Move(sur, COUP.SHOW));
-                }else if (copyGrid[sur] == UNDISCOVERED && possibleMine.get(sur) ==nbPossibilite){
+                }else if (copyGrid[sur] == UNDISCOVERED && possibleMine.get(sur) >=nbPossibilite){
+                    if(possibleMine.get(sur) > nbPossibilite){
+                        System.out.println("wird");
+                    }
                     sureMoves.add(new Move(sur, COUP.FLAG));
                 }
             }
@@ -47,6 +56,9 @@ public class CSP implements ArtificialPlayer{
                 if(copyGrid[i] == UNDISCOVERED){
                     legalMoves.add(i);
                 }
+            }
+            if(legalMoves.size() > undiscoveredFrontier.size()){
+                legalMoves.removeAll(undiscoveredFrontier);
             }
             Random ran = new Random();
             int index = legalMoves.get(ran.nextInt(legalMoves.size()));
@@ -65,7 +77,6 @@ public class CSP implements ArtificialPlayer{
 
         CASE[] grid = g.getCpyPlayerView();
 
-        bordure = new ArrayList<Integer>();
 
 
         for(int i=0; i< grid.length; i++){
@@ -73,11 +84,22 @@ public class CSP implements ArtificialPlayer{
                 bordure.add(i);
 
                 List<Integer> voisins = gameGrid.getSurroundingIndex(i);
+                boolean isSurrounded= true;
+                List<Integer> t = new ArrayList<Integer>();
                 for(Integer v : voisins){
                     if(grid[v] == UNDISCOVERED){
-                        undiscoveredFrontier.add(v);
+                        t.add(v);
+                    }else {
+                        isSurrounded = false;
                     }
                 }
+
+                if(!isSurrounded){
+                    undiscoveredFrontier.addAll(t);
+                }else{
+                    bordure.remove((Object)i);
+                }
+
             }
         }
 
@@ -117,9 +139,15 @@ public class CSP implements ArtificialPlayer{
                 undiscovered.add(i);
             }
         }
+
+        if(undiscovered.size() == 8) {
+            System.out.println("dfg");
+        }
+
         nbFlagToPlace+= grid[variableToSatisfy].indexValue;
         if(nbFlagToPlace <0){return false;}
-        if(nbFlagToPlace==0){return recurseCSP(grid,bordure,index+1);}
+        CASE[] cpyG = grid.clone();
+        if(nbFlagToPlace==0){return recurseCSP(cpyG,bordure,index+1);}
 
 
         int[] combinaison = new int[nbFlagToPlace];
@@ -135,11 +163,7 @@ public class CSP implements ArtificialPlayer{
             }
 
             recurseCSP(gCpy,bordure,index+1);
-
-
         }
-
-
 
         return false;
     }
@@ -153,8 +177,9 @@ public class CSP implements ArtificialPlayer{
             List<Integer> voisins = gameGrid.getSurroundingIndex(index);
             int nbFlag=0;
             for(Integer v : voisins){
-                if(grid[v] ==FLAGED )
+                if(grid[v] ==FLAGED ){
                     nbFlag++;
+                }
             }
             if(nbFlag != value){
                 return false;

@@ -104,17 +104,35 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+
+                System.gc();
                 new WindowMinesweeper().setVisible(true);
+                System.gc();
             }
         });
 
     }
 
-    public void createBoard(int lignes,int cols,int mines,String aiName,int timeDelay){
+    public void createBoard(final int lignes,final int cols,final int mines,
+                            final String aiName,final int timeDelay){
         GLOBAL.NBCOL= cols;
         GLOBAL.NBLIGNE = lignes;
 
-        new BoardGameView(lignes,cols,mines,aiName,timeDelay).setVisible(true);
+
+        System.gc();
+        new Thread(
+                (new Runnable() {
+                    @Override
+                    public void run() {
+                        new BoardGameView(lignes,cols,mines,aiName,timeDelay).setVisible(true);
+
+                    }
+                })
+
+        ).start();
+
+        System.gc();
+
 
     }
 
