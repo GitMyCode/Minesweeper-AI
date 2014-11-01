@@ -204,4 +204,6 @@ public class CSP implements ArtificialPlayer{
             combinaisonFlag(index+1, nbFlag, nbCase, combinaison, listeC);
         }
     }
+
+    
 }
