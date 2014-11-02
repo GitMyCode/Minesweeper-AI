@@ -58,12 +58,12 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         choiceMines.setPreferredSize(dim_jtext);
         choiceMines.setMinimumSize(dim_jtext);
 
-        choiceTimer = new JTextField("100");
+        choiceTimer = new JTextField(""+GLOBAL.DEFAULT_DELAY);
         choiceTimer.setPreferredSize(dim_jtext);
         choiceTimer.setMinimumSize(dim_jtext);
         labelTimer  = new JLabel("Time delay");
 
-        choiceMaxTime = new JTextField("1000");
+        choiceMaxTime = new JTextField(""+GLOBAL.DEFAULT_MAXTHINK);
         choiceTimer.setPreferredSize(dim_jtext);
         choiceTimer.setMinimumSize(dim_jtext);
 
@@ -73,7 +73,6 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         panelCreation.setPreferredSize(panel_creation_dim);
         panelCreation.setMinimumSize(panel_creation_dim);
         panelCreation.setMaximumSize(panel_creation_dim);
-
 
         choixAI = new JComboBox();
         labelAi = new JLabel("Ai");

@@ -1,5 +1,9 @@
 package root;
 
+import root.ENUM.CASE;
+import root.ENUM.COUP;
+import root.ai.CSP;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,15 +15,21 @@ import java.util.Set;
 public class GameRunner implements Runnable {
 
     private ArtificialPlayer ai;
+
     protected OutputObserver outputObserver= null;
 
     private Grid grid;
     private GridController controller;
     private int delayTime = 100;
     private int thinkLimit = 1000;
+    private volatile boolean running = true;
+
+    public void terminate() {
+        running = false;
+    }
 
     public GameRunner(ArtificialPlayer ai,Grid g,GridController controller,int delay,int thinkLimit){
-        this.ai = ai;
+        this.ai = (CSP)ai;
         this.grid = g;
         this.controller = controller;
         this.delayTime = delay;
@@ -29,8 +39,9 @@ public class GameRunner implements Runnable {
 
     @Override
     public void run () {
-
-        while (!grid.gameFinish() && !Thread.currentThread().isInterrupted()){
+        int tour =0;
+        while (!grid.gameFinish() && running){
+           // System.out.println("tour: "+tour);tour++;
 
             Set<Move> aiMoves = ai.getAiPlay(grid,thinkLimit);
             controller.movesSetPlay(aiMoves);
@@ -43,6 +54,9 @@ public class GameRunner implements Runnable {
                 Thread.currentThread().interrupt();
                 return;
             }
+        }
+        if(!running){
+            return;
         }
 
         /*After game*/
@@ -68,6 +82,8 @@ public class GameRunner implements Runnable {
 
 
     }
+
+
 
     private synchronized void SendMsg(String msg){
         outputObserver.message(msg);

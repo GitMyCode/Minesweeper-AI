@@ -9,6 +9,9 @@ import java.awt.*;
 public class GLOBAL {
 
 
+    public static int DEFAULT_MAXTHINK = 200;
+    public static int DEFAULT_DELAY    = 100;
+
     static int NBCOL;
     static int NBLIGNE;
 
