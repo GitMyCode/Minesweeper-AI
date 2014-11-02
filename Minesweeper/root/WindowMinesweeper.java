@@ -64,8 +64,8 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         labelTimer  = new JLabel("Time delay");
 
         choiceMaxTime = new JTextField(""+GLOBAL.DEFAULT_MAXTHINK);
-        choiceTimer.setPreferredSize(dim_jtext);
-        choiceTimer.setMinimumSize(dim_jtext);
+        choiceMaxTime.setPreferredSize(dim_jtext);
+        choiceMaxTime.setMinimumSize(dim_jtext);
 
         panelCreation = new JPanel(new GridBagLayout());
         panelCreation.setBackground(Color.orange);
