@@ -7,8 +7,8 @@ import java.util.Set;
  */
 public interface ArtificialPlayer {
 
-
     public Set<Move> getAiPlay(Grid g,int thinkLimit);
     public String getAiName ();
+
 
 }

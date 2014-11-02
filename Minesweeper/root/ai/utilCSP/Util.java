@@ -1,6 +1,7 @@
 package root.ai.utilCSP;
 
 import root.ENUM.CASE;
+import root.ENUM.COUP;
 import root.Move;
 
 import java.util.Set;
@@ -18,9 +19,14 @@ public class Util {
         int i=1;
         for(CASE c : grid){
             if(c == CASE.UNDISCOVERED){
-                print+= '-';
+                print+= '■';
+            }else if(c == CASE.EMPTY) {
+                print+='_';
             }else if(c == CASE.FLAGED){
-                print+= 'F';
+                print+= '⚑';
+
+            }else if(c == CASE.BLOW) {
+                print+= '●';
             }else {
                 print += c.indexValue;
             }
@@ -40,26 +46,33 @@ public class Util {
         CASE[] grid = gridOriginal.clone();
 
         for(Move m : coups){
-            grid[m.index] = CASE.BLOW; //Just pour une valeur quelquonc
+            if(m.coup == COUP.SHOW){
+
+                grid[m.index] = CASE.BLOW; //Just pour une valeur quelquonc
+            }else if(m.coup == COUP.FLAG){
+                grid[m.index] = CASE.DEFUSED; //Just pour une valeur quelquonc
+            }
         }
+
 
         for(CASE c : grid){
             if(c == CASE.UNDISCOVERED){
-                print+= '-';
+                print+= '□';
+            }else if(c == CASE.EMPTY) {
+                print+='_';
             }else if(c == CASE.FLAGED){
-                print+= 'F';
+                print+= '⚑';
 
             }else if(c == CASE.BLOW) {
-                print+= 'C';
+                print+= '●';
+            }else if(c== CASE.DEFUSED){
+                print+= '◯'; //○
             }else {
                 print += c.indexValue;
             }
             if(i%nbcol ==0 && i!=0){
                 print += "\n";
             }
-
-
-
             i++;
         }
         System.out.println(print);

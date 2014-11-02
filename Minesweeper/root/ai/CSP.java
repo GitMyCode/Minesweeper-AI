@@ -3,6 +3,7 @@ package root.ai;
 import root.ArtificialPlayer;
 import root.ENUM.CASE;
 import root.ENUM.COUP;
+import root.GameRunner;
 import root.Grid;
 import root.Move;
 import root.ai.utilCSP.TimeOver;
@@ -23,6 +24,8 @@ public class CSP implements ArtificialPlayer{
     public long remain;
     public boolean END = false;
     public final int LIMITE = 10;
+
+    public GameRunner forTest;
 
 
     Grid gameGrid;
@@ -60,11 +63,17 @@ public class CSP implements ArtificialPlayer{
             for(Integer sur : gameGrid.getSurroundingIndex(b)){
                 if(copyGrid[sur] == UNDISCOVERED && !possibleMine.containsKey(sur)){
                     sureMoves.add(new Move(sur, COUP.SHOW));
-                }else if (copyGrid[sur] == UNDISCOVERED && possibleMine.get(sur) >=nbPossibilite){
+                   /* if(!forTest.checkMove(sureMoves)){
+                        int adas=0;
+                    }*/
+                }else if ( copyGrid[sur] == UNDISCOVERED && possibleMine.get(sur) >=nbPossibilite){
                     if(possibleMine.get(sur) > nbPossibilite){
                         System.out.println("wird");
                     }
                     sureMoves.add(new Move(sur, COUP.FLAG));
+                   /* if(!forTest.checkMove(sureMoves)){
+                        int adas=0;
+                    }*/
                 }
 
                 if(copyGrid[sur]== UNDISCOVERED && possibleMine.containsKey(sur) && possibleMine.get(sur)< bestChance){
@@ -72,6 +81,9 @@ public class CSP implements ArtificialPlayer{
                 }
             }
         }
+        }
+        if(!gameGrid.checkMove(sureMoves)){
+            System.out.println(" Problem and is timeout:"+(timeUp()));
         }
 
 /*
@@ -130,16 +142,23 @@ public class CSP implements ArtificialPlayer{
                     }
                 }
                 if(nbFlaged == grid[i].indexValue){
-                    bordure.remove((Object) i);
+                    //bordure.remove((Object) i);
                     if(unknownNeighbors.size()!=0){
                         for(Integer v2 : unknownNeighbors){
-                            if(grid[v2] != UNDISCOVERED){
-                                System.out.println("nooop ");
-                            }
                             sureMoves.add(new Move(v2,COUP.SHOW));
                         }
                     }
-                }else if(!isSurrounded){
+                }else if((nbFlaged-grid[i].indexValue) == unknownNeighbors.size()){
+                    //bordure.remove((Object) i);
+                    if(unknownNeighbors.size()!=0){
+                        for(Integer v2 : unknownNeighbors){
+                            sureMoves.add(new Move(v2,COUP.FLAG));
+                        }
+
+                    }
+                }
+
+                else if(!isSurrounded){
                     undiscoveredFrontier.addAll(unknownNeighbors);
                 }else{
                     bordure.remove((Object)i);
@@ -150,10 +169,11 @@ public class CSP implements ArtificialPlayer{
 
         if(sureMoves.isEmpty()){
             recurseCSP(grid,bordure,0);
-
-
         }else{
-            System.out.println("sureMove");
+            if(!gameGrid.checkMove(sureMoves)){
+                System.out.println("ne devrait pas");
+                int sdfsd=0;
+            }
         }
 
 
@@ -162,15 +182,18 @@ public class CSP implements ArtificialPlayer{
 
     public boolean recurseCSP(CASE[] grid,List<Integer> bordure,int index) throws TimeOver{
 
+
         if(timeUp()){
-            System.out.println("Time over");
             throw new TimeOver("Time Over");
         }
 
         if(!allFlagOkey(grid,bordure,index)){
             return false;
         }
+
+
         if(index >= bordure.size()){
+            int stop=0;
 
             for(Integer i : undiscoveredFrontier){
                 if(grid[i] == FLAGED){
@@ -205,15 +228,15 @@ public class CSP implements ArtificialPlayer{
         if(nbFlagToPlace==0){
             CASE[] cpyG = grid.clone();
             return recurseCSP(cpyG,bordure,index+1);}
-        if(undiscovered.size() == nbFlagToPlace){
-
+       /* if(undiscovered.size() == nbFlagToPlace){
+            //System.out.println("nope");
             CASE[] cpyG = grid.clone();
             for(Integer i : undiscovered){
                 cpyG[i]= FLAGED;
                 sureMoves.add(new Move(i,COUP.FLAG));
             }
             return recurseCSP(cpyG,bordure,index+1);
-        }
+        }*/
 
         int[] combinaison = new int[nbFlagToPlace];
         ArrayList<int[]> listC = new ArrayList<int[]>();

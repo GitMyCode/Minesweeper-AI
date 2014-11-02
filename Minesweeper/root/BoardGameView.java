@@ -243,6 +243,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     public void actionPerformed (ActionEvent actionEvent) {
 
         if(actionEvent.getActionCommand() == "Start"){
+            resetGame();
             startGame();
         }else if(actionEvent.getActionCommand() == "Reset") {
             resetGame();
@@ -361,7 +362,9 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         if(task !=null){
             task = null;
         }
+
         if(runner!=null){
+            runner.terminate();
             runner = null;
         }
     }

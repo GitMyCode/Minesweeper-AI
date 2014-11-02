@@ -74,6 +74,26 @@ public class Grid {
         }
     }
 
+    /*
+    * TODO
+    * Pour debuggage seulement Ne doit pas etre utiliser comme strategie dans
+    * Les AI
+    * */
+    public boolean checkMove(Set<Move> moves){
+
+        for(Move m : moves){
+            if(underneathValues[m.index] != CASE.MINE && m.coup == COUP.FLAG){
+
+                return false;
+            }else if(underneathValues[m.index] == CASE.MINE && m.coup == COUP.SHOW){
+                return false;
+            }
+
+
+        }
+        return true;
+    }
+
     public List<Integer> getSurroundingIndex(int index){
         List<Integer> list = new ArrayList<Integer>();
         for(Dir D : Dir.direction8){
@@ -105,6 +125,22 @@ public class Grid {
                 return EnumSet.of(COUP.INVALID);
         }
     }
+
+
+    public Set<Integer> getUndiscoveredNeigbour(CASE[] grid, int index){
+        Set<Integer> set = new HashSet<Integer>();
+
+        for(Dir D: Dir.direction8){
+            if(isStepThisDirInGrid(D,index)){
+                int voisin = index + stepDir(D);
+                if(grid[voisin] == UNDISCOVERED){
+                    set.add(voisin);
+                }
+            }
+        }
+        return set;
+    }
+
 
     public CASE[] getCpyPlayerView(){
         CASE[] cpy;
@@ -304,6 +340,8 @@ public class Grid {
             }
         }
     }
+
+
 
 
 
