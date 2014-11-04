@@ -3,6 +3,7 @@ package root;
 import root.ENUM.CASE;
 import root.ENUM.COUP;
 
+import java.io.File;
 import java.util.*;
 
 
@@ -18,7 +19,7 @@ public class Grid {
     public int nbcol;
     public int nbligne;
     public int length;
-    private final int NBMINES;
+    protected  int NBMINES;
 
     protected int nbMinesRemaining;
     protected int nbFlagRemaining;
@@ -26,11 +27,39 @@ public class Grid {
     protected boolean win = false;
 
 
-    byte[] gridSpace;
     protected CASE[] underneathValues;
     CASE[] gridPlayerView;
 
     Random ran = new Random();
+
+    public Grid(File f){
+        try{
+            Scanner sc = new Scanner(f);
+            nbligne = sc.nextInt();
+            nbcol   = sc.nextInt();
+            NBMINES = sc.nextInt();
+            nbFlagRemaining = sc.nextInt();
+            nbMinesRemaining = sc.nextInt();
+            length = nbcol*nbligne;
+            this.NBMINES = NBMINES;
+            this.nbFlagRemaining = NBMINES;
+            this.nbMinesRemaining = NBMINES;
+
+            gridPlayerView = new CASE[length];
+            underneathValues = new CASE[length];
+
+            for(int i =0; i<length;i++){
+                underneathValues[i] = CASE.caseFromInt(sc.nextInt());
+            }
+            String s = sc.next();
+            for(int i =0; i<length;i++){
+                gridPlayerView[i] = CASE.caseFromInt(sc.nextInt());
+            }
+
+        }catch (Exception e){
+            System.out.println("Erreur remake grid:"+e);
+        }
+    }
 
     public Grid(int nbligne, int nbcol,int nbMines) {
         this.nbcol = nbcol;
@@ -42,13 +71,11 @@ public class Grid {
 
 
 
-        gridSpace = new byte[nbcol*nbligne];
         gridPlayerView = new CASE[nbcol*nbligne];
 
 
 
         Arrays.fill(gridPlayerView,UNDISCOVERED);
-        Arrays.fill(gridSpace, (byte) UNDISCOVERED.indexValue);
 
 
         underneathValues = createRdmGrid(nbligne,nbcol,nbMines);
@@ -197,8 +224,9 @@ public class Grid {
     }
 
     protected boolean gameFinish(){
-        if(lost)
+        if(lost){
             return true;
+        }
         if(win)
             return true;
 
