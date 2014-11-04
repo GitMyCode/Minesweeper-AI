@@ -36,6 +36,16 @@ public class CSP implements ArtificialPlayer{
     Integer  nbPossibilite =0;
     @Override
     public Set<Move> getAiPlay (Grid g,int thinkLimit) {
+
+
+
+        /*TODO
+        * 1) Splitter les frontieres en plusieurs frontiere indÉpendante
+        * 2) Ordonner les variables pour qu'elle soit voisines (Heuristique de CSP)
+        * 3) FAIRE LE MENAGE DANS CE BORDEL
+        * */
+
+
         gameGrid = g;
         CASE[] copyGrid = g.getCpyPlayerView();
         startTimer(thinkLimit);
@@ -83,7 +93,7 @@ public class CSP implements ArtificialPlayer{
         }
         }
         if(!gameGrid.checkMove(sureMoves)){
-            System.out.println(" Problem and is timeout:"+(timeUp()));
+            System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.checkIfPresentGridValid());
         }
 
 /*
@@ -328,6 +338,20 @@ public class CSP implements ArtificialPlayer{
 
         return false;
     }
+
+
+    public List<Integer> getIndicesNotInFrontiere(int index , Set<Integer> frontiere){
+        List<Integer> nextToFrontieres = new ArrayList<Integer>();
+        List<Integer> voisins = gameGrid.getSurroundingIndex(index);
+        for(Integer v : voisins){
+            if(!frontiere.contains(v)){
+                nextToFrontieres.add(v);
+            }
+        }
+        return nextToFrontieres;
+    }
+
+
 
 
 
