@@ -401,7 +401,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     public void saveGrid(){
         try {
             Format formatter = new SimpleDateFormat("MM-dd_hh-mm-ss");
-            FileWriter fw = new FileWriter("grid-"+(formatter.format(new Date())));
+            String fileName = "grid-"+(formatter.format(new Date()));
+            FileWriter fw = new FileWriter(fileName);
 
             fw.write(grid.nbligne+" "+grid.nbcol+" "+grid.NBMINES+" "+grid.nbFlagRemaining+" "+grid.nbMinesRemaining+ "\n");
             int i=1;String gridAllValue ="";
@@ -425,6 +426,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             }
             fw.write(gridPlayerView);
             fw.close();
+            message("Grid saved : "+fileName);
 
         }catch (Exception e){
 
