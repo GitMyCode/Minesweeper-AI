@@ -207,7 +207,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             infinitGame = true;
             startGame();
         }else if(actionEvent.getActionCommand() == "Step"){
-            disable((JButton)actionEvent.getSource(),thinkLimit);
+            ((JButton)actionEvent.getSource()).setEnabled(false);
             runner = null;
             startGame();
             runner.terminate();
@@ -274,6 +274,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         runner = null;
         gv.repaint();
         flagRemaining.setText(String.valueOf(nbMines));
+        step.setEnabled(true);
         message("Reset");
     }
 
@@ -283,6 +284,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             resetGame();
             startGame();
         }
+        /*Remettre disponible le step button au cas ou il avait ete desactive (pour prevenir  le spam)*/
+        step.setEnabled(true);
     }
 
     @Override
@@ -426,21 +429,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
         message("Initiate AI: "+ai.getAiName());
     }
-    /*
-    * Stackoverflow
-    * http://stackoverflow.com/questions/18753951/how-to-create-a-delay-between-button-click-to-prevent-button-spamming
-    * */
-    static void disable(final AbstractButton b, final int ms) {
-        b.setEnabled(false);
-        new SwingWorker() {
-            @Override protected Object doInBackground() throws Exception {
-                Thread.sleep(ms);
-                return null;
-            }
-            @Override protected void done() {
-                b.setEnabled(true);
-            }
-        }.execute();
-    }
+
+
+
 
 }
