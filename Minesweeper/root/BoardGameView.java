@@ -120,87 +120,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         gv.setController(gridController);
         gv.repaint();
     }
-    private void constructUi(){
-        createGridView(nbligne, nbcol);
-        flagRemaining = new JLabel(""+nbMines);
 
-
-        menu = new JPanel(new GridBagLayout());
-
-        reset = new JButton("Reset");
-        start = new JButton("Start");
-        infinit = new JButton("Infinit play");
-        reset.addActionListener(this);
-        start.addActionListener(this);
-        infinit.addActionListener(this);
-
-        rbInfinit = new JRadioButton("Continue after game");
-        rbStopAfterGame = new JRadioButton("Stop after game");
-        buttonGroup = new ButtonGroup();
-        buttonGroup.add(rbInfinit); buttonGroup.add(rbStopAfterGame);
-        rbInfinit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed (ActionEvent actionEvent) {
-                updateGameLoopChoice();
-            }
-        });
-        rbStopAfterGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed (ActionEvent actionEvent) {
-                updateGameLoopChoice();
-            }
-        });
-
-        saveGridToFile = new JButton("Save grid");
-        saveGridToFile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed (ActionEvent e) {
-                saveGrid();
-            }
-        });
-
-
-        GLOBAL.addItem(menu, reset, 0, 0, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, rbInfinit, 0, 3, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, rbStopAfterGame, 0, 4, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, saveGridToFile, 0, 5, 1, 1, GridBagConstraints.WEST);
-
-        add(menu, BorderLayout.EAST);
-
-
-        JPanel bottomPanel = new JPanel(new GridBagLayout());
-        JPanel bottomPanelScore = new JPanel(new GridBagLayout());
-        JPanel buttomPanelMessage = new JPanel(new GridBagLayout());
-        JScrollPane pane = new JScrollPane();
-        //buttomPanel.setBackground(Color.cyan);
-        messageTextArea = new JTextArea();
-        messageTextArea.setColumns(nbcol + GLOBAL.CELL_SIZE-5);
-        messageTextArea.setEditable(false);
-        messageTextArea.setRows(5);
-        pane.setViewportView(messageTextArea);
-
-
-
-        GLOBAL.addItem(bottomPanelScore,new JLabel("Nb flag: "),0,0,1,1,GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanelScore,flagRemaining,1,0,1,1,GridBagConstraints.EAST);
-
-        GLOBAL.addItem(bottomPanelScore,new JLabel("Nb lost: "),0,1,1,1,GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanelScore,lostTotal = new JLabel("0"),1,1,1,1,GridBagConstraints.EAST);
-
-        GLOBAL.addItem(bottomPanelScore,new JLabel("Nb wins: "),0,2,1,1,GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanelScore,winsTotal = new JLabel("0"),1,2,1,1,GridBagConstraints.EAST);
-
-
-        GLOBAL.addItem(bottomPanel, bottomPanelScore, 0, 0, 3, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanel, pane, 1, 0, 3, 1, GridBagConstraints.EAST);
-        add(bottomPanel,BorderLayout.SOUTH);
-
-
-
-        message("Initiate AI: "+ai.getAiName());
-    }
-
+    /*Prend le nom du fichier et va chercher la class puis cree une instance*/
     public ArtificialPlayer getAI(String name){
         ArtificialPlayer returnAi = null;
         try{
@@ -299,12 +220,9 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
                             System.gc();
                             runner.run();
                             System.gc();
-
                         }catch(Exception e){
                             e.printStackTrace();
                         }
-
-
                     }
 
                 };
@@ -414,4 +332,93 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     }
 
+
+
+
+
+
+
+
+
+
+    private void constructUi(){
+        createGridView(nbligne, nbcol);
+        flagRemaining = new JLabel(""+nbMines);
+
+
+        menu = new JPanel(new GridBagLayout());
+
+        reset = new JButton("Reset");
+        start = new JButton("Start");
+        infinit = new JButton("Infinit play");
+        reset.addActionListener(this);
+        start.addActionListener(this);
+        infinit.addActionListener(this);
+
+        rbInfinit = new JRadioButton("Continue after game");
+        rbStopAfterGame = new JRadioButton("Stop after game");
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(rbInfinit); buttonGroup.add(rbStopAfterGame);
+        rbInfinit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed (ActionEvent actionEvent) {
+                updateGameLoopChoice();
+            }
+        });
+        rbStopAfterGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed (ActionEvent actionEvent) {
+                updateGameLoopChoice();
+            }
+        });
+
+        saveGridToFile = new JButton("Save grid");
+        saveGridToFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed (ActionEvent e) {
+                saveGrid();
+            }
+        });
+
+
+        GLOBAL.addItem(menu, reset, 0, 0, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, rbInfinit, 0, 3, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, rbStopAfterGame, 0, 4, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, saveGridToFile, 0, 5, 1, 1, GridBagConstraints.WEST);
+
+        add(menu, BorderLayout.EAST);
+
+
+        JPanel bottomPanel = new JPanel(new GridBagLayout());
+        JPanel bottomPanelScore = new JPanel(new GridBagLayout());
+        JPanel buttomPanelMessage = new JPanel(new GridBagLayout());
+        JScrollPane pane = new JScrollPane();
+        //buttomPanel.setBackground(Color.cyan);
+        messageTextArea = new JTextArea();
+        messageTextArea.setColumns(nbcol + GLOBAL.CELL_SIZE-5);
+        messageTextArea.setEditable(false);
+        messageTextArea.setRows(5);
+        pane.setViewportView(messageTextArea);
+
+
+
+        GLOBAL.addItem(bottomPanelScore,new JLabel("Nb flag: "),0,0,1,1,GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanelScore,flagRemaining,1,0,1,1,GridBagConstraints.EAST);
+
+        GLOBAL.addItem(bottomPanelScore,new JLabel("Nb lost: "),0,1,1,1,GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanelScore,lostTotal = new JLabel("0"),1,1,1,1,GridBagConstraints.EAST);
+
+        GLOBAL.addItem(bottomPanelScore,new JLabel("Nb wins: "),0,2,1,1,GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanelScore,winsTotal = new JLabel("0"),1,2,1,1,GridBagConstraints.EAST);
+
+
+        GLOBAL.addItem(bottomPanel, bottomPanelScore, 0, 0, 3, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanel, pane, 1, 0, 3, 1, GridBagConstraints.EAST);
+        add(bottomPanel,BorderLayout.SOUTH);
+
+
+
+        message("Initiate AI: "+ai.getAiName());
+    }
 }

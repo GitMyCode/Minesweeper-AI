@@ -332,7 +332,7 @@ public class Grid {
     * WARNING: YOU must check if the next position is in the grid before this methode
     *           Use if(isStepInThisDirInGrid(RIGHT,currentPosition)){}
     * Return the distance to add to get to the next case in this direction
-    *          nextplace = current position  + stepFor direction
+    *          nextplace = current position  + step for direction(le OFFSET)
     * exemple: index =       40              +  step(RIGHT) = 41;
     * */
     public int step(Dir D){
