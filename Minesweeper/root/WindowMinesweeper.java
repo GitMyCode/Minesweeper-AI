@@ -109,6 +109,10 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
             @Override
             public void actionPerformed (ActionEvent e) {
                 chooser = new JFileChooser(".");
+                /*To keep the last selected as default*/
+                if(importLabel.getText() != "aucun"){
+                    chooser.setSelectedFile(new File(importLabel.getText()));
+                }
                 chooser.showDialog(new JFrame("choose file"),"Ok");
                 if(chooser.getSelectedFile() != null){
                     readFile(chooser.getSelectedFile());
