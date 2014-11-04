@@ -65,14 +65,13 @@
     <splitter split-orientation="horizontal" split-proportion="0.46908316">
       <split-first>
         <leaf>
-          <file leaf-file-name="WindowMinesweeper.java" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="WindowMinesweeper.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/root/WindowMinesweeper.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.52667814" vertical-offset="1581" max-vertical-offset="3757">
-                  <caret line="111" column="54" selection-start-line="111" selection-start-column="54" selection-end-line="111" selection-end-column="54" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="1938" max-vertical-offset="3757">
+                  <caret line="109" column="30" selection-start-line="109" selection-start-column="30" selection-end-line="109" selection-end-column="30" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#3954#4973#0" expanded="true" />
                     <element signature="e#4962#4963#0" expanded="true" />
                     <element signature="e#6030#6264#0" expanded="true" />
                     <element signature="e#6245#6246#0" expanded="true" />
@@ -143,11 +142,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="BoardGameView.java" pinned="false" current="false" current-in-tab="false">
+          <file leaf-file-name="BoardGameView.java" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="6048" max-vertical-offset="6919">
-                  <caret line="407" column="43" selection-start-line="407" selection-start-column="43" selection-end-line="407" selection-end-column="43" />
+                <state vertical-scroll-proportion="1.0016835" vertical-offset="5661" max-vertical-offset="6545">
+                  <caret line="406" column="47" selection-start-line="406" selection-start-column="47" selection-end-line="406" selection-end-column="47" />
                   <folding />
                 </state>
               </provider>
@@ -233,8 +232,8 @@
           <file leaf-file-name="Grid.java" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/root/Grid.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.52512157" vertical-offset="1206" max-vertical-offset="6375">
-                  <caret line="101" column="4" selection-start-line="101" selection-start-column="4" selection-end-line="101" selection-end-column="4" />
+                <state vertical-scroll-proportion="1.0842788" vertical-offset="5961" max-vertical-offset="6868">
+                  <caret line="406" column="23" selection-start-line="406" selection-start-column="23" selection-end-line="406" selection-end-column="23" />
                   <folding />
                 </state>
               </provider>
@@ -277,9 +276,9 @@
         <option value="$PROJECT_DIR$/root/GameRunner.java" />
         <option value="$PROJECT_DIR$/root/ai/CSP.java" />
         <option value="$PROJECT_DIR$/root/GridView.java" />
-        <option value="$PROJECT_DIR$/root/Grid.java" />
-        <option value="$PROJECT_DIR$/root/BoardGameView.java" />
         <option value="$PROJECT_DIR$/root/WindowMinesweeper.java" />
+        <option value="$PROJECT_DIR$/root/BoardGameView.java" />
+        <option value="$PROJECT_DIR$/root/Grid.java" />
       </list>
     </option>
   </component>
@@ -783,12 +782,12 @@
       <workItem from="1414944911130" duration="652000" />
       <workItem from="1415034853876" duration="10000" />
       <workItem from="1415046450478" duration="4351000" />
-      <workItem from="1415060030325" duration="11670000" />
+      <workItem from="1415060030325" duration="12541000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="113787000" />
+    <option name="totallyTimeSpent" value="114658000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="0" />
@@ -973,7 +972,6 @@
           <caret line="116" column="19" selection-start-line="116" selection-start-column="19" selection-end-line="116" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3954#4973#0" expanded="true" />
             <element signature="e#4962#4963#0" expanded="true" />
             <element signature="e#6030#6264#0" expanded="true" />
             <element signature="e#6245#6246#0" expanded="true" />
@@ -1238,35 +1236,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/root/Grid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.52512157" vertical-offset="1206" max-vertical-offset="6375">
-          <caret line="101" column="4" selection-start-line="101" selection-start-column="4" selection-end-line="101" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6048" max-vertical-offset="6919">
-          <caret line="407" column="43" selection-start-line="407" selection-start-column="43" selection-end-line="407" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/root/WindowMinesweeper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.52667814" vertical-offset="1581" max-vertical-offset="3757">
-          <caret line="111" column="54" selection-start-line="111" selection-start-column="54" selection-end-line="111" selection-end-column="54" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1938" max-vertical-offset="3757">
+          <caret line="109" column="30" selection-start-line="109" selection-start-column="30" selection-end-line="109" selection-end-column="30" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3954#4973#0" expanded="true" />
             <element signature="e#4962#4963#0" expanded="true" />
             <element signature="e#6030#6264#0" expanded="true" />
             <element signature="e#6245#6246#0" expanded="true" />
             <element signature="e#6508#6750#0" expanded="true" />
             <element signature="e#6731#6732#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/Grid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0842788" vertical-offset="5961" max-vertical-offset="6868">
+          <caret line="406" column="23" selection-start-line="406" selection-start-column="23" selection-end-line="406" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/BoardGameView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0016835" vertical-offset="5661" max-vertical-offset="6545">
+          <caret line="406" column="47" selection-start-line="406" selection-start-column="47" selection-end-line="406" selection-end-column="47" />
+          <folding />
         </state>
       </provider>
     </entry>

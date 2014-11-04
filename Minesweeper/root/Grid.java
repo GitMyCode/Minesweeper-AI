@@ -4,6 +4,9 @@ import root.ENUM.CASE;
 import root.ENUM.COUP;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -373,6 +376,35 @@ public class Grid {
                 grid[i]= CASE.caseFromInt(value);
             }
         }
+    }
+
+    protected void saveToFile(String fileName) throws Exception{
+
+
+            FileWriter fw = new FileWriter(fileName);
+
+            fw.write(nbligne+" "+nbcol+" "+NBMINES+" "+nbFlagRemaining+" "+nbMinesRemaining+ "\n");
+            int i=1;String gridAllValue ="";
+            for(CASE c : underneathValues){
+                gridAllValue+= c.indexValue+ " ";
+                if(i % nbcol==0){
+                    gridAllValue+="\n";
+                }
+                i++;
+            }
+            fw.write(gridAllValue);
+
+            fw.write("-\n");
+            i=1;String stringGridPlayerView ="";
+            for(CASE c : gridPlayerView){
+                stringGridPlayerView+= c.indexValue+" ";
+                if(i % nbcol==0){
+                    stringGridPlayerView+="\n";
+                }
+                i++;
+            }
+            fw.write(stringGridPlayerView);
+            fw.close();
     }
 
 
