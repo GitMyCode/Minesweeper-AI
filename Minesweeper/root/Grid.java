@@ -5,8 +5,6 @@ import root.ENUM.COUP;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -44,7 +42,6 @@ public class Grid {
             nbFlagRemaining = sc.nextInt();
             nbMinesRemaining = sc.nextInt();
             length = nbcol*nbligne;
-            this.NBMINES = NBMINES;
             this.nbFlagRemaining = NBMINES;
             this.nbMinesRemaining = NBMINES;
 
@@ -133,7 +130,7 @@ public class Grid {
         List<Integer> list = new ArrayList<Integer>();
         for(Dir D : Dir.direction8){
             if(isStepThisDirInGrid(D,index)){
-                list.add((index+stepDir(D)));
+                list.add((index+ step(D)));
 
             }
         }
@@ -168,7 +165,7 @@ public class Grid {
 
         for(Dir D: Dir.direction8){
             if(isStepThisDirInGrid(D,index)){
-                int voisin = index + stepDir(D);
+                int voisin = index + step(D);
                 if(grid[voisin] == UNDISCOVERED){
                     set.add(voisin);
                 }
@@ -283,7 +280,7 @@ public class Grid {
 
             if(underneathValues[index] == EMPTY){
                 for(Dir D : Dir.values()){
-                    int indexVoisin = index + stepDir(D);
+                    int indexVoisin = index + step(D);
                     if(isStepThisDirInGrid(D, index) && gridPlayerView[indexVoisin].equals(UNDISCOVERED) ){
                         playUndiscoveredCase(indexVoisin);
                     }
@@ -310,7 +307,7 @@ public class Grid {
                 case TOP:
                     if(index < 0 || index >= length)
                         return false;
-                    if(!((index + step(Dir.TOP) * (2 - 1)) >= 0)){
+                    if(!((index + stepUtility(Dir.TOP) * (2 - 1)) >= 0)){
                         return false;
                     }
                     break;
@@ -336,19 +333,19 @@ public class Grid {
     *           Use if(isStepInThisDirInGrid(RIGHT,currentPosition)){}
     * Return the distance to add to get to the next case in this direction
     *          nextplace = current position  + stepFor direction
-    * exemple: index =       40              +  stepDir(RIGHT) = 41;
+    * exemple: index =       40              +  step(RIGHT) = 41;
     * */
-    public int stepDir(Dir D){
+    public int step(Dir D){
         int step=0;
         for(Dir d : D.getCompDir()){
-            step += step(d);
+            step += stepUtility(d);
         }
         return step;
     }
 
 
 
-    private int step(Dir D){
+    private int stepUtility(Dir D){
         switch (D){
             case DOWN:  return nbcol;
             case TOP :  return -nbcol;
@@ -368,7 +365,7 @@ public class Grid {
 
             if(grid[i] != MINE){
                 for(Dir D : Dir.values()){
-                    int index = i+stepDir(D);
+                    int index = i+ step(D);
                     if(isStepThisDirInGrid(D, i) && grid[index] == MINE){
                         value++;
                     }
