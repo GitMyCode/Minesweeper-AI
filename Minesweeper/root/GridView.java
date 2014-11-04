@@ -39,7 +39,6 @@ public class GridView extends JPanel {
         setMinimumSize(dim_grid);
 
 
-        Arrays.fill(grid.gridSpace, (byte) UNDISCOVERED.indexValue);
        /* for(int i=0; i< 13; i++){
             java.net.URL imageUrl = getClass().getResource("root.img/j"+i+".gif");
             cases[i] = new ImageIcon(imageUrl).getImage();
