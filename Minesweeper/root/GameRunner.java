@@ -29,7 +29,7 @@ public class GameRunner implements Runnable {
     }
 
     public GameRunner(ArtificialPlayer ai,Grid g,GridController controller,int delay,int thinkLimit){
-        this.ai = (CSP)ai;
+        this.ai = ai;
         this.grid = g;
         this.controller = controller;
         this.delayTime = delay;

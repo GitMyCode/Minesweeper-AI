@@ -80,19 +80,24 @@ public class Grid {
     * Les AI
     * */
     public boolean checkMove(Set<Move> moves){
-
         for(Move m : moves){
             if(underneathValues[m.index] != CASE.MINE && m.coup == COUP.FLAG){
-
                 return false;
             }else if(underneathValues[m.index] == CASE.MINE && m.coup == COUP.SHOW){
                 return false;
             }
-
-
         }
         return true;
     }
+    public boolean checkIfPresentGridValid(){
+        for(int i =0;i<length;i++){
+            if(underneathValues[i] != MINE && gridPlayerView[i] == FLAGED ){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public List<Integer> getSurroundingIndex(int index){
         List<Integer> list = new ArrayList<Integer>();
@@ -102,6 +107,7 @@ public class Grid {
 
             }
         }
+
         return list;
     }
 
