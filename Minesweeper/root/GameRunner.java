@@ -55,12 +55,7 @@ public class GameRunner implements Runnable {
                 return;
             }
         }while(!grid.gameFinish() && running);
-        /*Si */
-        if(!running){
-            return;
-        }else{
-            running = false;
-        }
+
 
         /*After game*/
         if(grid.lost){
@@ -77,6 +72,7 @@ public class GameRunner implements Runnable {
                 Thread.sleep(100);
             }catch(InterruptedException ie){
                 Thread.currentThread().interrupt();
+                outputObserver.callback();
                 return;
             }
         }
