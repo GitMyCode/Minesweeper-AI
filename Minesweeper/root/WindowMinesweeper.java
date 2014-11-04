@@ -2,6 +2,7 @@ package root;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,8 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
     private final int HEIGHT = (ROW * GLOBAL.CELL_SIZE); //poru expert :280
 
     JButton create;
+    JButton importGrid;
+    JLabel importLabel;
     JLabel label_choice_row;
     JLabel label_choice_col;
     JLabel label_mine;
@@ -32,12 +35,15 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
     JTextField choiceMaxTime;
     JPanel panelCreation;
     JComboBox choixAI;
+    JFileChooser chooser;
     List<Class<?>> classes;
 
+    File savedGridToPlay =null;
+    String emptyLabelName = "Aucun";
 
     public WindowMinesweeper(){
 
-        create = new JButton("Create");
+        create = new JButton("Create new game");
         create.addActionListener(this);
 
 
@@ -69,7 +75,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
 
         panelCreation = new JPanel(new GridBagLayout());
         panelCreation.setBackground(Color.orange);
-        Dimension panel_creation_dim = new Dimension(250,200);
+        Dimension panel_creation_dim = new Dimension(280,240);
         panelCreation.setPreferredSize(panel_creation_dim);
         panelCreation.setMinimumSize(panel_creation_dim);
         panelCreation.setMaximumSize(panel_creation_dim);
@@ -99,8 +105,17 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         GLOBAL.addItem(panelCreation, choiceMaxTime, 1, 6, 1, 1, GridBagConstraints.EAST);
 
 
+        importLabel = new JLabel(emptyLabelName);
+        importGrid = new JButton("Import");
+        importGrid.addActionListener(this);
+        GLOBAL.addItem(panelCreation,importGrid, 1, 7, 1, 1, GridBagConstraints.EAST);
 
-        add(panelCreation,BorderLayout.NORTH);
+
+        GLOBAL.addItem(panelCreation,importLabel, 0, 7, 1, 1, GridBagConstraints.WEST);
+        //GLOBAL.addItem(panelCreation, (chooser = new JFileChooser()), 1, 8, 1, 1, GridBagConstraints.EAST);
+
+
+        add(panelCreation, BorderLayout.NORTH);
         add(create,BorderLayout.SOUTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
@@ -125,29 +140,43 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
                             final String aiName,final int timeDelay, final int thinkLimit){
         GLOBAL.NBCOL= cols;
         GLOBAL.NBLIGNE = lignes;
-
-
         System.gc();
         new Thread(
                 (new Runnable() {
                     @Override
                     public void run() {
-                        new BoardGameView(lignes,cols,mines,aiName,timeDelay,thinkLimit).setVisible(true);
+                        BoardGameView bv = new BoardGameView(lignes,cols,mines,aiName,timeDelay,thinkLimit);
+                        bv.setVisible(true);
+                        bv.setLocationRelativeTo(null);
 
                     }
                 })
-
+        ).start();
+        System.gc();
+    }
+    public void loadGridToBoard(final String aiName, final int timeDelay, final int thinkLimit){
+        System.out.println("Load grid");
+        System.gc();
+        new Thread(
+                (new Runnable() {
+                    @Override
+                    public void run() {
+                        BoardGameView bv = new BoardGameView(new Grid(savedGridToPlay),aiName,timeDelay,thinkLimit);
+                        bv.setVisible(true);
+                        bv.setLocationRelativeTo(null);
+                        bv.message("Load file: "+savedGridToPlay.getName());
+                    }
+                })
         ).start();
 
         System.gc();
-
 
     }
 
     @Override
     public void actionPerformed (ActionEvent actionEvent) {
 
-        if(actionEvent.getActionCommand() == "Create"){
+        if(actionEvent.getActionCommand() == "Create new game"){
             String text_row = choiceRow.getText();
             String text_col = choiceCol.getText();
             int row = Integer.parseInt(text_row);
@@ -158,10 +187,36 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
             int time = Integer.parseInt(choiceTimer.getText());
             int thinkLimite = Integer.parseInt(choiceMaxTime.getText());
 
-
             createBoard(row, col, mines, aiName,time,thinkLimite);
+
+        }else if(actionEvent.getActionCommand() =="Import") {
+            chooser = new JFileChooser(".");
+                /*To keep the last selected as default*/
+                if(importLabel.getText() != emptyLabelName){
+                    chooser.setSelectedFile(new File(importLabel.getText()));
+                }
+                chooser.showDialog(new JFrame("choose file"),"Ok");
+                if(chooser.getSelectedFile() != null){
+                    readFile(chooser.getSelectedFile());
+                    String aiName = (String)choixAI.getSelectedItem();
+                    int time = Integer.parseInt(choiceTimer.getText());
+                    int thinkLimite = Integer.parseInt(choiceMaxTime.getText());
+                    loadGridToBoard(aiName,time,thinkLimite);
+                    importLabel.setText(chooser.getSelectedFile().getName());
+
+                }else{
+                    importLabel.setText(emptyLabelName);
+                }
+
+
         }
 
 
     }
+
+    public void readFile(File f){
+        savedGridToPlay = f;
+    }
+
+
 }

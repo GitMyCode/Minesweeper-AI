@@ -3,6 +3,8 @@ package root;
 import root.ENUM.CASE;
 import root.ENUM.COUP;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.*;
 
 
@@ -18,7 +20,7 @@ public class Grid {
     public int nbcol;
     public int nbligne;
     public int length;
-    private final int NBMINES;
+    protected  int NBMINES;
 
     protected int nbMinesRemaining;
     protected int nbFlagRemaining;
@@ -26,11 +28,38 @@ public class Grid {
     protected boolean win = false;
 
 
-    byte[] gridSpace;
     protected CASE[] underneathValues;
     CASE[] gridPlayerView;
 
     Random ran = new Random();
+
+    public Grid(File f){
+        try{
+            Scanner sc = new Scanner(f);
+            nbligne = sc.nextInt();
+            nbcol   = sc.nextInt();
+            NBMINES = sc.nextInt();
+            nbFlagRemaining = sc.nextInt();
+            nbMinesRemaining = sc.nextInt();
+            length = nbcol*nbligne;
+            this.nbFlagRemaining = NBMINES;
+            this.nbMinesRemaining = NBMINES;
+
+            gridPlayerView = new CASE[length];
+            underneathValues = new CASE[length];
+
+            for(int i =0; i<length;i++){
+                underneathValues[i] = CASE.caseFromInt(sc.nextInt());
+            }
+            String s = sc.next();
+            for(int i =0; i<length;i++){
+                gridPlayerView[i] = CASE.caseFromInt(sc.nextInt());
+            }
+
+        }catch (Exception e){
+            System.out.println("Erreur remake grid:"+e);
+        }
+    }
 
     public Grid(int nbligne, int nbcol,int nbMines) {
         this.nbcol = nbcol;
@@ -42,13 +71,11 @@ public class Grid {
 
 
 
-        gridSpace = new byte[nbcol*nbligne];
         gridPlayerView = new CASE[nbcol*nbligne];
 
 
 
         Arrays.fill(gridPlayerView,UNDISCOVERED);
-        Arrays.fill(gridSpace, (byte) UNDISCOVERED.indexValue);
 
 
         underneathValues = createRdmGrid(nbligne,nbcol,nbMines);
@@ -103,7 +130,7 @@ public class Grid {
         List<Integer> list = new ArrayList<Integer>();
         for(Dir D : Dir.direction8){
             if(isStepThisDirInGrid(D,index)){
-                list.add((index+stepDir(D)));
+                list.add((index+ step(D)));
 
             }
         }
@@ -138,7 +165,7 @@ public class Grid {
 
         for(Dir D: Dir.direction8){
             if(isStepThisDirInGrid(D,index)){
-                int voisin = index + stepDir(D);
+                int voisin = index + step(D);
                 if(grid[voisin] == UNDISCOVERED){
                     set.add(voisin);
                 }
@@ -197,8 +224,9 @@ public class Grid {
     }
 
     protected boolean gameFinish(){
-        if(lost)
+        if(lost){
             return true;
+        }
         if(win)
             return true;
 
@@ -252,7 +280,7 @@ public class Grid {
 
             if(underneathValues[index] == EMPTY){
                 for(Dir D : Dir.values()){
-                    int indexVoisin = index + stepDir(D);
+                    int indexVoisin = index + step(D);
                     if(isStepThisDirInGrid(D, index) && gridPlayerView[indexVoisin].equals(UNDISCOVERED) ){
                         playUndiscoveredCase(indexVoisin);
                     }
@@ -279,7 +307,7 @@ public class Grid {
                 case TOP:
                     if(index < 0 || index >= length)
                         return false;
-                    if(!((index + step(Dir.TOP) * (2 - 1)) >= 0)){
+                    if(!((index + stepUtility(Dir.TOP) * (2 - 1)) >= 0)){
                         return false;
                     }
                     break;
@@ -305,19 +333,19 @@ public class Grid {
     *           Use if(isStepInThisDirInGrid(RIGHT,currentPosition)){}
     * Return the distance to add to get to the next case in this direction
     *          nextplace = current position  + stepFor direction
-    * exemple: index =       40              +  stepDir(RIGHT) = 41;
+    * exemple: index =       40              +  step(RIGHT) = 41;
     * */
-    public int stepDir(Dir D){
+    public int step(Dir D){
         int step=0;
         for(Dir d : D.getCompDir()){
-            step += step(d);
+            step += stepUtility(d);
         }
         return step;
     }
 
 
 
-    private int step(Dir D){
+    private int stepUtility(Dir D){
         switch (D){
             case DOWN:  return nbcol;
             case TOP :  return -nbcol;
@@ -337,7 +365,7 @@ public class Grid {
 
             if(grid[i] != MINE){
                 for(Dir D : Dir.values()){
-                    int index = i+stepDir(D);
+                    int index = i+ step(D);
                     if(isStepThisDirInGrid(D, i) && grid[index] == MINE){
                         value++;
                     }
@@ -345,6 +373,35 @@ public class Grid {
                 grid[i]= CASE.caseFromInt(value);
             }
         }
+    }
+
+    protected void saveToFile(String fileName) throws Exception{
+
+
+            FileWriter fw = new FileWriter(fileName);
+
+            fw.write(nbligne+" "+nbcol+" "+NBMINES+" "+nbFlagRemaining+" "+nbMinesRemaining+ "\n");
+            int i=1;String gridAllValue ="";
+            for(CASE c : underneathValues){
+                gridAllValue+= c.indexValue+ " ";
+                if(i % nbcol==0){
+                    gridAllValue+="\n";
+                }
+                i++;
+            }
+            fw.write(gridAllValue);
+
+            fw.write("-\n");
+            i=1;String stringGridPlayerView ="";
+            for(CASE c : gridPlayerView){
+                stringGridPlayerView+= c.indexValue+" ";
+                if(i % nbcol==0){
+                    stringGridPlayerView+="\n";
+                }
+                i++;
+            }
+            fw.write(stringGridPlayerView);
+            fw.close();
     }
 
 
