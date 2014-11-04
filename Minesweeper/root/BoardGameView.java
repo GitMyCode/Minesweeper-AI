@@ -207,6 +207,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             infinitGame = true;
             startGame();
         }else if(actionEvent.getActionCommand() == "Step"){
+            disable((JButton)actionEvent.getSource(),thinkLimit);
             runner = null;
             startGame();
             runner.terminate();
@@ -425,4 +426,21 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
         message("Initiate AI: "+ai.getAiName());
     }
+    /*
+    * Stackoverflow
+    * http://stackoverflow.com/questions/18753951/how-to-create-a-delay-between-button-click-to-prevent-button-spamming
+    * */
+    static void disable(final AbstractButton b, final int ms) {
+        b.setEnabled(false);
+        new SwingWorker() {
+            @Override protected Object doInBackground() throws Exception {
+                Thread.sleep(ms);
+                return null;
+            }
+            @Override protected void done() {
+                b.setEnabled(true);
+            }
+        }.execute();
+    }
+
 }
