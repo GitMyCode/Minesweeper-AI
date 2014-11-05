@@ -126,14 +126,47 @@ public class Grid {
     }
 
 
+    /*
+    * DES if parce que je veux m<assurer que la list retourner suivre cet ordre
+    * */
     public List<Integer> getSurroundingIndex(int index){
         List<Integer> list = new ArrayList<Integer>();
-        for(Dir D : Dir.direction8){
+
+
+        if(isStepThisDirInGrid(Dir.RIGHT,index)){
+            list.add(index+step(Dir.RIGHT));
+        }
+        if(isStepThisDirInGrid(Dir.DOWN,index)){
+            list.add(index+step(Dir.DOWN));
+        }
+
+        if(isStepThisDirInGrid(Dir.TOP,index)){
+            list.add(index+step(Dir.TOP));
+        }
+
+        if(isStepThisDirInGrid(Dir.LEFT,index)){
+            list.add(index+step(Dir.LEFT));
+        }
+
+        if(isStepThisDirInGrid(Dir.TOPLEFT,index)){
+            list.add(index+step(Dir.TOPLEFT));
+        }
+        if(isStepThisDirInGrid(Dir.TOPRIGHT,index)){
+            list.add(index+step(Dir.TOPRIGHT));
+        }
+        if(isStepThisDirInGrid(Dir.DOWNLEFT,index)){
+            list.add(index+step(Dir.DOWNLEFT));
+        }
+        if(isStepThisDirInGrid(Dir.DOWNRIGHT,index)){
+            list.add(index+step(Dir.DOWNRIGHT));
+        }
+
+        /*for(Dir D : Dir.direction8){
             if(isStepThisDirInGrid(D,index)){
                 list.add((index+ step(D)));
 
             }
-        }
+        }*/
 
         return list;
     }

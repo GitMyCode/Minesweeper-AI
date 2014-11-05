@@ -39,9 +39,8 @@ public class GameRunner implements Runnable {
 
     @Override
     public void run () {
-        int tour =0;
-        while (!grid.gameFinish() && running){
-           // System.out.println("tour: "+tour);tour++;
+        do{
+           //
 
             Set<Move> aiMoves = ai.getAiPlay(grid,thinkLimit);
             controller.movesSetPlay(aiMoves);
@@ -54,10 +53,8 @@ public class GameRunner implements Runnable {
                 Thread.currentThread().interrupt();
                 return;
             }
-        }
-        if(!running){
-            return;
-        }
+        }while(!grid.gameFinish() && running);
+
 
         /*After game*/
         if(grid.lost){
@@ -74,6 +71,7 @@ public class GameRunner implements Runnable {
                 Thread.sleep(100);
             }catch(InterruptedException ie){
                 Thread.currentThread().interrupt();
+                outputObserver.callback();
                 return;
             }
         }

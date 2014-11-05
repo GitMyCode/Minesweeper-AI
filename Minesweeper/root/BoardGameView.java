@@ -38,6 +38,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     private JButton reset;
     private JButton start;
+    private JButton step;
 
     private JRadioButton rbInfinit;
     private JRadioButton rbStopAfterGame;
@@ -205,6 +206,11 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         }else if(actionEvent.getActionCommand() == "Infinit play"){
             infinitGame = true;
             startGame();
+        }else if(actionEvent.getActionCommand() == "Step"){
+            ((JButton)actionEvent.getSource()).setEnabled(false);
+            runner = null;
+            startGame();
+            runner.terminate();
         }
     }
 
@@ -268,6 +274,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         runner = null;
         gv.repaint();
         flagRemaining.setText(String.valueOf(nbMines));
+        step.setEnabled(true);
         message("Reset");
     }
 
@@ -277,6 +284,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             resetGame();
             startGame();
         }
+        /*Remettre disponible le step button au cas ou il avait ete desactive (pour prevenir  le spam)*/
+        step.setEnabled(true);
     }
 
     @Override
@@ -323,13 +332,9 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             String fileName = "grid-"+(formatter.format(new Date()));
             grid.saveToFile(fileName);
             message("Grid saved : " + fileName);
-
         }catch (Exception e){
             System.out.println(e);
         }
-
-
-
     }
 
 
@@ -351,9 +356,11 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         reset = new JButton("Reset");
         start = new JButton("Start");
         infinit = new JButton("Infinit play");
+        step = new JButton("Step");
         reset.addActionListener(this);
         start.addActionListener(this);
         infinit.addActionListener(this);
+        step.addActionListener(this);
 
         rbInfinit = new JRadioButton("Continue after game");
         rbStopAfterGame = new JRadioButton("Stop after game");
@@ -383,6 +390,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
         GLOBAL.addItem(menu, reset, 0, 0, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, step, 1, 1, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(menu, rbInfinit, 0, 3, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(menu, rbStopAfterGame, 0, 4, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(menu, saveGridToFile, 0, 5, 1, 1, GridBagConstraints.WEST);
@@ -421,4 +429,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
         message("Initiate AI: "+ai.getAiName());
     }
+
+
+
+
 }
