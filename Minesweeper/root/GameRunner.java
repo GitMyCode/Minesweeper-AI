@@ -39,7 +39,6 @@ public class GameRunner implements Runnable {
 
     @Override
     public void run () {
-        int tour =0;
         do{
            //
 

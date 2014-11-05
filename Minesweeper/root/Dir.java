@@ -103,10 +103,6 @@ public enum Dir {
 
 
 
-    /***
-     * Valide la limite pour N, O, S, E
-     */
-
 
     public enum Axes{
         VERTICAL(TOP, DOWN, 0),

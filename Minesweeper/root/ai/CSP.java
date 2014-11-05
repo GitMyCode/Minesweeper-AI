@@ -1,17 +1,15 @@
 package root.ai;
 
-import root.ArtificialPlayer;
+import root.*;
 import root.ENUM.CASE;
 import root.ENUM.COUP;
-import root.GameRunner;
-import root.Grid;
-import root.Move;
 import root.ai.utilCSP.TimeOver;
 
 import static root.ENUM.CASE.*;
 import static root.ENUM.COUP.*;
 
 import java.util.*;
+import static root.Dir.*;
 
 /**
  * Created by MB on 10/31/2014.
@@ -25,7 +23,6 @@ public class CSP implements ArtificialPlayer{
     public boolean END = false;
     public final int LIMITE = 10;
 
-    public GameRunner forTest;
 
 
     Grid gameGrid;
@@ -131,7 +128,10 @@ public class CSP implements ArtificialPlayer{
 
         CASE[] grid = g.getCpyPlayerView();
 
+       /* List<List<Integer>> test = findFrontier(grid);
 
+        int stop=0;
+        */
 
         for(int i=0; i< grid.length; i++){
             if(CASE.isIndicatorCase(grid[i])){
@@ -351,7 +351,65 @@ public class CSP implements ArtificialPlayer{
         return nextToFrontieres;
     }
 
+    public List<List<Integer>> findFrontier(CASE[] grid){
+        List<List<Integer>> allFrontiers = new LinkedList<List<Integer>>();
+        Set<Integer> inFrontiereSoFar = new HashSet<Integer>();
+        for(int i =0; i < grid.length; i++){
+            if(CASE.isIndicatorCase(grid[i]) && !inFrontiereSoFar.contains(i)){
+                Set<Integer> frontHash = new HashSet<Integer>();
+                List<Integer> front = new ArrayList<Integer>();
+                front.add(i);
+                frontHash.add(i);
+                putInFrontier(i,front,frontHash,inFrontiereSoFar,grid);
+                inFrontiereSoFar.addAll(frontHash);
+                allFrontiers.add(front);
+            }
+        }
+        return allFrontiers;
+    }
 
+    public void putInFrontier(int nextIndex,List<Integer> front,Set<Integer> frontiereHash,Set<Integer> allFront, CASE[] grid){
+
+        for(Integer i : gameGrid.getSurroundingIndex(nextIndex)){
+            if(!frontiereHash.contains(i) && CASE.isIndicatorCase(grid[i]) && !allFront.contains(i)){
+                frontiereHash.add(i);
+                front.add(i);
+                putInFrontier(i, front, frontiereHash,allFront, grid);
+                break;
+            }
+            /*else if(front.get(0) == i){
+                return;
+            }*/
+        }
+
+    }
+/*
+
+    public Dir getNextDirection(int index,Dir lastDir){
+        if(lastDir.getCompDir().contains(LEFT)){
+
+        }else {
+
+        }
+
+    }
+
+    public Set<Dir> getPossibleDirection(CASE[] grid, int index){
+
+    }
+*/
+
+
+
+    public int nbFlagToPlace(CASE[] grid, int index ){
+        int nbFlagRemaining = grid[index].indexValue;
+        for(Integer v : gameGrid.getSurroundingIndex(index)){
+            if(grid[v] == FLAGED){
+                nbFlagRemaining--;
+            }
+        }
+        return nbFlagRemaining;
+    }
 
 
 
