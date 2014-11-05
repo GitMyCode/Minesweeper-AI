@@ -383,7 +383,6 @@ public class CSP implements ArtificialPlayer{
         }
 
     }
-/*
 
     public Dir getNextDirection(int index,Dir lastDir){
         if(lastDir.getCompDir().contains(LEFT)){
@@ -395,9 +394,14 @@ public class CSP implements ArtificialPlayer{
     }
 
     public Set<Dir> getPossibleDirection(CASE[] grid, int index){
-
+        Set<Dir> direction = new HashSet<Dir>();
+        if(gameGrid.isStepThisDirInGrid(RIGHT,index) && CASE.isIndicatorCase(grid[index+gameGrid.step(RIGHT)])){
+            direction.add(RIGHT);
+        }
+        if(gameGrid.isStepThisDirInGrid(RIGHT,index) && CASE.isIndicatorCase(grid[index+gameGrid.step(RIGHT)])){
+            direction.add(RIGHT);
+        }
     }
-*/
 
 
 
