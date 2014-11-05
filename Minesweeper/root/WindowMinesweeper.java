@@ -195,19 +195,19 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
                 if(importLabel.getText() != emptyLabelName){
                     chooser.setSelectedFile(new File(importLabel.getText()));
                 }
-                chooser.showDialog(new JFrame("choose file"),"Ok");
-                if(chooser.getSelectedFile() != null){
-                    readFile(chooser.getSelectedFile());
-                    String aiName = (String)choixAI.getSelectedItem();
-                    int time = Integer.parseInt(choiceTimer.getText());
-                    int thinkLimite = Integer.parseInt(choiceMaxTime.getText());
-                    loadGridToBoard(aiName,time,thinkLimite);
-                    importLabel.setText(chooser.getSelectedFile().getName());
+                if(chooser.showDialog(new JFrame("choose file"),"Ok") == JFileChooser.APPROVE_OPTION) {
+                    if (chooser.getSelectedFile() != null) {
+                        readFile(chooser.getSelectedFile());
+                        String aiName = (String) choixAI.getSelectedItem();
+                        int time = Integer.parseInt(choiceTimer.getText());
+                        int thinkLimite = Integer.parseInt(choiceMaxTime.getText());
+                        loadGridToBoard(aiName, time, thinkLimite);
+                        importLabel.setText(chooser.getSelectedFile().getName());
 
-                }else{
-                    importLabel.setText(emptyLabelName);
+                    } else {
+                        importLabel.setText(emptyLabelName);
+                    }
                 }
-
 
         }
 
