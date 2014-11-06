@@ -150,6 +150,9 @@ public class CSP implements ArtificialPlayer{
         int stop=0;
 
 
+        if(!sureMoves.isEmpty()){
+            return;
+        }
 
 
         for(List<Integer> oneFrontiere : allFrontiere){
@@ -205,55 +208,6 @@ public class CSP implements ArtificialPlayer{
             allHitFlag.add(mapHitFlags);
             nbMatchByFrontier.add(nbPossibilite);
         }
-
-       /* for(int i=0; i< grid.length; i++){
-            if(CASE.isIndicatorCase(grid[i])){
-                bordure.add(i);
-
-                List<Integer> voisins = gameGrid.getSurroundingIndex(i);
-                boolean isSurrounded= true;
-                List<Integer> unknownNeighbors = new ArrayList<Integer>();
-                int nbFlaged =0;
-                for(Integer v : voisins){
-                    if(grid[v] == UNDISCOVERED){
-                        unknownNeighbors.add(v);
-                    }else if(grid[v] == FLAGED){
-                        nbFlaged++;
-                    }
-                    else {
-                        isSurrounded = false;
-                    }
-                }
-                if(nbFlaged == grid[i].indexValue){
-                    //bordure.remove((Object) i);
-                    if(unknownNeighbors.size()!=0){
-                        for(Integer v2 : unknownNeighbors){
-                            sureMoves.add(new Move(v2,COUP.SHOW));
-                        }
-                    }
-                }else if((nbFlaged-grid[i].indexValue) == unknownNeighbors.size()){
-                    //bordure.remove((Object) i);
-                    if(unknownNeighbors.size()!=0){
-                        for(Integer v2 : unknownNeighbors){
-                            sureMoves.add(new Move(v2,COUP.FLAG));
-                        }
-
-                    }
-                }
-
-                else if(!isSurrounded){
-                    undiscoveredFrontier.addAll(unknownNeighbors);
-                }else{
-                    bordure.remove((Object)i);
-                }
-
-            }
-        }*/
-
-
-
-
-
     }
 
     public boolean recurseCSP(CASE[] grid,List<Integer> bordure,Set<Integer> undiscoveredFrontier,Map<Integer,Integer>mapFlagHit,int index) throws TimeOver{
@@ -303,16 +257,9 @@ public class CSP implements ArtificialPlayer{
         if(nbFlagToPlace <0){return false;}
         if(nbFlagToPlace==0){
             CASE[] cpyG = grid.clone();
-            return recurseCSP(cpyG,bordure,undiscoveredFrontier,mapFlagHit,index+1);}
-       /* if(undiscovered.size() == nbFlagToPlace){
-            //System.out.println("nope");
-            CASE[] cpyG = grid.clone();
-            for(Integer i : undiscovered){
-                cpyG[i]= FLAGED;
-                sureMoves.add(new Move(i,COUP.FLAG));
-            }
-            return recurseCSP(cpyG,bordure,index+1);
-        }*/
+            return recurseCSP(cpyG,bordure,undiscoveredFrontier,mapFlagHit,index+1);
+        }
+
 
         int[] combinaison = new int[nbFlagToPlace];
         ArrayList<int[]> listC = new ArrayList<int[]>();
@@ -421,25 +368,32 @@ public class CSP implements ArtificialPlayer{
         List<List<Integer>> allFrontiers = new LinkedList<List<Integer>>();
         Set<Integer> inFrontiereSoFar = new HashSet<Integer>();
         for(int i =0; i < grid.length; i++){
+            if(CASE.isIndicatorCase(grid[i])){
+                if(isIndiceSatisfied(grid,i)){
+                    for(Integer c: getUndiscoveredneighbours(grid,i)){
+                        sureMoves.add(new Move(c,SHOW));
+                    }
 
-            if(CASE.isIndicatorCase(grid[i]) && indiceSatisfied(grid,i)){
-                for(Integer c: getUndiscoveredneighbours(grid,i)){
-                    sureMoves.add(new Move(c,SHOW));
-                }
+                }else if(nbFlagToPlace(grid,i) == getUndiscoveredneighbours(grid,i).size()) {
+                    for(Integer v : getUndiscoveredneighbours(grid,i)) {
+                        sureMoves.add(new Move(v,FLAG));
+                    }
+                }else if( !inFrontiereSoFar.contains(i)){
+                    Set<Integer> frontHash = new HashSet<Integer>();
+                    List<Integer> front = new ArrayList<Integer>();
+                    front.add(i);
+                    frontHash.add(i);
 
-            }else if(CASE.isIndicatorCase(grid[i]) && !inFrontiereSoFar.contains(i)){
-                Set<Integer> frontHash = new HashSet<Integer>();
-                List<Integer> front = new ArrayList<Integer>();
-                front.add(i);
-                frontHash.add(i);
 
-
-                putInFrontier(i,front,frontHash,inFrontiereSoFar,grid,null);
-                inFrontiereSoFar.addAll(frontHash);
-                if(front.size() >= 2){
-                    allFrontiers.add(front);
+                    putInFrontier(i,front,frontHash,inFrontiereSoFar,grid,null);
+                    inFrontiereSoFar.addAll(frontHash);
+                    if(front.size() >= 2){
+                        allFrontiers.add(front);
+                    }
                 }
             }
+
+
         }
         return allFrontiers;
     }
@@ -455,7 +409,7 @@ public class CSP implements ArtificialPlayer{
         for(Dir d : thisDirection){
             nextDir =d;
             int next = nextIndex+gameGrid.step(nextDir);
-            if(!frontiereHash.contains(next) && !allFront.contains(next) && !indiceSatisfied(grid,next)){
+            if(!frontiereHash.contains(next) && !allFront.contains(next) && !isIndiceSatisfied(grid, next)){
                 frontiereHash.add(next);front.add(next);
                 putInFrontier(next,front,frontiereHash,allFront,grid,nextDir);
             }
@@ -503,7 +457,7 @@ public class CSP implements ArtificialPlayer{
         return nbFlagRemaining;
     }
 
-   public boolean indiceSatisfied(CASE[] grid, int index){
+   public boolean isIndiceSatisfied(CASE[] grid, int index){
        int indice = grid[index].indexValue;
        int nbFlagPosed =0;
        for(Integer v: gameGrid.getSurroundingIndex(index)){
