@@ -75,7 +75,7 @@ public class CSP implements ArtificialPlayer{
                 List<Integer> frontier = allFrontiere.get(frontierIndex);
                 int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
                 Map<Integer,Integer> flagHits = allHitFlag.get(frontierIndex);
-                if(nbPossibilityHere != 0 && frontier.size() >2){
+                if(true){
                     for(Integer b : frontier){
                         for(Integer sur : gameGrid.getSurroundingIndex(b)){
                             if(copyGrid[sur] == UNDISCOVERED && !flagHits.containsKey(sur)){
@@ -421,7 +421,13 @@ public class CSP implements ArtificialPlayer{
         List<List<Integer>> allFrontiers = new LinkedList<List<Integer>>();
         Set<Integer> inFrontiereSoFar = new HashSet<Integer>();
         for(int i =0; i < grid.length; i++){
-            if(CASE.isIndicatorCase(grid[i]) && !inFrontiereSoFar.contains(i) && !indiceSatisfied(grid,i)){
+
+            if(CASE.isIndicatorCase(grid[i]) && indiceSatisfied(grid,i)){
+                for(Integer c: getUndiscoveredneighbours(grid,i)){
+                    sureMoves.add(new Move(c,SHOW));
+                }
+
+            }else if(CASE.isIndicatorCase(grid[i]) && !inFrontiereSoFar.contains(i)){
                 Set<Integer> frontHash = new HashSet<Integer>();
                 List<Integer> front = new ArrayList<Integer>();
                 front.add(i);
@@ -440,17 +446,7 @@ public class CSP implements ArtificialPlayer{
 
     public void putInFrontier(int nextIndex,List<Integer> front,Set<Integer> frontiereHash,Set<Integer> allFront, CASE[] grid,Dir lastDir){
 
-        /*for(Integer i : gameGrid.getSurroundingIndex(nextIndex)){
-            if(!frontiereHash.contains(i) && CASE.isIndicatorCase(grid[i]) && !allFront.contains(i)){
-                frontiereHash.add(i);
-                front.add(i);
-                putInFrontier(i, front, frontiereHash,allFront, grid);
-                break;
-            }
-            *//*else if(front.get(0) == i){
-                return;
-            }*//*
-        }*/
+
         Set<Dir> thisDirection = getPossibleDirection(grid, nextIndex, frontiereHash);
         if(thisDirection==null || thisDirection.isEmpty())
             return;
@@ -463,60 +459,7 @@ public class CSP implements ArtificialPlayer{
                 frontiereHash.add(next);front.add(next);
                 putInFrontier(next,front,frontiereHash,allFront,grid,nextDir);
             }
-
-
         }
-
-
-
-
-    }
-
-    final  Set<Dir> side1 = new LinkedHashSet<Dir>(){{
-        add(RIGHT);add(DOWN);add(DOWNRIGHT);add(TOPRIGHT);
-
-    }};
-    final  Set<Dir> side2 = new LinkedHashSet<Dir>(){{
-        add(TOP);add(LEFT);add(DOWNLEFT);add(TOPLEFT);
-    }};
-    public Dir getNextDirection(CASE[] grid, int index,Dir lastDir, Set<Integer> frontiere,Set<Integer> allFront){
-        Set<Dir> directions = getPossibleDirection(grid,index,frontiere);
-
-        /*Dir dSide1 = null;
-        for(Dir D : side1){
-            if(directions.contains(D)){
-                dSide1 = D;
-                break;
-            }
-        }
-        Dir dSide2 = null;
-        for(Dir D : side2){
-            if(directions.contains(D)){
-                dSide2 = D;
-                break;
-            }
-        }
-        if(dSide1 == null || (side1.contains(lastDir) && dirPriority(dSide2,dSide1))  ){
-            return dSide2;
-        }
-        if(dSide2 == null || (side2.contains(lastDir)&& dirPriority(dSide1,dSide2))){
-            return dSide1;
-        }
-
-        if(lastDir ==null){
-            return (dSide1 == null)? dSide2 : dSide1;
-        }
-
-        if(side1.contains(lastDir))
-            return dSide1;
-        if(side2.contains(lastDir))
-            return dSide2;*/
-
-        if(directions == null || direction8.isEmpty()){
-            return null;
-        }
-
-        return directions.iterator().next();
     }
 
 
@@ -540,6 +483,15 @@ public class CSP implements ArtificialPlayer{
 
     }
 
+    public Set<Integer> getUndiscoveredneighbours(CASE[] grid ,int index){
+        Set<Integer> undiscovered = new HashSet<Integer>();
+        for(Integer i: gameGrid.getSurroundingIndex(index)){
+            if(grid[i] == UNDISCOVERED){
+                undiscovered.add(i);
+            }
+        }
+        return undiscovered;
+    }
 
     public int nbFlagToPlace(CASE[] grid, int index ){
         int nbFlagRemaining = grid[index].indexValue;
@@ -561,20 +513,6 @@ public class CSP implements ArtificialPlayer{
        }
        return indice == nbFlagPosed;
    }
-
-   public boolean dirPriority(Dir d1, Dir d2){
-       if(d2 ==null){
-           return true;
-       }
-       if(d1 ==null){
-           return false;
-       }
-       if(d1.getCompDir().size() < d2.getCompDir().size()){
-           return true;
-       }
-        return false;
-   }
-
 
 
     
