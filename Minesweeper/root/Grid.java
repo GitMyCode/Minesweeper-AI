@@ -326,6 +326,7 @@ public class Grid {
     }
 
 
+
     public boolean isStepThisDirInGrid (Dir D, int index){
 
         for(Dir d : D.getCompDir()){
