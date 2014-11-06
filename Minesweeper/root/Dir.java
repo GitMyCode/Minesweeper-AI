@@ -8,6 +8,23 @@ import java.util.*;
  */
 public enum Dir {
 
+
+    RIGHT(){
+        @Override public Dir opp() { return LEFT; }
+
+        @Override
+        public Set<Dir> getCompDir () {
+            return EnumSet.of(RIGHT);
+        }
+    },
+
+    LEFT{
+        @Override public Dir opp() { return RIGHT; }
+        @Override
+        public Set<Dir> getCompDir () {
+            return EnumSet.of(LEFT);
+        }
+    },
     DOWN{
         @Override public Dir opp() { return TOP; }
 
@@ -26,23 +43,9 @@ public enum Dir {
         }
     },
 
-    LEFT{
-        @Override public Dir opp() { return RIGHT; }
-        @Override
-        public Set<Dir> getCompDir () {
-            return EnumSet.of(LEFT);
-        }
-    },
 
 
-    RIGHT(){
-        @Override public Dir opp() { return LEFT; }
 
-        @Override
-        public Set<Dir> getCompDir () {
-            return EnumSet.of(RIGHT);
-        }
-    },
 
     DOWNLEFT(){
         @Override public Dir opp() { return TOPRIGHT; }
@@ -82,8 +85,8 @@ public enum Dir {
 
     public int nbcol;
 
-    public static final Set<Dir> direction4 = new HashSet<Dir>();
-    public static final Set<Dir> direction8 = new HashSet<Dir>();
+    public static final Set<Dir> direction4 = new LinkedHashSet<Dir>();
+    public static final Set<Dir> direction8 = new LinkedHashSet<Dir>();
     static {
         /* Les 4 directions DOWN, RIGHT, DOWNRIGHT, TOPRIGHT d'un point */
         direction4.add(DOWN);
