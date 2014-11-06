@@ -3,6 +3,7 @@ package root.ai;
 import root.*;
 import root.ENUM.CASE;
 import root.ENUM.COUP;
+import root.ai.utilCSP.Tarjan;
 import root.ai.utilCSP.TimeOver;
 
 import static root.ENUM.CASE.*;
@@ -28,8 +29,12 @@ public class CSP implements ArtificialPlayer{
     Grid gameGrid;
     Set<Move> sureMoves;
 
-    Set<Integer> undiscoveredFrontier;
+    //Set<Integer> undiscoveredFrontier;
     Map<Integer,Integer> possibleMine;
+    List<Integer> nbMatchByFrontier;
+    List<List<Integer>> allFrontiere;
+    List<Set<Integer>> allUndiscovFrontier;
+    List<Map<Integer,Integer>> allHitFlag;
     Integer  nbPossibilite =0;
     @Override
     public Set<Move> getAiPlay (Grid g,int thinkLimit) {
@@ -51,43 +56,54 @@ public class CSP implements ArtificialPlayer{
         nbPossibilite =0;
         sureMoves = new HashSet<Move>();
         possibleMine = new HashMap<Integer, Integer>();
-        undiscoveredFrontier = new HashSet<Integer>();
-        List<Integer> bordure= new ArrayList<Integer>();
+        //undiscoveredFrontier = new HashSet<Integer>();
+        allUndiscovFrontier = new ArrayList<Set<Integer>>();
+        allFrontiere = new ArrayList<List<Integer>>();
+        allHitFlag = new ArrayList<Map<Integer, Integer>>();
+        nbMatchByFrontier = new ArrayList<Integer>();
 
 
         try {
-            getSureCoup(g,bordure);
+            getSureCoup(g);
         }catch (TimeOver e){
 
         }
 
 
+        if(sureMoves.isEmpty()){
+            for(int frontierIndex=0; frontierIndex< nbMatchByFrontier.size();frontierIndex++){
+                List<Integer> frontier = allFrontiere.get(frontierIndex);
+                int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
+                Map<Integer,Integer> flagHits = allHitFlag.get(frontierIndex);
+                if(nbPossibilityHere != 0 && frontier.size() >2){
+                    for(Integer b : frontier){
+                        for(Integer sur : gameGrid.getSurroundingIndex(b)){
+                            if(copyGrid[sur] == UNDISCOVERED && !flagHits.containsKey(sur)){
+                                sureMoves.add(new Move(sur, COUP.SHOW));
+                                if(!gameGrid.checkMove(sureMoves)){
+                                    int adas=0;
+                                }
+                            }else if ( copyGrid[sur] == UNDISCOVERED && flagHits.get(sur) >=nbPossibilityHere){
+                                if(flagHits.get(sur) > nbPossibilityHere){
+                                    System.out.println("wird");
+                                }
+                                sureMoves.add(new Move(sur, COUP.FLAG));
+                                if(!gameGrid.checkMove(sureMoves)){
+                                    int adas=0;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+            }
+        }
 
 
         if(sureMoves.isEmpty()){
             int bestChance =Integer.MAX_VALUE;
-        for(Integer b : bordure){
-            for(Integer sur : gameGrid.getSurroundingIndex(b)){
-                if(copyGrid[sur] == UNDISCOVERED && !possibleMine.containsKey(sur)){
-                    sureMoves.add(new Move(sur, COUP.SHOW));
-                   /* if(!forTest.checkMove(sureMoves)){
-                        int adas=0;
-                    }*/
-                }else if ( copyGrid[sur] == UNDISCOVERED && possibleMine.get(sur) >=nbPossibilite){
-                    if(possibleMine.get(sur) > nbPossibilite){
-                        System.out.println("wird");
-                    }
-                    sureMoves.add(new Move(sur, COUP.FLAG));
-                   /* if(!forTest.checkMove(sureMoves)){
-                        int adas=0;
-                    }*/
-                }
 
-                if(copyGrid[sur]== UNDISCOVERED && possibleMine.containsKey(sur) && possibleMine.get(sur)< bestChance){
-                    bestChance = possibleMine.get(sur);
-                }
-            }
-        }
         }
         if(!gameGrid.checkMove(sureMoves)){
             System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.checkIfPresentGridValid());
@@ -108,9 +124,9 @@ public class CSP implements ArtificialPlayer{
                     legalMoves.add(i);
                 }
             }
-            if(legalMoves.size() > undiscoveredFrontier.size()){
+            /*if(legalMoves.size() > undiscoveredFrontier.size()){
                 legalMoves.removeAll(undiscoveredFrontier);
-            }
+            }*/
             Random ran = new Random();
             int index = legalMoves.get(ran.nextInt(legalMoves.size()));
             sureMoves.add(new Move(index,COUP.SHOW));
@@ -124,16 +140,73 @@ public class CSP implements ArtificialPlayer{
         return "CSP-Martin";
     }
 
-    public void getSureCoup(Grid g,List<Integer> bordure) throws TimeOver{
+    public void getSureCoup(Grid g) throws TimeOver{
 
         CASE[] grid = g.getCpyPlayerView();
 
-       /* List<List<Integer>> test = findFrontier(grid);
+        allFrontiere = findFrontier(grid);
+
 
         int stop=0;
-        */
 
-        for(int i=0; i< grid.length; i++){
+
+
+
+        for(List<Integer> oneFrontiere : allFrontiere){
+
+
+
+            Set<Integer> undiscovFrontier = new HashSet<Integer>();
+
+            for(Integer i : oneFrontiere){
+                List<Integer> unknownNeighbors = new ArrayList<Integer>();
+                List<Integer> voisins = gameGrid.getSurroundingIndex(i);
+                int nbFlaged =0;
+                for(Integer v : voisins){
+                    if(grid[v] == UNDISCOVERED){
+                        unknownNeighbors.add(v);
+                        undiscovFrontier.add(v);
+                    }else if(grid[v] == FLAGED){
+                        nbFlaged++;
+                    }
+                }
+                if(nbFlaged == grid[i].indexValue){
+                    //bordure.remove((Object) i);
+                    if(unknownNeighbors.size()!=0){
+                        for(Integer v2 : unknownNeighbors){
+                            sureMoves.add(new Move(v2,COUP.SHOW));
+                        }
+                    }
+                }else if((nbFlaged-grid[i].indexValue) == unknownNeighbors.size()){
+                    //bordure.remove((Object) i);
+                    if(unknownNeighbors.size()!=0){
+                        for(Integer v2 : unknownNeighbors){
+                            sureMoves.add(new Move(v2,COUP.FLAG));
+                        }
+
+                    }
+                }
+
+
+
+            }
+
+            nbPossibilite=0;
+            Map<Integer,Integer> mapHitFlags = new HashMap<Integer, Integer>();
+            if(sureMoves.isEmpty()){
+                recurseCSP(grid, oneFrontiere, undiscovFrontier,mapHitFlags, 0);
+            }else{
+                if(!gameGrid.checkMove(sureMoves)){
+                    System.out.println("ne devrait pas");
+                }
+            }
+
+            allUndiscovFrontier.add(undiscovFrontier);
+            allHitFlag.add(mapHitFlags);
+            nbMatchByFrontier.add(nbPossibilite);
+        }
+
+       /* for(int i=0; i< grid.length; i++){
             if(CASE.isIndicatorCase(grid[i])){
                 bordure.add(i);
 
@@ -175,22 +248,15 @@ public class CSP implements ArtificialPlayer{
                 }
 
             }
-        }
+        }*/
 
-        if(sureMoves.isEmpty()){
-            recurseCSP(grid,bordure,0);
-        }else{
-            if(!gameGrid.checkMove(sureMoves)){
-                System.out.println("ne devrait pas");
-                int sdfsd=0;
-            }
-        }
+
 
 
 
     }
 
-    public boolean recurseCSP(CASE[] grid,List<Integer> bordure,int index) throws TimeOver{
+    public boolean recurseCSP(CASE[] grid,List<Integer> bordure,Set<Integer> undiscoveredFrontier,Map<Integer,Integer>mapFlagHit,int index) throws TimeOver{
 
 
         if(timeUp()){
@@ -207,8 +273,8 @@ public class CSP implements ArtificialPlayer{
 
             for(Integer i : undiscoveredFrontier){
                 if(grid[i] == FLAGED){
-                    int lastTimeFlaged = (possibleMine.containsKey(i))? possibleMine.get(i)+1 : 1;
-                    possibleMine.put(i, lastTimeFlaged);
+                    int lastTimeFlaged = (mapFlagHit.containsKey(i))? mapFlagHit.get(i)+1 : 1;
+                    mapFlagHit.put(i, lastTimeFlaged);
                 }
             }
             nbPossibilite++;
@@ -237,7 +303,7 @@ public class CSP implements ArtificialPlayer{
         if(nbFlagToPlace <0){return false;}
         if(nbFlagToPlace==0){
             CASE[] cpyG = grid.clone();
-            return recurseCSP(cpyG,bordure,index+1);}
+            return recurseCSP(cpyG,bordure,undiscoveredFrontier,mapFlagHit,index+1);}
        /* if(undiscovered.size() == nbFlagToPlace){
             //System.out.println("nope");
             CASE[] cpyG = grid.clone();
@@ -260,7 +326,7 @@ public class CSP implements ArtificialPlayer{
                 gCpy[indexToFlag] = FLAGED;
             }
 
-            recurseCSP(gCpy,bordure,index+1);
+            recurseCSP(gCpy,bordure,undiscoveredFrontier,mapFlagHit,index+1);
         }
 
         return false;
@@ -355,54 +421,124 @@ public class CSP implements ArtificialPlayer{
         List<List<Integer>> allFrontiers = new LinkedList<List<Integer>>();
         Set<Integer> inFrontiereSoFar = new HashSet<Integer>();
         for(int i =0; i < grid.length; i++){
-            if(CASE.isIndicatorCase(grid[i]) && !inFrontiereSoFar.contains(i)){
+            if(CASE.isIndicatorCase(grid[i]) && !inFrontiereSoFar.contains(i) && !indiceSatisfied(grid,i)){
                 Set<Integer> frontHash = new HashSet<Integer>();
                 List<Integer> front = new ArrayList<Integer>();
                 front.add(i);
                 frontHash.add(i);
-                putInFrontier(i,front,frontHash,inFrontiereSoFar,grid);
+
+
+                putInFrontier(i,front,frontHash,inFrontiereSoFar,grid,null);
                 inFrontiereSoFar.addAll(frontHash);
-                allFrontiers.add(front);
+                if(front.size() >= 2){
+                    allFrontiers.add(front);
+                }
             }
         }
         return allFrontiers;
     }
 
-    public void putInFrontier(int nextIndex,List<Integer> front,Set<Integer> frontiereHash,Set<Integer> allFront, CASE[] grid){
+    public void putInFrontier(int nextIndex,List<Integer> front,Set<Integer> frontiereHash,Set<Integer> allFront, CASE[] grid,Dir lastDir){
 
-        for(Integer i : gameGrid.getSurroundingIndex(nextIndex)){
+        /*for(Integer i : gameGrid.getSurroundingIndex(nextIndex)){
             if(!frontiereHash.contains(i) && CASE.isIndicatorCase(grid[i]) && !allFront.contains(i)){
                 frontiereHash.add(i);
                 front.add(i);
                 putInFrontier(i, front, frontiereHash,allFront, grid);
                 break;
             }
-            /*else if(front.get(0) == i){
+            *//*else if(front.get(0) == i){
                 return;
-            }*/
+            }*//*
+        }*/
+        Set<Dir> thisDirection = getPossibleDirection(grid, nextIndex, frontiereHash);
+        if(thisDirection==null || thisDirection.isEmpty())
+            return;
+
+        Dir nextDir =null;
+        for(Dir d : thisDirection){
+            nextDir =d;
+            int next = nextIndex+gameGrid.step(nextDir);
+            if(!frontiereHash.contains(next) && !allFront.contains(next) && !indiceSatisfied(grid,next)){
+                frontiereHash.add(next);front.add(next);
+                putInFrontier(next,front,frontiereHash,allFront,grid,nextDir);
+            }
+
+
         }
+
+
+
 
     }
 
-    public Dir getNextDirection(int index,Dir lastDir){
-        if(lastDir.getCompDir().contains(LEFT)){
+    final  Set<Dir> side1 = new LinkedHashSet<Dir>(){{
+        add(RIGHT);add(DOWN);add(DOWNRIGHT);add(TOPRIGHT);
 
-        }else {
+    }};
+    final  Set<Dir> side2 = new LinkedHashSet<Dir>(){{
+        add(TOP);add(LEFT);add(DOWNLEFT);add(TOPLEFT);
+    }};
+    public Dir getNextDirection(CASE[] grid, int index,Dir lastDir, Set<Integer> frontiere,Set<Integer> allFront){
+        Set<Dir> directions = getPossibleDirection(grid,index,frontiere);
 
+        /*Dir dSide1 = null;
+        for(Dir D : side1){
+            if(directions.contains(D)){
+                dSide1 = D;
+                break;
+            }
+        }
+        Dir dSide2 = null;
+        for(Dir D : side2){
+            if(directions.contains(D)){
+                dSide2 = D;
+                break;
+            }
+        }
+        if(dSide1 == null || (side1.contains(lastDir) && dirPriority(dSide2,dSide1))  ){
+            return dSide2;
+        }
+        if(dSide2 == null || (side2.contains(lastDir)&& dirPriority(dSide1,dSide2))){
+            return dSide1;
         }
 
+        if(lastDir ==null){
+            return (dSide1 == null)? dSide2 : dSide1;
+        }
+
+        if(side1.contains(lastDir))
+            return dSide1;
+        if(side2.contains(lastDir))
+            return dSide2;*/
+
+        if(directions == null || direction8.isEmpty()){
+            return null;
+        }
+
+        return directions.iterator().next();
     }
 
-    public Set<Dir> getPossibleDirection(CASE[] grid, int index){
-        Set<Dir> direction = new HashSet<Dir>();
-        if(gameGrid.isStepThisDirInGrid(RIGHT,index) && CASE.isIndicatorCase(grid[index+gameGrid.step(RIGHT)])){
-            direction.add(RIGHT);
-        }
-        if(gameGrid.isStepThisDirInGrid(RIGHT,index) && CASE.isIndicatorCase(grid[index+gameGrid.step(RIGHT)])){
-            direction.add(RIGHT);
-        }
-    }
 
+
+    public Set<Dir> getPossibleDirection(CASE[] grid, int index,Set<Integer> frontiere){
+        Set<Dir> direction = new LinkedHashSet<Dir>();
+
+        int nbDirCardinal =0;
+        for(Dir D : direction8){
+            int next = index+gameGrid.step(D);
+            if(gameGrid.isStepThisDirInGrid(D,index) && !frontiere.contains(next) && CASE.isIndicatorCase(grid[next])
+                    ){
+                direction.add(D);
+                if(D.getCompDir().size() ==1){
+                    nbDirCardinal++;
+                }
+
+            }
+        }
+        return direction;
+
+    }
 
 
     public int nbFlagToPlace(CASE[] grid, int index ){
@@ -415,7 +551,29 @@ public class CSP implements ArtificialPlayer{
         return nbFlagRemaining;
     }
 
+   public boolean indiceSatisfied(CASE[] grid, int index){
+       int indice = grid[index].indexValue;
+       int nbFlagPosed =0;
+       for(Integer v: gameGrid.getSurroundingIndex(index)){
+            if(grid[v] == FLAGED){
+                nbFlagPosed++;
+            }
+       }
+       return indice == nbFlagPosed;
+   }
 
+   public boolean dirPriority(Dir d1, Dir d2){
+       if(d2 ==null){
+           return true;
+       }
+       if(d1 ==null){
+           return false;
+       }
+       if(d1.getCompDir().size() < d2.getCompDir().size()){
+           return true;
+       }
+        return false;
+   }
 
 
 

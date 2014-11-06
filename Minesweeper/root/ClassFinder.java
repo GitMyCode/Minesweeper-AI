@@ -41,7 +41,7 @@ public final class ClassFinder {
             for (File nestedFile : file.listFiles()) {
                 classes.addAll(find(nestedFile, scannedPackage));
             }
-        } else if (resource.endsWith(CLASS_SUFFIX)) {
+        } else if (resource.endsWith(CLASS_SUFFIX) && !resource.contains("$")) {
             final int beginIndex = 0;
             final int endIndex = resource.length() - CLASS_SUFFIX.length();
             final String className = resource.substring(beginIndex, endIndex);
