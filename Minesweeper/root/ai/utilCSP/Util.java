@@ -80,6 +80,13 @@ public class Util {
 
     }
 
+    public static void printFrontiereInOrder(CASE[] gridOrigin,int nbcol, List<Integer> frontiere){
+        CASE[] cpy = gridOrigin.clone();
+        for(Integer i: frontiere){
+            printIndex(cpy,nbcol,i);
+        }
+    }
+
     public static void printFrontiere(CASE[] gridOrigin, int nbcol,Set<Integer> frontiere){
 
         String print="";
