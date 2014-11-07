@@ -1,6 +1,11 @@
 package root;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.xml.soap.Text;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
@@ -11,13 +16,19 @@ import java.util.List;
 /**
  * Created by MB on 10/29/2014.
  */
-public class WindowMinesweeper extends JFrame implements ActionListener{
+public class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener{
 
+    /*
+    * TODO
+    * FAIRE LE MENAGE
+    * */
 
     int ROW = 20;
     int COL = 20;
+    int nbMines= 80;
     private final int WIDTH = (COL*GLOBAL.CELL_SIZE) ; //pour expert : 480
     private final int HEIGHT = (ROW * GLOBAL.CELL_SIZE); //poru expert :280
+    private final TextListener textListener = new TextListener();
 
     JButton create;
     JButton importGrid;
@@ -28,6 +39,9 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
     JLabel labelAi;
     JLabel labelTimer;
 
+
+    JLabel slideMineLabel;
+    JSlider sliderMines;
     JTextField choiceCol;
     JTextField choiceRow;
     JTextField choiceMines;
@@ -55,14 +69,24 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         choiceRow = new JTextField("20");
         choiceRow.setPreferredSize(dim_jtext);
         choiceRow.setMinimumSize(dim_jtext);
+        choiceRow.getDocument().addDocumentListener(textListener);
 
         choiceCol = new JTextField("20");
         choiceCol.setPreferredSize(dim_jtext);
         choiceCol.setMinimumSize(dim_jtext);
+        choiceCol.getDocument().addDocumentListener(textListener);
 
-        choiceMines       = new JTextField("80");
-        choiceMines.setPreferredSize(dim_jtext);
-        choiceMines.setMinimumSize(dim_jtext);
+
+        sliderMines = new JSlider(JSlider.HORIZONTAL,0,100,20);
+        sliderMines.addChangeListener(this);
+        sliderMines.setMajorTickSpacing(10);
+        sliderMines.setMinorTickSpacing(1);
+        sliderMines.setPaintTicks(true);
+        sliderMines.setPaintLabels(true);
+        sliderMines.setSize(new Dimension(280, 50));
+        sliderMines.setMinimumSize(new Dimension(280, 50));
+
+
 
         choiceTimer = new JTextField(""+GLOBAL.DEFAULT_DELAY);
         choiceTimer.setPreferredSize(dim_jtext);
@@ -75,7 +99,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
 
         panelCreation = new JPanel(new GridBagLayout());
         panelCreation.setBackground(Color.orange);
-        Dimension panel_creation_dim = new Dimension(280,240);
+        Dimension panel_creation_dim = new Dimension(390,240);
         panelCreation.setPreferredSize(panel_creation_dim);
         panelCreation.setMinimumSize(panel_creation_dim);
         panelCreation.setMaximumSize(panel_creation_dim);
@@ -92,8 +116,13 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         GLOBAL.addItem(panelCreation, choiceRow, 1, 0, 1, 1, GridBagConstraints.EAST);
         GLOBAL.addItem(panelCreation, label_choice_col, 0, 1, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(panelCreation, choiceCol, 1, 1, 1, 1, GridBagConstraints.EAST);
+
+
         GLOBAL.addItem(panelCreation, label_mine, 0, 2, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, choiceMines, 1, 2, 1, 1, GridBagConstraints.EAST);
+        GLOBAL.addItem(panelCreation, sliderMines, 1, 2, 1, 1, GridBagConstraints.EAST);
+
+
+
         GLOBAL.addItem(panelCreation, create, 0, 3, 0, 0, GridBagConstraints.WEST);
         GLOBAL.addItem(panelCreation, labelAi, 0, 4, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(panelCreation, choixAI, 1, 4, 1, 1, GridBagConstraints.EAST);
@@ -105,6 +134,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         GLOBAL.addItem(panelCreation, choiceMaxTime, 1, 6, 1, 1, GridBagConstraints.EAST);
 
 
+
         importLabel = new JLabel(emptyLabelName);
         importGrid = new JButton("Import");
         importGrid.addActionListener(this);
@@ -114,6 +144,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
         GLOBAL.addItem(panelCreation,importLabel, 0, 7, 1, 1, GridBagConstraints.WEST);
         //GLOBAL.addItem(panelCreation, (chooser = new JFileChooser()), 1, 8, 1, 1, GridBagConstraints.EAST);
 
+      //  GLOBAL.addItem(panelCreation, sliderMines, 1, 8, 1, 1, GridBagConstraints.EAST);
 
         add(panelCreation, BorderLayout.NORTH);
         add(create,BorderLayout.SOUTH);
@@ -219,4 +250,43 @@ public class WindowMinesweeper extends JFrame implements ActionListener{
     }
 
 
+    @Override
+    public void stateChanged (ChangeEvent e) {
+
+        JSlider source =(JSlider) e.getSource();
+        if(!source.getValueIsAdjusting()){
+            updateMine();
+        }
+    }
+
+    public class TextListener implements DocumentListener{
+        @Override
+        public void insertUpdate (DocumentEvent e) {
+            updateMine();
+        }
+
+        @Override
+        public void removeUpdate (DocumentEvent e) {
+            updateMine();
+        }
+
+        @Override
+        public void changedUpdate (DocumentEvent e) {
+            updateMine();
+        }
+    }
+
+
+    public void updateMine(){
+        String text_row = choiceRow.getText();
+        String text_col = choiceCol.getText();
+        int row = (text_row.equals("") || text_row ==null)? 0 :Integer.parseInt(text_row);
+        int col = (text_col.equals("") || text_col == null)? 0 :Integer.parseInt(text_col);
+
+        float minePercentage = sliderMines.getValue();
+
+        nbMines = (int)((row*col) * (minePercentage/100));
+        label_mine.setText("Nb mines: "+nbMines);
+
+    }
 }

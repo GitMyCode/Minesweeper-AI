@@ -280,7 +280,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     @Override
     public void callback () {
-        if(infinitGame){
+        if(infinitGame && (runner != null && runner.isRunning())){
             resetGame();
             startGame();
         }
