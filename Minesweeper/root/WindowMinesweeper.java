@@ -23,10 +23,15 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     * FAIRE LE MENAGE
     * */
 
-    int ROW = 20;
-    int COL = 20;
     int nbMines= 80;
+    int row = 20;
+    int col = 20;
+    String choosedAi ="root.ai.RandomAi";
+    int timeDelay = 100;
+    int thinkLimit = 200;
     int caseSize =16;
+
+
     private final TextListener textListener = new TextListener();
 
     JButton create;
@@ -169,8 +174,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
     public void createBoard(final int lignes,final int cols,final int mines,
                             final String aiName,final int timeDelay, final int thinkLimit,final int caseSize){
-        GLOBAL.NBCOL= cols;
-        GLOBAL.NBLIGNE = lignes;
+
         System.gc();
         new Thread(
                 (new Runnable() {
@@ -208,17 +212,8 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     public void actionPerformed (ActionEvent actionEvent) {
 
         if(actionEvent.getActionCommand() == "Create new game"){
-            String text_row = choiceRow.getText();
-            String text_col = choiceCol.getText();
-            int row = Integer.parseInt(text_row);
-            int col = Integer.parseInt(text_col);
-            String aiName = (String)choixAI.getSelectedItem();
-            int time = Integer.parseInt(choiceTimer.getText());
-            int thinkLimite = Integer.parseInt(choiceMaxTime.getText());
-
-            caseSize = Integer.parseInt(choiceSizeCase.getText());
-
-            createBoard(row, col, nbMines, aiName,time,thinkLimite,caseSize);
+            updateParameter();
+            createBoard(row, col, nbMines, choosedAi,timeDelay,thinkLimit,caseSize);
 
         }else if(actionEvent.getActionCommand() =="Import") {
             chooser = new JFileChooser(".");
@@ -229,10 +224,10 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
                 if(chooser.showDialog(new JFrame("choose file"),"Ok") == JFileChooser.APPROVE_OPTION) {
                     if (chooser.getSelectedFile() != null) {
                         readFile(chooser.getSelectedFile());
-                        String aiName = (String) choixAI.getSelectedItem();
-                        int time = Integer.parseInt(choiceTimer.getText());
-                        int thinkLimite = Integer.parseInt(choiceMaxTime.getText());
-                        loadGridToBoard(aiName, time, thinkLimite,caseSize);
+
+                        updateParameter();
+
+                        loadGridToBoard(choosedAi, timeDelay, thinkLimit,caseSize);
                         importLabel.setText(chooser.getSelectedFile().getName());
 
                     } else {
@@ -276,6 +271,19 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         }
     }
 
+
+    public void updateParameter(){
+        String text_row = choiceRow.getText();
+        String text_col = choiceCol.getText();
+        row = Integer.parseInt(text_row);
+        col = Integer.parseInt(text_col);
+        choosedAi = (String)choixAI.getSelectedItem();
+        timeDelay= Integer.parseInt(choiceTimer.getText());
+        thinkLimit= Integer.parseInt(choiceMaxTime.getText());
+
+        caseSize = Integer.parseInt(choiceSizeCase.getText());
+
+    }
 
     public void updateMine(){
         String text_row = choiceRow.getText();
