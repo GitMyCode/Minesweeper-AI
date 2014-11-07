@@ -25,6 +25,10 @@ public class GridView extends JPanel {
     GridController controller;
 
 
+    public GridView(BoardGameView.GameBuilder b){
+
+    }
+
     public GridView(int nbligne,int nbcol,int width, int height,int caseSize){
         this.nbcol = nbcol;
         this.nbligne = nbligne;
@@ -70,18 +74,6 @@ public class GridView extends JPanel {
                 Graphics g = bi.createGraphics();
                 g.drawImage(cases[i],0,0, caseSize,caseSize,null);
                 cases[i]=  new ImageIcon(bi).getImage();
-           /*
-            File f = new File("../img2/c"+i+".png");
-            BufferedImage rawImage = ImageIO.read(f);
-
-
-            BufferedImage bufferedImage = new BufferedImage(15,15,rawImage.getType());
-            Graphics2D g = bufferedImage.createGraphics();
-            g.drawImage(rawImage,0,0,15,15,null);
-            g.dispose();
-            int type = rawImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : rawImage.getType();
-
-            image = scale(rawImage,type,15,15,0.5,0.5);*/
 
             }catch (Exception e){
 
@@ -98,7 +90,6 @@ public class GridView extends JPanel {
             int y = (i%nbcol)  * caseSize;
 
             g.drawImage(cases[grid.gridPlayerView[i].indexValue],y,x,this);
-            //g.drawImage(cases[grid.gridSpace[i]], y, x, this);
         }
     }
 

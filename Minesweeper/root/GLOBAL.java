@@ -9,13 +9,15 @@ import java.awt.*;
 public class GLOBAL {
 
 
+    /*DEFAULT*/
     public static int DEFAULT_MAXTHINK = 200;
     public static int DEFAULT_DELAY    = 100;
-
-    static int NBCOL;
-    static int NBLIGNE;
-
+    public static int NBCOL = 20;
+    public static int NBLIGNE = 20;
     public static final int CELL_SIZE = 10;
+    public static final int NBMINES = 80;
+    public static final String DEFAULT_AI = "root.ai.RandomAi";
+
     public static final int NB_TYPE_IMAGE = 16;
 
     public static void addItem(JPanel p, JComponent c, int x, int y, int width, int height, int align) {
