@@ -53,7 +53,7 @@ public class GameRunner implements Runnable {
             controller.movesSetPlay(aiMoves);
             System.gc();
             try{
-                if(!Thread.currentThread().isInterrupted()){
+                if(delayTime != 0 && !Thread.currentThread().isInterrupted()){
                     Thread.sleep(delayTime);
                 }
             }catch(InterruptedException ie){
@@ -67,7 +67,7 @@ public class GameRunner implements Runnable {
         if(grid.lost){
             SendMsg("Lost!");
             outputObserver.updateLost();
-            grid.showAllCase();
+           // grid.showAllCase();
 
         }else if(grid.win){
             SendMsg("Win!");

@@ -404,7 +404,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         JScrollPane pane = new JScrollPane();
         //buttomPanel.setBackground(Color.cyan);
         messageTextArea = new JTextArea();
-        messageTextArea.setColumns(nbcol + GLOBAL.CELL_SIZE-5);
+        messageTextArea.setColumns(30);
         messageTextArea.setEditable(false);
         messageTextArea.setRows(5);
         pane.setViewportView(messageTextArea);
@@ -421,8 +421,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         GLOBAL.addItem(bottomPanelScore,winsTotal = new JLabel("0"),1,2,1,1,GridBagConstraints.EAST);
 
 
-        GLOBAL.addItem(bottomPanel, bottomPanelScore, 0, 0, 3, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanel, pane, 1, 0, 3, 1, GridBagConstraints.EAST);
+        GLOBAL.addItem(bottomPanel, bottomPanelScore, 0, 0, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanel, pane, 1, 0, 1, 1, GridBagConstraints.WEST);
         add(bottomPanel,BorderLayout.SOUTH);
 
 

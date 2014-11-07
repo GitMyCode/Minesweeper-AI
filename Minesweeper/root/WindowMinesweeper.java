@@ -63,7 +63,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
         label_choice_row = new JLabel("Nb row");
         label_choice_col = new JLabel("Nb col");
-        label_mine       = new JLabel("Nb mines");
+        label_mine       = new JLabel("Nb mines: "+nbMines);
 
         Dimension dim_jtext = new Dimension(120,20);
         choiceRow = new JTextField("20");
@@ -77,14 +77,14 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         choiceCol.getDocument().addDocumentListener(textListener);
 
 
-        sliderMines = new JSlider(JSlider.HORIZONTAL,0,100,20);
+        sliderMines = new JSlider(JSlider.HORIZONTAL,0,35,20);
         sliderMines.addChangeListener(this);
-        sliderMines.setMajorTickSpacing(10);
+        sliderMines.setMajorTickSpacing(5);
         sliderMines.setMinorTickSpacing(1);
         sliderMines.setPaintTicks(true);
         sliderMines.setPaintLabels(true);
         sliderMines.setSize(new Dimension(280, 50));
-        sliderMines.setMinimumSize(new Dimension(280, 50));
+        sliderMines.setMinimumSize(new Dimension(220, 50));
 
 
 
@@ -212,13 +212,11 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
             String text_col = choiceCol.getText();
             int row = Integer.parseInt(text_row);
             int col = Integer.parseInt(text_col);
-            String text_mine = choiceMines.getText();
-            int mines = Integer.parseInt(text_mine) ;
             String aiName = (String)choixAI.getSelectedItem();
             int time = Integer.parseInt(choiceTimer.getText());
             int thinkLimite = Integer.parseInt(choiceMaxTime.getText());
 
-            createBoard(row, col, mines, aiName,time,thinkLimite);
+            createBoard(row, col, nbMines, aiName,time,thinkLimite);
 
         }else if(actionEvent.getActionCommand() =="Import") {
             chooser = new JFileChooser(".");
