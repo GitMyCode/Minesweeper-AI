@@ -66,10 +66,11 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     int nbLost =0;
     int nbWins =0;
     int thinkLimit=1000;
+    int caseSize = 16;
 
 
 
-    public BoardGameView(Grid grid,String aiName, int delay, int thinkLimit){
+    public BoardGameView(Grid grid,String aiName, int delay, int thinkLimit,int caseSize){
         setSize(WIDTH + 300, HEIGHT + 100);
         ai=getAI(aiName);
         setTitle(ai.getAiName());
@@ -79,6 +80,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         this.nbligne = grid.nbligne;
         this.nbMines = grid.NBMINES;
         this.thinkLimit = thinkLimit;
+        this.caseSize = caseSize;
 
         constructUi();
         pack();
@@ -92,7 +94,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         linkMVC();
     }
 
-    public BoardGameView (int nbligne, int nbcol, int nbMines,String aiName,int delay,int thinkLimit){
+    public BoardGameView (int nbligne, int nbcol, int nbMines,String aiName,int delay,int thinkLimit,int caseSize){
         setSize(WIDTH + 300, HEIGHT + 100);
         ai=getAI(aiName);
         setTitle(ai.getAiName());
@@ -102,6 +104,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         this.nbMines = nbMines;
         this.thinkLimit = thinkLimit;
         this.grid = new Grid(nbligne,nbcol,nbMines);
+        this.caseSize = caseSize;
         constructUi();
         pack();
 
@@ -143,8 +146,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         cadre.add(Box.createVerticalGlue());
         cadre.add(Box.createHorizontalGlue());
 
-        int width = (col*GLOBAL.CELL_SIZE) ; //pour expert : 480
-        int height = (row * GLOBAL.CELL_SIZE); //pour expert :280
+        int width = (col*caseSize) ; //pour expert : 480
+        int height = (row * caseSize); //pour expert :280
 
         les_y = new Rule(1,col);
         Dimension dim_y = new Dimension(width+20,7);
@@ -176,7 +179,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         GLOBAL.addItem(containterField, les_x, 0, 1, 0, 7, GridBagConstraints.WEST);
 
 
-        gv = new GridView(row,col,width,height);
+        gv = new GridView(row,col,width,height,caseSize);
         gv.setBackground(Color.cyan);
 
         GLOBAL.addItem(containterField, gv, 1, 2, 0, 0, GridBagConstraints.CENTER);
