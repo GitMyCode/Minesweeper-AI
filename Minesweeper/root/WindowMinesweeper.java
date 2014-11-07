@@ -172,6 +172,27 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
     }
 
+    public void test(){
+
+       new Thread((new Runnable() {
+           @Override
+           public void run () {
+               new BoardGameView.GameBuilder().
+                       row(row).
+                       col(col).
+                       mines(nbMines).
+                       delay(timeDelay).
+                       think(thinkLimit).
+                       aiName(choosedAi).
+                       caseSize(caseSize).
+                       build();
+
+           }
+       })).start();
+
+
+    }
+
     public void createBoard(final int lignes,final int cols,final int mines,
                             final String aiName,final int timeDelay, final int thinkLimit,final int caseSize){
 
@@ -180,9 +201,21 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
                 (new Runnable() {
                     @Override
                     public void run() {
-                        BoardGameView bv = new BoardGameView(lignes,cols,mines,aiName,timeDelay,thinkLimit,caseSize);
+                        BoardGameView bv = new BoardGameView.GameBuilder().
+                                row(row).
+                                col(col).
+                                mines(nbMines).
+                                delay(timeDelay).
+                                think(thinkLimit).
+                                aiName(choosedAi).
+                                caseSize(caseSize).
+                                build();
                         bv.setVisible(true);
                         bv.setLocationRelativeTo(null);
+
+                        /*BoardGameView bv = new BoardGameView(lignes,cols,mines,aiName,timeDelay,thinkLimit,caseSize);
+                        bv.setVisible(true);
+                        bv.setLocationRelativeTo(null);*/
 
                     }
                 })
@@ -196,7 +229,14 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
                 (new Runnable() {
                     @Override
                     public void run() {
-                        BoardGameView bv = new BoardGameView(new Grid(savedGridToPlay),aiName,timeDelay,thinkLimit,caseSize);
+                        //BoardGameView bv = new BoardGameView(new Grid(savedGridToPlay),aiName,timeDelay,thinkLimit,caseSize);
+                        BoardGameView bv = new BoardGameView.GameBuilder().
+                                loadGrid(savedGridToPlay).
+                                aiName(aiName).
+                                caseSize(caseSize).
+                                delay(timeDelay).
+                                think(thinkLimit).
+                                build();
                         bv.setVisible(true);
                         bv.setLocationRelativeTo(null);
                         bv.message("Load file: "+savedGridToPlay.getName());
