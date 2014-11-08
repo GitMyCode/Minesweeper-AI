@@ -108,6 +108,9 @@ public class CSP implements ArtificialPlayer{
         if(!gameGrid.checkMove(sureMoves)){
             System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.checkIfPresentGridValid());
         }
+        if(timeUp()){
+            System.out.println("Time UP!");
+        }
 
 /*
         if(sureMoves.isEmpty() && bestChance != Integer.MAX_VALUE){

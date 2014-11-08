@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.text.Format;
@@ -59,141 +60,121 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private Thread t = null;
 
     boolean infinitGame=false;
-    int nbligne=0;
-    int nbcol=0;
     int nbMines=0;
     int deplayTime = 100;
     int nbLost =0;
     int nbWins =0;
     int thinkLimit=1000;
+    int caseSize = 16;
+
+    public static class GameBuilder {
+        int nbligne=GLOBAL.NBLIGNE;
+        int nbcol= GLOBAL.NBCOL;
+        int nbMines= GLOBAL.NBMINES;
+        int deplayTime = GLOBAL.DEFAULT_DELAY;
+        int thinkLimit= GLOBAL.DEFAULT_MAXTHINK;
+        int caseSize = GLOBAL.CELL_SIZE;
+        Grid grid = null;
+        ArtificialPlayer ai;
+        String aiString;
+        String designFoler = GLOBAL.DEFAULT_DESIGN;
 
 
-
-    public BoardGameView(Grid grid,String aiName, int delay, int thinkLimit){
-        setSize(WIDTH + 300, HEIGHT + 100);
-        ai=getAI(aiName);
-        setTitle(ai.getAiName());
-        this.grid = grid;
-        this.deplayTime = delay;
-        this.nbcol = grid.nbcol;
-        this.nbligne = grid.nbligne;
-        this.nbMines = grid.NBMINES;
-        this.thinkLimit = thinkLimit;
-
-        constructUi();
-        pack();
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing (WindowEvent windowEvent) {
-                super.windowClosing(windowEvent);
-                closingCleanUp();
-            }
-        });
-        linkMVC();
-    }
-
-    public BoardGameView (int nbligne, int nbcol, int nbMines,String aiName,int delay,int thinkLimit){
-        setSize(WIDTH + 300, HEIGHT + 100);
-        ai=getAI(aiName);
-        setTitle(ai.getAiName());
-        this.deplayTime = delay;
-        this.nbcol = nbcol;
-        this.nbligne = nbligne;
-        this.nbMines = nbMines;
-        this.thinkLimit = thinkLimit;
-        this.grid = new Grid(nbligne,nbcol,nbMines);
-        constructUi();
-        pack();
-
-
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing (WindowEvent windowEvent) {
-                super.windowClosing(windowEvent);
-                closingCleanUp();
-            }
-        });
-        linkMVC();
-    }
-    private void linkMVC(){
-        gv.setGrid(grid);
-        gridController = new GridControllerImpl(grid,gv,flagRemaining);
-        gv.setController(gridController);
-        gv.repaint();
-    }
-
-    /*Prend le nom du fichier et va chercher la class puis cree une instance*/
-    public ArtificialPlayer getAI(String name){
-        ArtificialPlayer returnAi = null;
-        try{
-            Class c = Class.forName(name);
-            Constructor<?> constructor = c.getConstructor();
-            returnAi =(ArtificialPlayer) constructor.newInstance();
-
-        }catch (Exception e){
-            System.out.println(e);
+        public GameBuilder(){
         }
-        return returnAi;
+
+        public BoardGameView build(){
+            grid = (grid==null)? new Grid(nbligne,nbcol,nbMines): grid;
+            return new BoardGameView(this);
+        }
+
+
+        public GameBuilder loadGrid(File f){
+            this.grid = new Grid(f);
+            this.nbcol = grid.nbcol;
+            this.nbligne = grid.nbligne;
+            this.nbMines = grid.NBMINES;
+            return this;
+        }
+
+        public GameBuilder row (int nbligne) {
+            this.nbligne = nbligne;return this;
+        }
+        public GameBuilder design (String s){
+            this.designFoler = s; return this;
+        }
+
+        public GameBuilder col (int nbcol) {
+            this.nbcol = nbcol;return this;
+        }
+
+        public GameBuilder mines (int nbMines) {
+            this.nbMines = nbMines;return this;
+        }
+
+        public GameBuilder delay (int deplayTime) {
+            this.deplayTime = deplayTime;return this;
+        }
+
+        public GameBuilder think (int thinkLimit) {
+            this.thinkLimit = thinkLimit;return this;
+        }
+
+        public GameBuilder caseSize (int caseSize) {
+            this.caseSize = caseSize;return this;
+        }
+        public GameBuilder aiName(String aiName){
+            this.aiString =aiName;
+            this.ai = getAI(aiName);
+            return this;
+        }
+
+        public GameBuilder grid (Grid grid) {
+            this.grid = grid;return this;
+        }
+
+
+        /*Prend le nom du fichier et va chercher la class puis cree une instance*/
+        private ArtificialPlayer getAI(String name){
+            ArtificialPlayer returnAi = null;
+            try{
+                Class c = Class.forName(name);
+                Constructor<?> constructor = c.getConstructor();
+                returnAi =(ArtificialPlayer) constructor.newInstance();
+
+            }catch (Exception e){
+                System.out.println(e);
+            }
+            return returnAi;
+        }
+
     }
 
 
-    public void createGridView(int row,int col){
-        cadre = new Box(BoxLayout.Y_AXIS);
-        cadre.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        cadre.add(Box.createVerticalGlue());
-        cadre.add(Box.createHorizontalGlue());
 
-        int width = (col*GLOBAL.CELL_SIZE) ; //pour expert : 480
-        int height = (row * GLOBAL.CELL_SIZE); //pour expert :280
+    public BoardGameView(GameBuilder b){
+        this.grid = b.grid;
+        this.caseSize = b.caseSize;
+        this.ai = b.ai;
+        this.deplayTime = b.deplayTime;
+        this.thinkLimit = b.thinkLimit;
 
-        les_y = new Rule(1,col);
-        Dimension dim_y = new Dimension(width+20,7);
-        les_y.setPreferredSize(dim_y);
-        les_y.setMinimumSize(dim_y);
-        les_y.setMaximumSize(dim_y);
-        les_y.setLayout(new GridLayout(1,col));
+        constructUi(b.nbligne,b.nbcol,b.caseSize,b.designFoler);
+        pack();
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing (WindowEvent windowEvent) {
+                super.windowClosing(windowEvent);
+                closingCleanUp();
+            }
+        });
+        linkMVC();
 
-        les_x = new Rule(0,row);
-        Dimension dim_x = new Dimension(10,height);
-        les_x.setPreferredSize(dim_x);
-        les_x.setMinimumSize(dim_x);
-        les_x.setMaximumSize(dim_x);
-        // les_x.setBackground(Color.CYAN);
-        les_x.setLayout(new GridLayout(row,1));
-
-
-
-        containterField = new JPanel(new GridBagLayout());
-        Dimension dim_container = new Dimension(width+40,height+30);
-        containterField.setMaximumSize(dim_container);
-        containterField.setMinimumSize(dim_container);
-        containterField.setPreferredSize(dim_container);
-        //containterField.setBackground(Color.red);
-
-
-        GLOBAL.addItem(containterField, les_y, 1, 0, 0, 7, GridBagConstraints.NORTHWEST);
-
-        GLOBAL.addItem(containterField, les_x, 0, 1, 0, 7, GridBagConstraints.WEST);
-
-
-        gv = new GridView(row,col,width,height);
-        gv.setBackground(Color.cyan);
-
-        GLOBAL.addItem(containterField, gv, 1, 2, 0, 0, GridBagConstraints.CENTER);
-
-
-        Dimension dim_cadre = new Dimension(width+30,height+30);
-        cadre.setPreferredSize(dim_cadre);
-        cadre.setMaximumSize(dim_cadre);
-        cadre.setMaximumSize(dim_cadre);
-
-
-        cadre.add(containterField);
-        cadre.add(Box.createVerticalGlue());
-        cadre.add(Box.createHorizontalGlue());
-
-        add(cadre,BorderLayout.CENTER);
     }
+
+
+
+
 
 
     @Override
@@ -232,19 +213,29 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
                     }
 
                 };
-
                 t = new Thread(task);
                 t.start();
             }
-
         }catch (Exception e){
             System.out.println(e);
         }
-
-
-
-
     }
+
+
+    public void resetGame(){
+        grid.resetGrid();
+
+        if(t !=null){
+            t.interrupt();
+        }
+        if(runner!=null)runner.terminate();
+        runner = null;
+        gv.repaint();
+        flagRemaining.setText(String.valueOf(nbMines));
+        step.setEnabled(true);
+        message("Reset");
+    }
+
 
     /* De connect5 auteur Éric beaudry */
     public synchronized void message(final String msg) {
@@ -265,22 +256,11 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         SwingUtilities.invokeLater(runnable);*/
     }
 
-    public void resetGame(){
-        grid.resetGrid();
 
-        if(t !=null){
-            t.interrupt();
-        }
-        runner = null;
-        gv.repaint();
-        flagRemaining.setText(String.valueOf(nbMines));
-        step.setEnabled(true);
-        message("Reset");
-    }
 
     @Override
     public void callback () {
-        if(infinitGame){
+        if(infinitGame && (runner != null && runner.isRunning())){
             resetGame();
             startGame();
         }
@@ -342,12 +322,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
 
 
-
-
-
-
-    private void constructUi(){
-        createGridView(nbligne, nbcol);
+    private void constructUi(int nbligne,int nbcol,int caseSize,String designFolder){
+        createGridView(nbligne, nbcol,caseSize,designFolder);
         flagRemaining = new JLabel(""+nbMines);
 
 
@@ -404,7 +380,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         JScrollPane pane = new JScrollPane();
         //buttomPanel.setBackground(Color.cyan);
         messageTextArea = new JTextArea();
-        messageTextArea.setColumns(nbcol + GLOBAL.CELL_SIZE-5);
+        messageTextArea.setColumns(30);
         messageTextArea.setEditable(false);
         messageTextArea.setRows(5);
         pane.setViewportView(messageTextArea);
@@ -421,14 +397,79 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         GLOBAL.addItem(bottomPanelScore,winsTotal = new JLabel("0"),1,2,1,1,GridBagConstraints.EAST);
 
 
-        GLOBAL.addItem(bottomPanel, bottomPanelScore, 0, 0, 3, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanel, pane, 1, 0, 3, 1, GridBagConstraints.EAST);
+        GLOBAL.addItem(bottomPanel, bottomPanelScore, 0, 0, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanel, pane, 1, 0, 1, 1, GridBagConstraints.WEST);
         add(bottomPanel,BorderLayout.SOUTH);
 
 
 
         message("Initiate AI: "+ai.getAiName());
     }
+
+     public void createGridView(int row,int col, int caseSize, String designFolder){
+        cadre = new Box(BoxLayout.Y_AXIS);
+        cadre.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        cadre.add(Box.createVerticalGlue());
+        cadre.add(Box.createHorizontalGlue());
+
+        int width = (col*caseSize) ; //pour expert : 480
+        int height = (row * caseSize); //pour expert :280
+
+        les_y = new Rule(1,col);
+        Dimension dim_y = new Dimension(width+20,7);
+        les_y.setPreferredSize(dim_y);
+        les_y.setMinimumSize(dim_y);
+        les_y.setMaximumSize(dim_y);
+        les_y.setLayout(new GridLayout(1,col));
+
+        les_x = new Rule(0,row);
+        Dimension dim_x = new Dimension(10,height);
+        les_x.setPreferredSize(dim_x);
+        les_x.setMinimumSize(dim_x);
+        les_x.setMaximumSize(dim_x);
+        // les_x.setBackground(Color.CYAN);
+        les_x.setLayout(new GridLayout(row,1));
+
+
+
+        containterField = new JPanel(new GridBagLayout());
+        Dimension dim_container = new Dimension(width+40,height+30);
+        containterField.setMaximumSize(dim_container);
+        containterField.setMinimumSize(dim_container);
+        containterField.setPreferredSize(dim_container);
+        //containterField.setBackground(Color.red);
+
+
+        GLOBAL.addItem(containterField, les_y, 1, 0, 0, 7, GridBagConstraints.NORTHWEST);
+
+        GLOBAL.addItem(containterField, les_x, 0, 1, 0, 7, GridBagConstraints.WEST);
+
+
+        gv = new GridView(row,col,width,height,caseSize,designFolder);
+        gv.setBackground(Color.cyan);
+
+        GLOBAL.addItem(containterField, gv, 1, 2, 0, 0, GridBagConstraints.CENTER);
+
+
+        Dimension dim_cadre = new Dimension(width+30,height+30);
+        cadre.setPreferredSize(dim_cadre);
+        cadre.setMaximumSize(dim_cadre);
+        cadre.setMaximumSize(dim_cadre);
+
+
+        cadre.add(containterField);
+        cadre.add(Box.createVerticalGlue());
+        cadre.add(Box.createHorizontalGlue());
+
+        add(cadre,BorderLayout.CENTER);
+    }
+    private void linkMVC(){
+        gv.setGrid(grid);
+        gridController = new GridControllerImpl(grid,gv,flagRemaining);
+        gv.setController(gridController);
+        gv.repaint();
+    }
+
 
 
 
