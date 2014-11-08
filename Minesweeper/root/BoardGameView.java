@@ -60,8 +60,6 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private Thread t = null;
 
     boolean infinitGame=false;
-    int nbligne=0;
-    int nbcol=0;
     int nbMines=0;
     int deplayTime = 100;
     int nbLost =0;
@@ -79,10 +77,17 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         Grid grid = null;
         ArtificialPlayer ai;
         String aiString;
+        String designFoler = GLOBAL.DEFAULT_DESIGN;
 
 
         public GameBuilder(){
         }
+
+        public BoardGameView build(){
+            grid = (grid==null)? new Grid(nbligne,nbcol,nbMines): grid;
+            return new BoardGameView(this);
+        }
+
 
         public GameBuilder loadGrid(File f){
             this.grid = new Grid(f);
@@ -94,6 +99,9 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
         public GameBuilder row (int nbligne) {
             this.nbligne = nbligne;return this;
+        }
+        public GameBuilder design (String s){
+            this.designFoler = s; return this;
         }
 
         public GameBuilder col (int nbcol) {
@@ -125,22 +133,20 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             this.grid = grid;return this;
         }
 
-        public BoardGameView build(){
-            grid = (grid==null)? new Grid(nbligne,nbcol,nbMines): grid;
-            return new BoardGameView(this);
-        }
-        public ArtificialPlayer getAI(String name){
-        ArtificialPlayer returnAi = null;
-        try{
-            Class c = Class.forName(name);
-            Constructor<?> constructor = c.getConstructor();
-            returnAi =(ArtificialPlayer) constructor.newInstance();
 
-        }catch (Exception e){
-            System.out.println(e);
+        /*Prend le nom du fichier et va chercher la class puis cree une instance*/
+        private ArtificialPlayer getAI(String name){
+            ArtificialPlayer returnAi = null;
+            try{
+                Class c = Class.forName(name);
+                Constructor<?> constructor = c.getConstructor();
+                returnAi =(ArtificialPlayer) constructor.newInstance();
+
+            }catch (Exception e){
+                System.out.println(e);
+            }
+            return returnAi;
         }
-        return returnAi;
-    }
 
     }
 
@@ -148,15 +154,12 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     public BoardGameView(GameBuilder b){
         this.grid = b.grid;
-        this.nbcol = b.nbcol;
-        this.nbligne = b.nbligne;
-        this.nbMines = b.nbMines;
         this.caseSize = b.caseSize;
         this.ai = b.ai;
         this.deplayTime = b.deplayTime;
         this.thinkLimit = b.thinkLimit;
 
-        constructUi();
+        constructUi(b.nbligne,b.nbcol,b.caseSize,b.designFoler);
         pack();
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -169,16 +172,6 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     }
 
-
-
-    private void linkMVC(){
-        gv.setGrid(grid);
-        gridController = new GridControllerImpl(grid,gv,flagRemaining);
-        gv.setController(gridController);
-        gv.repaint();
-    }
-
-    /*Prend le nom du fichier et va chercher la class puis cree une instance*/
 
 
 
@@ -220,19 +213,29 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
                     }
 
                 };
-
                 t = new Thread(task);
                 t.start();
             }
-
         }catch (Exception e){
             System.out.println(e);
         }
-
-
-
-
     }
+
+
+    public void resetGame(){
+        grid.resetGrid();
+
+        if(t !=null){
+            t.interrupt();
+        }
+        if(runner!=null)runner.terminate();
+        runner = null;
+        gv.repaint();
+        flagRemaining.setText(String.valueOf(nbMines));
+        step.setEnabled(true);
+        message("Reset");
+    }
+
 
     /* De connect5 auteur Éric beaudry */
     public synchronized void message(final String msg) {
@@ -253,18 +256,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         SwingUtilities.invokeLater(runnable);*/
     }
 
-    public void resetGame(){
-        grid.resetGrid();
 
-        if(t !=null){
-            t.interrupt();
-        }
-        runner = null;
-        gv.repaint();
-        flagRemaining.setText(String.valueOf(nbMines));
-        step.setEnabled(true);
-        message("Reset");
-    }
 
     @Override
     public void callback () {
@@ -330,12 +322,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
 
 
-
-
-
-
-    private void constructUi(){
-        createGridView(nbligne, nbcol);
+    private void constructUi(int nbligne,int nbcol,int caseSize,String designFolder){
+        createGridView(nbligne, nbcol,caseSize,designFolder);
         flagRemaining = new JLabel(""+nbMines);
 
 
@@ -418,7 +406,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         message("Initiate AI: "+ai.getAiName());
     }
 
-     public void createGridView(int row,int col){
+     public void createGridView(int row,int col, int caseSize, String designFolder){
         cadre = new Box(BoxLayout.Y_AXIS);
         cadre.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         cadre.add(Box.createVerticalGlue());
@@ -457,7 +445,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         GLOBAL.addItem(containterField, les_x, 0, 1, 0, 7, GridBagConstraints.WEST);
 
 
-        gv = new GridView(row,col,width,height,caseSize);
+        gv = new GridView(row,col,width,height,caseSize,designFolder);
         gv.setBackground(Color.cyan);
 
         GLOBAL.addItem(containterField, gv, 1, 2, 0, 0, GridBagConstraints.CENTER);
@@ -474,6 +462,12 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         cadre.add(Box.createHorizontalGlue());
 
         add(cadre,BorderLayout.CENTER);
+    }
+    private void linkMVC(){
+        gv.setGrid(grid);
+        gridController = new GridControllerImpl(grid,gv,flagRemaining);
+        gv.setController(gridController);
+        gv.repaint();
     }
 
 

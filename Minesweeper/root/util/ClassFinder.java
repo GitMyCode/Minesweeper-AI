@@ -1,8 +1,9 @@
-package root;
+package root.util;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +52,25 @@ public final class ClassFinder {
             }
         }
         return classes;
+    }
+
+
+    public static List<String> findFolder(final String folder){
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final String scannedPath = folder.replace(DOT, SLASH);
+        List<String> allFolder = new ArrayList<String>();
+        try {
+
+            Enumeration<URL> resources = classLoader.getResources(scannedPath);
+            File theFolder = new File(resources.nextElement().getFile());
+            for(File imgFolder : theFolder.listFiles() ){
+                allFolder.add(imgFolder.getName());
+            }
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return allFolder;
     }
 
 }
