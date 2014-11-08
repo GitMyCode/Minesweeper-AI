@@ -25,10 +25,16 @@ public class GameRunner implements Runnable {
     private volatile boolean running = true;
 
     public void terminate() {
+
         running = false;
     }
 
+    public boolean isRunning(){
+        return running;
+    }
+
     public GameRunner(ArtificialPlayer ai,Grid g,GridController controller,int delay,int thinkLimit){
+        running = true;
         this.ai = ai;
         this.grid = g;
         this.controller = controller;
@@ -39,6 +45,7 @@ public class GameRunner implements Runnable {
 
     @Override
     public void run () {
+        System.out.println("start gamerunner");
         do{
            //
 
@@ -46,7 +53,7 @@ public class GameRunner implements Runnable {
             controller.movesSetPlay(aiMoves);
             System.gc();
             try{
-                if(!Thread.currentThread().isInterrupted()){
+                if(delayTime != 0 && !Thread.currentThread().isInterrupted()){
                     Thread.sleep(delayTime);
                 }
             }catch(InterruptedException ie){
@@ -60,7 +67,7 @@ public class GameRunner implements Runnable {
         if(grid.lost){
             SendMsg("Lost!");
             outputObserver.updateLost();
-            grid.showAllCase();
+           // grid.showAllCase();
 
         }else if(grid.win){
             SendMsg("Win!");

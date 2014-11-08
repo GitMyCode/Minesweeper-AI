@@ -33,6 +33,9 @@ public class Grid {
 
     Random ran = new Random();
 
+
+
+
     public Grid(File f){
         try{
             Scanner sc = new Scanner(f);

@@ -35,34 +35,7 @@ public enum CASE {
 
 
     CASE(int i){
-
-        try{
-
-            indexValue = i;
-            java.net.URL imageUrl = getClass().getResource("../img3/"+i+".png");
-            image =  new ImageIcon(imageUrl).getImage();
-            BufferedImage bi = new BufferedImage(image.getWidth(null),image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-            Graphics g = bi.createGraphics();
-            g.drawImage(image,0,0, GLOBAL.CELL_SIZE,GLOBAL.CELL_SIZE,null);
-            image =  new ImageIcon(bi).getImage();
-           /*
-            File f = new File("../img2/c"+i+".png");
-            BufferedImage rawImage = ImageIO.read(f);
-
-
-            BufferedImage bufferedImage = new BufferedImage(15,15,rawImage.getType());
-            Graphics2D g = bufferedImage.createGraphics();
-            g.drawImage(rawImage,0,0,15,15,null);
-            g.dispose();
-            int type = rawImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : rawImage.getType();
-
-            image = scale(rawImage,type,15,15,0.5,0.5);*/
-
-        }catch (Exception e){
-
-        }
-
-
+        indexValue = i;
     }
 
     private static final Map<Integer, CASE> intToTypeMap = new HashMap<Integer, CASE>();
@@ -81,7 +54,6 @@ public enum CASE {
 
 
 
-    public Image image;
     public int indexValue;
     final String  pathfile= "../root.img/j";
 
