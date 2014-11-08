@@ -1,12 +1,16 @@
 package root;
 
+import com.sun.java.util.jar.pack.*;
 import root.ENUM.COUP;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 import static root.ENUM.CASE.*;
 /**
@@ -17,23 +21,23 @@ public class GridView extends JPanel {
 
     int nbligne=0;
     int nbcol =0;
-    int caseSize =16;
+    int caseSize =GLOBAL.CELL_SIZE;
 
+    String designFolder = GLOBAL.DEFAULT_DESIGN;
     Image[] cases;
 
     Grid grid;
     GridController controller;
 
 
-    public GridView(BoardGameView.GameBuilder b){
 
-    }
 
-    public GridView(int nbligne,int nbcol,int width, int height,int caseSize){
+    public GridView(int nbligne,int nbcol,int width, int height,int caseSize,String designFolder){
         this.nbcol = nbcol;
         this.nbligne = nbligne;
         this.cases = new Image[GLOBAL.NB_TYPE_IMAGE];
         this.caseSize = caseSize;
+        this.designFolder = designFolder;
 
         grid = new Grid(nbligne,nbcol,20);
 
@@ -44,11 +48,6 @@ public class GridView extends JPanel {
         setMaximumSize(dim_grid);
         setMinimumSize(dim_grid);
 
-
-       /* for(int i=0; i< 13; i++){
-            java.net.URL imageUrl = getClass().getResource("root.img/j"+i+".gif");
-            cases[i] = new ImageIcon(imageUrl).getImage();
-        }*/
 
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         initCasesImages();
@@ -63,22 +62,34 @@ public class GridView extends JPanel {
     }
 
 
+    /*
+    * TODO
+    * je penses que ce devrait etre gerer par une autre class mais bon
+    * */
     private void initCasesImages(){
-        for(int i=0; i< GLOBAL.NB_TYPE_IMAGE; i++){
             try{
 
+                final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                final String scannedPath = "root/design/"+designFolder;
+                Enumeration<URL> ressource = classLoader.getResources(scannedPath);
+                final File folder  = new File(ressource.nextElement().getFile());
+                int i=0;
+                File[] t = folder.listFiles();
+                Arrays.sort(t);
+                for (File cellImg : t){
+                    java.net.URL imageUrl =  cellImg.toURL();
+                    cases[i] =  new ImageIcon(imageUrl).getImage();
+                    BufferedImage bi = new BufferedImage(cases[i].getWidth(null),cases[i].getHeight(null), BufferedImage.TYPE_INT_ARGB);
+                    Graphics g = bi.createGraphics();
+                    g.drawImage(cases[i],0,0, caseSize,caseSize,null);
+                    cases[i]=  new ImageIcon(bi).getImage();
 
-                java.net.URL imageUrl = getClass().getResource("design/img3/"+i+".png");
-                cases[i] =  new ImageIcon(imageUrl).getImage();
-                BufferedImage bi = new BufferedImage(cases[i].getWidth(null),cases[i].getHeight(null), BufferedImage.TYPE_INT_ARGB);
-                Graphics g = bi.createGraphics();
-                g.drawImage(cases[i],0,0, caseSize,caseSize,null);
-                cases[i]=  new ImageIcon(bi).getImage();
+                    i++;
+                }
 
             }catch (Exception e){
 
             }
-        }
     }
 
     protected void paintComponent(Graphics g){

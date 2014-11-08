@@ -1,16 +1,17 @@
 package root;
 
+import root.util.ClassFinder;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.xml.soap.Text;
 import java.awt.*;
 import java.io.File;
-import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -23,13 +24,14 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     * FAIRE LE MENAGE
     * */
 
-    int nbMines= 80;
-    int row = 20;
-    int col = 20;
-    String choosedAi ="root.ai.RandomAi";
-    int timeDelay = 100;
-    int thinkLimit = 200;
-    int caseSize =16;
+    int nbMines= GLOBAL.NBMINES;
+    int row = GLOBAL.NBLIGNE;
+    int col = GLOBAL.NBCOL;
+    String choosedAi = GLOBAL.DEFAULT_AI;
+    String choosedDesign = GLOBAL.DEFAULT_DESIGN;
+    int timeDelay = GLOBAL.DEFAULT_DELAY;
+    int thinkLimit = GLOBAL.DEFAULT_MAXTHINK;
+    int caseSize =GLOBAL.CELL_SIZE;
 
 
     private final TextListener textListener = new TextListener();
@@ -54,8 +56,10 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     JTextField choiceSizeCase;
     JPanel panelCreation;
     JComboBox choixAI;
+    JComboBox choixDesign;
     JFileChooser chooser;
     List<Class<?>> classes;
+    List<String> allDesign;
 
     File savedGridToPlay =null;
     String emptyLabelName = "Aucun";
@@ -71,12 +75,12 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         label_mine       = new JLabel("Nb mines: "+nbMines);
 
         Dimension dim_jtext = new Dimension(120,20);
-        choiceRow = new JTextField("20");
+        choiceRow = new JTextField(""+row);
         choiceRow.setPreferredSize(dim_jtext);
         choiceRow.setMinimumSize(dim_jtext);
         choiceRow.getDocument().addDocumentListener(textListener);
 
-        choiceCol = new JTextField("20");
+        choiceCol = new JTextField(""+col);
         choiceCol.setPreferredSize(dim_jtext);
         choiceCol.setMinimumSize(dim_jtext);
         choiceCol.getDocument().addDocumentListener(textListener);
@@ -90,6 +94,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         sliderMines.setPaintLabels(true);
         sliderMines.setSize(new Dimension(280, 50));
         sliderMines.setMinimumSize(new Dimension(220, 50));
+
 
 
         choiceSizeCase = new JTextField(""+caseSize);
@@ -107,7 +112,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
         panelCreation = new JPanel(new GridBagLayout());
         panelCreation.setBackground(Color.orange);
-        Dimension panel_creation_dim = new Dimension(390,240);
+        Dimension panel_creation_dim = new Dimension(390,280);
         panelCreation.setPreferredSize(panel_creation_dim);
         panelCreation.setMinimumSize(panel_creation_dim);
         panelCreation.setMaximumSize(panel_creation_dim);
@@ -119,6 +124,14 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
             String name = c.getName();
             choixAI.addItem(name);
         }
+
+        choixDesign = new JComboBox();
+        allDesign = ClassFinder.findFolder("root.design");
+        for(String s : allDesign){
+            choixDesign.addItem(s);
+        }
+
+
 
         GLOBAL.addItem(panelCreation, label_choice_row, 0, 0, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(panelCreation, choiceRow, 1, 0, 1, 1, GridBagConstraints.EAST);
@@ -144,11 +157,14 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         GLOBAL.addItem(panelCreation, new JLabel("Case size"), 0, 7, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(panelCreation, choiceSizeCase, 1, 7, 1, 1, GridBagConstraints.EAST);
 
+        GLOBAL.addItem(panelCreation, new JLabel("Design: "), 0, 8, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(panelCreation, choixDesign, 1, 8, 1, 1, GridBagConstraints.EAST);
+
         importLabel = new JLabel(emptyLabelName);
         importGrid = new JButton("Import");
         importGrid.addActionListener(this);
-        GLOBAL.addItem(panelCreation,importGrid, 1, 8, 1, 1, GridBagConstraints.EAST);
-        GLOBAL.addItem(panelCreation,importLabel, 0, 8, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(panelCreation,importGrid, 1, 9, 1, 1, GridBagConstraints.EAST);
+        GLOBAL.addItem(panelCreation,importLabel, 0, 9, 1, 1, GridBagConstraints.WEST);
 
 
         add(panelCreation, BorderLayout.NORTH);
@@ -172,29 +188,8 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
     }
 
-    public void test(){
 
-       new Thread((new Runnable() {
-           @Override
-           public void run () {
-               new BoardGameView.GameBuilder().
-                       row(row).
-                       col(col).
-                       mines(nbMines).
-                       delay(timeDelay).
-                       think(thinkLimit).
-                       aiName(choosedAi).
-                       caseSize(caseSize).
-                       build();
-
-           }
-       })).start();
-
-
-    }
-
-    public void createBoard(final int lignes,final int cols,final int mines,
-                            final String aiName,final int timeDelay, final int thinkLimit,final int caseSize){
+    public void createBoard(){
 
         System.gc();
         new Thread(
@@ -209,6 +204,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
                                 think(thinkLimit).
                                 aiName(choosedAi).
                                 caseSize(caseSize).
+                                design(choosedDesign).
                                 build();
                         bv.setVisible(true);
                         bv.setLocationRelativeTo(null);
@@ -222,7 +218,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         ).start();
         System.gc();
     }
-    public void loadGridToBoard(final String aiName, final int timeDelay, final int thinkLimit,final int caseSize){
+    public void loadGridToBoard(){
         System.out.println("Load grid");
         System.gc();
         new Thread(
@@ -232,10 +228,11 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
                         //BoardGameView bv = new BoardGameView(new Grid(savedGridToPlay),aiName,timeDelay,thinkLimit,caseSize);
                         BoardGameView bv = new BoardGameView.GameBuilder().
                                 loadGrid(savedGridToPlay).
-                                aiName(aiName).
+                                aiName(choosedAi).
                                 caseSize(caseSize).
                                 delay(timeDelay).
                                 think(thinkLimit).
+                                design(choosedDesign).
                                 build();
                         bv.setVisible(true);
                         bv.setLocationRelativeTo(null);
@@ -253,7 +250,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
         if(actionEvent.getActionCommand() == "Create new game"){
             updateParameter();
-            createBoard(row, col, nbMines, choosedAi,timeDelay,thinkLimit,caseSize);
+            createBoard();
 
         }else if(actionEvent.getActionCommand() =="Import") {
             chooser = new JFileChooser(".");
@@ -267,7 +264,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
                         updateParameter();
 
-                        loadGridToBoard(choosedAi, timeDelay, thinkLimit,caseSize);
+                        loadGridToBoard();
                         importLabel.setText(chooser.getSelectedFile().getName());
 
                     } else {
@@ -320,6 +317,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         choosedAi = (String)choixAI.getSelectedItem();
         timeDelay= Integer.parseInt(choiceTimer.getText());
         thinkLimit= Integer.parseInt(choiceMaxTime.getText());
+        choosedDesign =(String) choixDesign.getSelectedItem();
 
         caseSize = Integer.parseInt(choiceSizeCase.getText());
 
