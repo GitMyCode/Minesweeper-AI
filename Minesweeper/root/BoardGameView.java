@@ -204,7 +204,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         }
     }
 
-    private void startGame(){
+    private synchronized void startGame(){
         try{
             if(runner ==null){
                 runner = new GameRunner(ai,grid,gridController,deplayTime,thinkLimit);
