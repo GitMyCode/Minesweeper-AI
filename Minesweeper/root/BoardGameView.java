@@ -40,6 +40,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private JButton reset;
     private JButton start;
     private JButton step;
+    private JButton stop;
 
     private JRadioButton rbInfinit;
     private JRadioButton rbStopAfterGame;
@@ -182,6 +183,12 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
         if(actionEvent.getActionCommand() == "Start"){
             startGame();
+
+        }else if(actionEvent.getActionCommand() == "Stop"){
+            if(runner!= null){
+                runner.terminate();
+                runner =null;
+            }
         }else if(actionEvent.getActionCommand() == "Reset") {
             resetGame();
         }else if(actionEvent.getActionCommand() == "Infinit play"){
@@ -189,9 +196,11 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             startGame();
         }else if(actionEvent.getActionCommand() == "Step"){
             ((JButton)actionEvent.getSource()).setEnabled(false);
-            runner = null;
-            startGame();
-            runner.terminate();
+            if(runner ==null){
+                startGame();
+                runner.terminate();
+            }
+
         }
     }
 
@@ -259,13 +268,17 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
 
     @Override
-    public void callback () {
+    public synchronized void callback () {
         if(infinitGame && (runner != null && runner.isRunning())){
             resetGame();
             startGame();
+        }else{
+            runner = null;
         }
+
         /*Remettre disponible le step button au cas ou il avait ete desactive (pour prevenir  le spam)*/
         step.setEnabled(true);
+
     }
 
     @Override
@@ -333,6 +346,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         start = new JButton("Start");
         infinit = new JButton("Infinit play");
         step = new JButton("Step");
+        stop = new JButton("Stop");
+        stop.addActionListener(this);
         reset.addActionListener(this);
         start.addActionListener(this);
         infinit.addActionListener(this);
@@ -363,13 +378,16 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             }
         });
 
+        JPanel topMenu = new JPanel(new GridBagLayout());
+        GLOBAL.addItem(topMenu, reset, 0, 0, 1, 1, GridBagConstraints.CENTER);
+        GLOBAL.addItem(topMenu, start, 0, 1, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(topMenu, step, 1, 1, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(topMenu, stop, 2, 1, 1, 1, GridBagConstraints.WEST);
 
-        GLOBAL.addItem(menu, reset, 0, 0, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, start, 0, 1, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, step, 1, 1, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, rbInfinit, 0, 3, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, rbStopAfterGame, 0, 4, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, saveGridToFile, 0, 5, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, topMenu, 0, 0, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, rbInfinit, 0, 1, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, rbStopAfterGame, 0, 2, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, saveGridToFile, 0, 3, 1, 1, GridBagConstraints.WEST);
 
         add(menu, BorderLayout.EAST);
 
