@@ -60,7 +60,11 @@ public class GameRunner implements Runnable {
                 Thread.currentThread().interrupt();
                 return;
             }
-        }while(!grid.gameFinish() && running);
+            if(outputObserver ==null){
+                System.out.println("observer null");
+            }
+
+        }while(!grid.gameFinish() && running && outputObserver!=null);
 
 
         /*After game*/
