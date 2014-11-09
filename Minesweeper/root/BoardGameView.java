@@ -159,6 +159,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         this.ai = b.ai;
         this.deplayTime = b.deplayTime;
         this.thinkLimit = b.thinkLimit;
+        setTitle(ai.getAiName());
 
         constructUi(b.nbligne,b.nbcol,b.caseSize,b.designFoler);
         pack();
