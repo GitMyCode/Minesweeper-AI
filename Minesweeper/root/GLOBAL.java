@@ -18,6 +18,7 @@ public class GLOBAL {
     public static final int NBMINES = 400;
     public static final String DEFAULT_AI = "root.ai.RandomAi";
     public static final String DEFAULT_DESIGN = "img";
+    public static final boolean CONTINUE_AFTER = true;
 
     public static final int NB_TYPE_IMAGE = 15;
 
