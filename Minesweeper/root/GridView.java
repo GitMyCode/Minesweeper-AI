@@ -1,6 +1,7 @@
 package root;
 
 import com.sun.java.util.jar.pack.*;
+import root.ENUM.CASE;
 import root.ENUM.COUP;
 
 import javax.imageio.ImageIO;
@@ -38,8 +39,8 @@ public class GridView extends JPanel {
     public GridView(int nbligne,int nbcol,int width, int height,int caseSize,String designFolder){
         this.nbcol = nbcol;
         this.nbligne = nbligne;
-        this.cases = new Image[GLOBAL.NB_TYPE_IMAGE];
         this.caseSize = caseSize;
+        this.cases = new Image[CASE.values().length];
         this.designFolder = designFolder;
 
         grid = new Grid(nbligne,nbcol,20);
@@ -76,8 +77,9 @@ public class GridView extends JPanel {
                 final String scannedPath = "root/design/"+designFolder;
                 Enumeration<URL> ressource = classLoader.getResources(scannedPath);
                 final File folder  = new File(ressource.nextElement().getFile());
-                int i=0;
                 File[] t = folder.listFiles();
+
+
 
                 try {
 
@@ -85,7 +87,12 @@ public class GridView extends JPanel {
                 }catch (Exception e){
                     System.out.println(e);
                 }
+                int i=0;
                 for (File cellImg : t){
+                    if(i == CASE.values().length)
+                        break;
+                    
+
                     java.net.URL imageUrl =  cellImg.toURL();
                     cases[i] =  new ImageIcon(imageUrl).getImage();
                     BufferedImage im = ImageIO.read(cellImg);
@@ -105,6 +112,8 @@ public class GridView extends JPanel {
             }
     }
 
+
+
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
 
@@ -115,6 +124,8 @@ public class GridView extends JPanel {
 
             g.drawImage(cases[grid.gridPlayerView[i].indexValue],y,x,this);
         }
+
+        g.dispose();
     }
 
 
