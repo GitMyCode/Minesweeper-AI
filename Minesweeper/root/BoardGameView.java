@@ -60,7 +60,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private Runnable task = null;
     private Thread t = null;
 
-    boolean infinitGame=false;
+    boolean infinitGame=GLOBAL.CONTINUE_AFTER;
     int nbMines=0;
     int deplayTime = 100;
     int nbLost =0;
@@ -370,6 +370,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
                 updateGameLoopChoice();
             }
         });
+        rbInfinit.setSelected(GLOBAL.CONTINUE_AFTER);
 
         saveGridToFile = new JButton("Save grid");
         saveGridToFile.addActionListener(new ActionListener() {
