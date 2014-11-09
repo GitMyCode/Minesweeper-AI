@@ -430,8 +430,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         cadre.add(Box.createVerticalGlue());
         cadre.add(Box.createHorizontalGlue());
 
-        int width = (col*caseSize) ; //pour expert : 480
-        int height = (row * caseSize); //pour expert :280
+        int width = (col*(caseSize)) ; //pour expert : 480
+        int height = (row * (caseSize)); //pour expert :280
 
         les_y = new Rule(1,col);
         Dimension dim_y = new Dimension(width+20,7);
@@ -464,7 +464,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
 
         gv = new GridView(row,col,width,height,caseSize,designFolder);
-        gv.setBackground(Color.cyan);
+        gv.setBackground(new Color(0x33383D));
 
         GLOBAL.addItem(containterField, gv, 1, 2, 0, 0, GridBagConstraints.CENTER);
 
