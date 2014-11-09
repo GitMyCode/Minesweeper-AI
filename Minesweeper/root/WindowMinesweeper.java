@@ -221,7 +221,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     public void loadGridToBoard(){
         System.out.println("Load grid");
         System.gc();
-        new Thread(
+        Thread t = new Thread(
                 (new Runnable() {
                     @Override
                     public void run() {
@@ -239,7 +239,9 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
                         bv.message("Load file: "+savedGridToPlay.getName());
                     }
                 })
-        ).start();
+        );
+        t.start();
+
 
         System.gc();
 

@@ -10,7 +10,7 @@ public class GLOBAL {
 
 
     /*DEFAULT*/
-    public static int DEFAULT_MAXTHINK = 200;
+    public static int DEFAULT_MAXTHINK = 2000;
     public static int DEFAULT_DELAY    = 100;
     public static int NBCOL = 50;
     public static int NBLIGNE = 40;

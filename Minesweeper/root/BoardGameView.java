@@ -222,6 +222,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
                     }
 
                 };
+
                 t = new Thread(task);
                 t.start();
             }
