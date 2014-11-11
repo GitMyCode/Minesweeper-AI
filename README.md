@@ -42,9 +42,10 @@ Le dossier __root__ dans __Minesweeper__ contient tout le code du projet. Il est
 + __util__ contient une classe permettant de charger toutes les classes dans le paquetage sans connaître leurs noms.
 
 À la racine de root, les fichiers suivants sont utiles à connaître:
-+ __ArtificialPlayer__
-+ __GameRunner__
-+ __WindowMinesweeper__
++ __BoardGameView__ contient tous les événements liés au jeu (création de la grille, options de la grille, etc.).
++ __GameRunner__ contient les méthodes nécessaires pour l'exécution du jeu.
++ __GLOBAL__ contient toutes les valeurs *hardcodées* du jeu. Pratique pour faire des changements à la taille de la grille, aux délais, au nombre de mines, etc.
++ __WindowMinesweeper__ contient toute l'interface du menu d'options qui permet de démarrer le jeu.
 
 IntelliJ, lorsqu'un nouveau projet est créé, ajoute un dossier __IDEA__ à la racine, qui contient tous les fichiers nécessaires à la compilation. Il s'agit en grande partie des fichiers xml. Vous n'avez pas à vous préoccuper de ce dossier.
 
