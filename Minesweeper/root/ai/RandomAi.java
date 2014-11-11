@@ -25,7 +25,7 @@ public class RandomAi implements ArtificialPlayer {
 
 
     @Override
-    public Set<Move> getAiPlay (Grid g,int thinkLimit) {
+    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
 
         CASE[] myView = g.getCpyPlayerView();
         Random ran = new Random();
@@ -61,7 +61,7 @@ public class RandomAi implements ArtificialPlayer {
     }
 
     @Override
-    public String getAiName () {
+    public String getName() {
         return "Random";
     }
 }

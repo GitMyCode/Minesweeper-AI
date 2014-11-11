@@ -38,7 +38,7 @@ public class CSP implements ArtificialPlayer{
     List<Map<Integer,Integer>> allHitFlag;
     Integer  nbPossibilite =0;
     @Override
-    public Set<Move> getAiPlay (Grid g,int thinkLimit) {
+    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
 
 
 
@@ -146,7 +146,7 @@ public class CSP implements ArtificialPlayer{
     }
 
     @Override
-    public String getAiName () {
+    public String getName() {
         return "CSP-Martin";
     }
 

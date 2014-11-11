@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class nIA implements ArtificialPlayer{
     @Override
-    public Set<Move> getAiPlay(Grid g, int thinkLimit) {
+    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
 
         CASE[] gc = g.getCpyPlayerView();
 
@@ -33,7 +33,7 @@ public class nIA implements ArtificialPlayer{
     }
 
     @Override
-    public String getAiName() {
+    public String getName() {
         return "test";
     }
 }

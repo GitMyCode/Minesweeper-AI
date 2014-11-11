@@ -2,13 +2,7 @@ package root;
 
 import java.util.Set;
 
-/**
- * Created by MB on 10/30/2014.
- */
 public interface ArtificialPlayer {
-
-    public Set<Move> getAiPlay(Grid g,int thinkLimit);
-    public String getAiName ();
-
-
+    public Set<Move> getNextMoves(Grid g, int thinkLimit);
+    public String getName();
 }

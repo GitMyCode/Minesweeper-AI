@@ -1,32 +1,20 @@
 package root;
 
-//import javafx.scene.control.RadioButton;
-
-import root.ENUM.CASE;
-
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by MB on 10/29/2014.
- */
 public class BoardGameView extends JFrame implements ActionListener, OutputObserver{
-
-
-    private JPanel gridPanel;
-    private Rule les_y;
-    private Rule les_x;
+    private Rule yAxis;
+    private Rule xAxis;
     private Box cadre;
     private JPanel containterField;
 
@@ -42,10 +30,10 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private JButton step;
     private JButton stop;
 
-    private JRadioButton rbInfinit;
+    private JRadioButton rbInfinite;
     private JRadioButton rbStopAfterGame;
     private ButtonGroup buttonGroup;
-    private JButton infinit;
+    private JButton infinite;
     private JButton saveGridToFile;
 
     GridView gv;
@@ -60,90 +48,95 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private Runnable task = null;
     private Thread t = null;
 
-    boolean infinitGame=GLOBAL.CONTINUE_AFTER;
-    int nbMines=0;
-    int deplayTime = 100;
-    int nbLost =0;
-    int nbWins =0;
-    int thinkLimit=1000;
+    boolean infiniteGame = GLOBAL.CONTINUE_AFTER;
+    int nbMines = 0;
+    int delayTime = 100;
+    int nbLost = 0;
+    int nbWins = 0;
+    int thinkLimit = 1000;
     int caseSize = 16;
 
     public static class GameBuilder {
-        int nbligne=GLOBAL.NBLIGNE;
-        int nbcol= GLOBAL.NBCOL;
-        int nbMines= GLOBAL.NBMINES;
-        int deplayTime = GLOBAL.DEFAULT_DELAY;
-        int thinkLimit= GLOBAL.DEFAULT_MAXTHINK;
+        int nbLignes = GLOBAL.NBLIGNE;
+        int nbCols = GLOBAL.NBCOL;
+        int nbMines = GLOBAL.NBMINES;
+        int delayTime = GLOBAL.DEFAULT_DELAY;
+        int thinkLimit = GLOBAL.DEFAULT_MAXTHINK;
         int caseSize = GLOBAL.CELL_SIZE;
         Grid grid = null;
         ArtificialPlayer ai;
         String aiString;
-        String designFoler = GLOBAL.DEFAULT_DESIGN;
+        String designFolder = GLOBAL.DEFAULT_DESIGN;
 
+        public GameBuilder(){ }
 
-        public GameBuilder(){
-        }
-
-        public BoardGameView build(){
-            grid = (grid==null)? new Grid(nbligne,nbcol,nbMines): grid;
+        public BoardGameView build() {
+            grid = (grid==null)? new Grid(nbLignes, nbCols,nbMines): grid;
             return new BoardGameView(this);
         }
 
-
         public GameBuilder loadGrid(File f){
             this.grid = new Grid(f);
-            this.nbcol = grid.nbcol;
-            this.nbligne = grid.nbligne;
-            this.nbMines = grid.NBMINES;
+            this.nbCols = grid.nbCols;
+            this.nbLignes = grid.nbLignes;
+            this.nbMines = grid.nbMines;
             return this;
         }
 
-        public GameBuilder row (int nbligne) {
-            this.nbligne = nbligne;return this;
-        }
-        public GameBuilder design (String s){
-            this.designFoler = s; return this;
+        public GameBuilder row (int nbLignes) {
+            this.nbLignes = nbLignes;
+            return this;
         }
 
-        public GameBuilder col (int nbcol) {
-            this.nbcol = nbcol;return this;
+        public GameBuilder design (String s){
+            this.designFolder = s;
+            return this;
+        }
+
+        public GameBuilder col (int nbCols) {
+            this.nbCols = nbCols;
+            return this;
         }
 
         public GameBuilder mines (int nbMines) {
-            this.nbMines = nbMines;return this;
+            this.nbMines = nbMines;
+            return this;
         }
 
-        public GameBuilder delay (int deplayTime) {
-            this.deplayTime = deplayTime;return this;
+        public GameBuilder delay (int delayTime) {
+            this.delayTime = delayTime;
+            return this;
         }
 
         public GameBuilder think (int thinkLimit) {
-            this.thinkLimit = thinkLimit;return this;
+            this.thinkLimit = thinkLimit;
+            return this;
         }
 
         public GameBuilder caseSize (int caseSize) {
-            this.caseSize = caseSize;return this;
+            this.caseSize = caseSize;
+            return this;
         }
         public GameBuilder aiName(String aiName){
-            this.aiString =aiName;
+            this.aiString = aiName;
             this.ai = getAI(aiName);
             return this;
         }
 
         public GameBuilder grid (Grid grid) {
-            this.grid = grid;return this;
+            this.grid = grid;
+            return this;
         }
 
-
         /*Prend le nom du fichier et va chercher la class puis cree une instance*/
-        private ArtificialPlayer getAI(String name){
+        private ArtificialPlayer getAI(String name) {
             ArtificialPlayer returnAi = null;
-            try{
+            try {
                 Class c = Class.forName(name);
                 Constructor<?> constructor = c.getConstructor();
-                returnAi =(ArtificialPlayer) constructor.newInstance();
+                returnAi = (ArtificialPlayer) constructor.newInstance();
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e);
             }
             return returnAi;
@@ -151,75 +144,65 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     }
 
-
-
     public BoardGameView(GameBuilder b){
         this.grid = b.grid;
         this.caseSize = b.caseSize;
         this.ai = b.ai;
-        this.deplayTime = b.deplayTime;
+        this.delayTime = b.delayTime;
         this.thinkLimit = b.thinkLimit;
-        setTitle(ai.getAiName());
+        setTitle(ai.getName());
 
-        constructUi(b.nbligne,b.nbcol,b.caseSize,b.designFoler);
+        constructUi(b.nbLignes, b.nbCols, b.caseSize, b.designFolder);
         pack();
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing (WindowEvent windowEvent) {
-                super.windowClosing(windowEvent);
-                closingCleanUp();
+            super.windowClosing(windowEvent);
+            closingCleanUp();
             }
         });
         linkMVC();
-
     }
-
-
-
-
-
 
     @Override
     public void actionPerformed (ActionEvent actionEvent) {
 
-        if(actionEvent.getActionCommand() == "Start"){
+        if(actionEvent.getActionCommand() == "Start") {
             startGame();
-
-        }else if(actionEvent.getActionCommand() == "Stop"){
-            if(runner!= null){
+        } else if(actionEvent.getActionCommand() == "Stop") {
+            if(runner!= null) {
                 runner.terminate();
                 runner =null;
             }
-        }else if(actionEvent.getActionCommand() == "Reset") {
+        } else if(actionEvent.getActionCommand() == "Reset") {
             resetGame();
-        }else if(actionEvent.getActionCommand() == "Infinit play"){
-            infinitGame = true;
+        } else if(actionEvent.getActionCommand() == "Infinit play") {
+            infiniteGame = true;
             startGame();
-        }else if(actionEvent.getActionCommand() == "Step"){
+        } else if(actionEvent.getActionCommand() == "Step") {
             ((JButton)actionEvent.getSource()).setEnabled(false);
-            if(runner ==null){
+            if(runner == null){
                 startGame();
                 runner.terminate();
             }
-
         }
     }
 
     private synchronized void startGame(){
-        try{
-            if(runner ==null){
-                runner = new GameRunner(ai,grid,gridController,deplayTime,thinkLimit);
+        try {
+            if(runner == null) {
+                runner = new GameRunner(ai, grid, gridController, delayTime, thinkLimit);
                 runner.setOutputObserver(this);
                 task = new Runnable(){
                     @Override
                     public void run(){
-                        try{
-                            System.gc();
-                            runner.run();
-                            System.gc();
-                        }catch(Exception e){
-                            e.printStackTrace();
-                        }
+                    try {
+                        System.gc();
+                        runner.run();
+                        System.gc();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
                     }
 
                 };
@@ -227,19 +210,19 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
                 t = new Thread(task);
                 t.start();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
 
 
-    public void resetGame(){
+    public void resetGame() {
         grid.resetGrid();
 
-        if(t !=null){
+        if(t != null) {
             t.interrupt();
         }
-        if(runner!=null)runner.terminate();
+        if(runner != null)runner.terminate();
         runner = null;
         gv.repaint();
         flagRemaining.setText(String.valueOf(nbMines));
@@ -252,29 +235,14 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     public synchronized void message(final String msg) {
         messageTextArea.append(msg + "\n");
         messageTextArea.setCaretPosition(messageTextArea.getDocument().getLength());
-        /*Runnable  runnable = new Runnable() {
-            public void run(){
-
-
-                if (messageTextArea.getDocument().getLength() > 50000) {
-                    try {
-                        messageTextArea.getDocument().remove(0, 5000);
-                    } catch (BadLocationException e) {
-                    }
-                }
-            }
-        };
-        SwingUtilities.invokeLater(runnable);*/
     }
-
-
 
     @Override
     public synchronized void callback () {
-        if(infinitGame && (runner != null && runner.isRunning())){
+        if(infiniteGame && (runner != null && runner.isRunning())) {
             resetGame();
             startGame();
-        }else{
+        } else {
             runner = null;
         }
 
@@ -296,25 +264,24 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     }
 
     public void updateGameLoopChoice(){
-        if(rbInfinit.isSelected()){
-            infinitGame = true;
-        }else {
-            infinitGame= false;
+        if(rbInfinite.isSelected()) {
+            infiniteGame = true;
+        } else {
+            infiniteGame = false;
         }
-
     }
-
 
     private void closingCleanUp(){
         System.out.println("closing");
-        if(t != null){
+        if(t != null) {
             t.interrupt();
         }
-        if(task !=null){
+
+        if(task != null) {
             task = null;
         }
 
-        if(runner!=null){
+        if(runner != null) {
             runner.terminate();
             runner = null;
         }
@@ -322,56 +289,51 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     public void saveGrid(){
         try {
-
             Format formatter = new SimpleDateFormat("MM-dd_hh-mm-ss");
-            String fileName = "grid-"+(formatter.format(new Date()));
+            String fileName = "grid-" + (formatter.format(new Date()));
             grid.saveToFile(fileName);
             message("Grid saved : " + fileName);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-
-
-
-
-
-    private void constructUi(int nbligne,int nbcol,int caseSize,String designFolder){
-        createGridView(nbligne, nbcol,caseSize,designFolder);
-        flagRemaining = new JLabel(""+nbMines);
-
+    private void constructUi(int nbLignes, int nbCols, int caseSize, String designFolder){
+        createGridView(nbLignes, nbCols, caseSize, designFolder);
+        flagRemaining = new JLabel("" + nbMines);
 
         menu = new JPanel(new GridBagLayout());
 
         reset = new JButton("Reset");
         start = new JButton("Start");
-        infinit = new JButton("Infinit play");
+        infinite = new JButton("Infinit play");
         step = new JButton("Step");
         stop = new JButton("Stop");
         stop.addActionListener(this);
         reset.addActionListener(this);
         start.addActionListener(this);
-        infinit.addActionListener(this);
+        infinite.addActionListener(this);
         step.addActionListener(this);
 
-        rbInfinit = new JRadioButton("Continue after game");
+        rbInfinite = new JRadioButton("Continue after game");
         rbStopAfterGame = new JRadioButton("Stop after game");
         buttonGroup = new ButtonGroup();
-        buttonGroup.add(rbInfinit); buttonGroup.add(rbStopAfterGame);
-        rbInfinit.addActionListener(new ActionListener() {
+        buttonGroup.add(rbInfinite); buttonGroup.add(rbStopAfterGame);
+        rbInfinite.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed (ActionEvent actionEvent) {
+            public void actionPerformed(ActionEvent actionEvent) {
                 updateGameLoopChoice();
             }
         });
+
         rbStopAfterGame.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed (ActionEvent actionEvent) {
+            public void actionPerformed(ActionEvent actionEvent) {
                 updateGameLoopChoice();
             }
         });
-        rbInfinit.setSelected(GLOBAL.CONTINUE_AFTER);
+
+        rbInfinite.setSelected(GLOBAL.CONTINUE_AFTER);
 
         saveGridToFile = new JButton("Save grid");
         saveGridToFile.addActionListener(new ActionListener() {
@@ -388,43 +350,35 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         GLOBAL.addItem(topMenu, stop, 2, 1, 1, 1, GridBagConstraints.WEST);
 
         GLOBAL.addItem(menu, topMenu, 0, 0, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, rbInfinit, 0, 1, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(menu, rbInfinite, 0, 1, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(menu, rbStopAfterGame, 0, 2, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(menu, saveGridToFile, 0, 3, 1, 1, GridBagConstraints.WEST);
 
         add(menu, BorderLayout.EAST);
 
-
         JPanel bottomPanel = new JPanel(new GridBagLayout());
         JPanel bottomPanelScore = new JPanel(new GridBagLayout());
-        JPanel buttomPanelMessage = new JPanel(new GridBagLayout());
         JScrollPane pane = new JScrollPane();
-        //buttomPanel.setBackground(Color.cyan);
         messageTextArea = new JTextArea();
         messageTextArea.setColumns(30);
         messageTextArea.setEditable(false);
         messageTextArea.setRows(5);
         pane.setViewportView(messageTextArea);
 
+        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb flag: "), 0, 0, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanelScore, flagRemaining, 1, 0, 1, 1, GridBagConstraints.EAST);
 
+        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb lost: "), 0, 1, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanelScore, lostTotal = new JLabel("0"), 1, 1, 1, 1, GridBagConstraints.EAST);
 
-        GLOBAL.addItem(bottomPanelScore,new JLabel("Nb flag: "),0,0,1,1,GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanelScore,flagRemaining,1,0,1,1,GridBagConstraints.EAST);
-
-        GLOBAL.addItem(bottomPanelScore,new JLabel("Nb lost: "),0,1,1,1,GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanelScore,lostTotal = new JLabel("0"),1,1,1,1,GridBagConstraints.EAST);
-
-        GLOBAL.addItem(bottomPanelScore,new JLabel("Nb wins: "),0,2,1,1,GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanelScore,winsTotal = new JLabel("0"),1,2,1,1,GridBagConstraints.EAST);
-
+        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb wins: "), 0, 2, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanelScore, winsTotal = new JLabel("0"), 1, 2, 1, 1, GridBagConstraints.EAST);
 
         GLOBAL.addItem(bottomPanel, bottomPanelScore, 0, 0, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(bottomPanel, pane, 1, 0, 1, 1, GridBagConstraints.WEST);
-        add(bottomPanel,BorderLayout.SOUTH);
+        add(bottomPanel, BorderLayout.SOUTH);
 
-
-
-        message("Initiate AI: "+ai.getAiName());
+        message("Initiate AI: " + ai.getName());
     }
 
      public void createGridView(int row,int col, int caseSize, String designFolder){
@@ -433,23 +387,22 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         cadre.add(Box.createVerticalGlue());
         cadre.add(Box.createHorizontalGlue());
 
-        int width = (col*(caseSize)) ; //pour expert : 480
+        int width = (col * (caseSize)) ; //pour expert : 480
         int height = (row * (caseSize)); //pour expert :280
 
-        les_y = new Rule(1,col);
+        yAxis = new Rule(1, col);
         Dimension dim_y = new Dimension(width+20,7);
-        les_y.setPreferredSize(dim_y);
-        les_y.setMinimumSize(dim_y);
-        les_y.setMaximumSize(dim_y);
-        les_y.setLayout(new GridLayout(1,col));
+        yAxis.setPreferredSize(dim_y);
+        yAxis.setMinimumSize(dim_y);
+        yAxis.setMaximumSize(dim_y);
+        yAxis.setLayout(new GridLayout(1, col));
 
-        les_x = new Rule(0,row);
+        xAxis = new Rule(0,row);
         Dimension dim_x = new Dimension(10,height);
-        les_x.setPreferredSize(dim_x);
-        les_x.setMinimumSize(dim_x);
-        les_x.setMaximumSize(dim_x);
-        // les_x.setBackground(Color.CYAN);
-        les_x.setLayout(new GridLayout(row,1));
+        xAxis.setPreferredSize(dim_x);
+        xAxis.setMinimumSize(dim_x);
+        xAxis.setMaximumSize(dim_x);
+        xAxis.setLayout(new GridLayout(row, 1));
 
 
 
@@ -461,9 +414,9 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         //containterField.setBackground(Color.red);
 
 
-        GLOBAL.addItem(containterField, les_y, 1, 0, 0, 7, GridBagConstraints.NORTHWEST);
+        GLOBAL.addItem(containterField, yAxis, 1, 0, 0, 7, GridBagConstraints.NORTHWEST);
 
-        GLOBAL.addItem(containterField, les_x, 0, 1, 0, 7, GridBagConstraints.WEST);
+        GLOBAL.addItem(containterField, xAxis, 0, 1, 0, 7, GridBagConstraints.WEST);
 
 
         gv = new GridView(row,col,width,height,caseSize,designFolder);
