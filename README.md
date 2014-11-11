@@ -11,6 +11,8 @@ Voici le code pour notre 3e projet du cours d'Intelligence Artificielle avec Ér
 Exécution du jeu
 ----------------
 
+
+
 Installation et compilation du code (pour correction ou contribution)
 --------------------------------------------------------------------
 Téléchargez le code du jeu dans un dossier. Pour ce faire, vous pouvez cliquer sur le bouton *Download ZIP* à droite de l'écran et décompresser le dossier, ou encore exécuter la commande `git clone https://github.com/GitMyCode/Minesweeper-AI.git`
@@ -28,5 +30,10 @@ Choisissez Editor>File Encoding. Assurez-vous que tous les encodages sont en UTF
 Pour indiquer à IntelliJ à quel endroit le Main se trouve dans le projet (et pour exécuter le programme en même temps), ouvrez l'arborescence et cliquez avec le bouton droit de la souris sur : MineSweeper>Root>WindowMinesweeper. Choisissez *Run WindowMineswee...main()*.
 
 Voilà! Vous pouvez vous amuser à configurer votre Démineur et à le tester avec différents algorithmes.
+
+Structure des dossiers
+----------------------
+Le dossier __root__ dans __Minesweeper__ contient tout le code du projet. Il est composé de plusieurs sous-dossiers:
++ __ai__ contient les différents algorithmes pour le joueur artificiel (CSP, aléatoire, réseau bayésien...)
 
 
