@@ -10,7 +10,7 @@ Voici le code pour notre 3e projet du cours d'Intelligence Artificielle avec Ér
 
 Exécution du jeu
 ----------------
-
+Section à venir.
 
 
 Installation et compilation du code (pour correction ou contribution)
@@ -33,8 +33,8 @@ Pour indiquer à IntelliJ à quel endroit le Main se trouve dans le projet (et p
 
 Voilà! Vous pouvez vous amuser à configurer votre Démineur et à le tester avec différents algorithmes.
 
-Structure des dossiers
-----------------------
+Structure du projet
+--------------------
 Le dossier __root__ dans __Minesweeper__ contient tout le code du projet. Il est composé de plusieurs sous-dossiers:
 + __ai__ contient les différents algorithmes pour le joueur artificiel (CSP, aléatoire, réseau bayésien...)
 + __design__ contient les éléments de l'interface graphique du jeu.
