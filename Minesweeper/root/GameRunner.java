@@ -79,7 +79,7 @@ public class GameRunner implements Runnable {
         }
         if(!Thread.currentThread().isInterrupted()){
             try{
-                Thread.sleep(100);
+                Thread.sleep(200);
             }catch(InterruptedException ie){
                 Thread.currentThread().interrupt();
                 outputObserver.callback();

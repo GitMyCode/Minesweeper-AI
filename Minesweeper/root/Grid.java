@@ -412,7 +412,7 @@ public class Grid {
         }
     }
 
-    protected void saveToFile(String fileName) throws Exception{
+    public void saveToFile(String fileName) throws Exception{
 
 
             FileWriter fw = new FileWriter(fileName);
