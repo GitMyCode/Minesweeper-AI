@@ -6,7 +6,7 @@ Voici le code pour notre 3e projet du cours d'Intelligence Artificielle avec Ér
 + Frédéric Vachon
 + Louis-Bertrand Varin
 + Geneviève Lalonde, LALG08568204
-+ Nilovna Bascunan-Vasquez
++ Nilovna Bascunan-Vasquez, BASN22518900
 
 Exécution du jeu
 ----------------
@@ -23,10 +23,18 @@ Une fois dans IntelliJ, créez un nouveau projet. Lorsque vous devez créer un d
 
 Attendez que IntelliJ termine de compiler les modules. Ensuite, vous devriez avoir une arborescence de tous les fichiers du projet à gauche de l'écran.
 
-Sélectionnez le dossier MineSweeper dans Minesweeper-AI et appuyez sur F4 pour ouvrir la fenêtre des Module Settings. À l'aide du bouton __Mark as:__, marquez le dossier MineSweeper comme étant un dossier __Sources__. Fermez la fenêtre des Settings.
+Sélectionnez le dossier MineSweeper dans Minesweeper-AI et appuyez sur F4 pour ouvrir la fenêtre des Module Settings. 
+
+À l'aide du bouton __Mark as:__, marquez le dossier MineSweeper comme étant un dossier __Sources__. 
+
+Fermez la fenêtre des Settings.
+
 Ouvrez maintenant la fenêtre des paramètres du projet dans File>Settings... 
+
 Choisissez Editor>File Encoding. Assurez-vous que tous les encodages sont en UTF-8, y compris __Default encoding for properties files__ dans le bas de l'écran. 
+
 Choisissez ensuite Version Control>Github si vous désirez faire des mises à jour du dépôt. Inscrivez __https://github.com/GitMyCode/Minesweeper-AI.git__ dans le champ __Host:__ et entrez vos informations de login dans les champs appropriés, puis cliquez sur __Apply__.
+
 Fermez la fenêtre des Settings.
 
 Pour indiquer à IntelliJ à quel endroit le Main se trouve dans le projet (et pour exécuter le programme en même temps), ouvrez l'arborescence et cliquez avec le bouton droit de la souris sur : MineSweeper>Root>WindowMinesweeper. Choisissez __Run WindowMineswee...main()__.

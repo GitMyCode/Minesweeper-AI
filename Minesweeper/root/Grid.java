@@ -17,71 +17,63 @@ import static root.ENUM.CASE.*;
 
 public class Grid {
 
-    public int nbcol;
-    public int nbligne;
+    public int nbCols;
+    public int nbLignes;
     public int length;
-    protected  int NBMINES;
+    protected int nbMines;
 
     protected int nbMinesRemaining;
-    protected int nbFlagRemaining;
-    protected boolean lost= false;
+    protected int nbFlagsRemaining;
+    protected boolean lost = false;
     protected boolean win = false;
-
 
     protected CASE[] underneathValues;
     CASE[] gridPlayerView;
 
-    Random ran = new Random();
+    Random rand = new Random();
 
-
-
-
-    public Grid(File f){
-        try{
+    public Grid(File f) {
+        try {
             Scanner sc = new Scanner(f);
-            nbligne = sc.nextInt();
-            nbcol   = sc.nextInt();
-            NBMINES = sc.nextInt();
-            nbFlagRemaining = sc.nextInt();
-            nbMinesRemaining = sc.nextInt();
-            length = nbcol*nbligne;
-            this.nbFlagRemaining = NBMINES;
-            this.nbMinesRemaining = NBMINES;
+            this.nbLignes = sc.nextInt();
+            this.nbCols = sc.nextInt();
+            this.nbMines = sc.nextInt();
+            this.nbFlagsRemaining = sc.nextInt();
+            this.nbMinesRemaining = sc.nextInt();
+            this.length = nbCols * nbLignes;
+            this.nbFlagsRemaining = nbMines;
+            this.nbMinesRemaining = nbMines;
 
-            gridPlayerView = new CASE[length];
-            underneathValues = new CASE[length];
+            this.gridPlayerView = new CASE[length];
+            this.underneathValues = new CASE[length];
 
-            for(int i =0; i<length;i++){
-                underneathValues[i] = CASE.caseFromInt(sc.nextInt());
+            for(int i = 0; i < length; i++){
+                this.underneathValues[i] = CASE.caseFromInt(sc.nextInt());
             }
+
             String s = sc.next();
-            for(int i =0; i<length;i++){
-                gridPlayerView[i] = CASE.caseFromInt(sc.nextInt());
+            for(int i = 0; i < length; i++){
+                this.gridPlayerView[i] = CASE.caseFromInt(sc.nextInt());
             }
 
-        }catch (Exception e){
-            System.out.println("Erreur remake grid:"+e);
+        } catch (Exception e) {
+            System.out.println("Erreur remake grid:" + e);
         }
     }
 
-    public Grid(int nbligne, int nbcol,int nbMines) {
-        this.nbcol = nbcol;
-        this.nbligne = nbligne;
-        this.length = nbcol*nbligne;
-        this.NBMINES = nbMines;
-        this.nbFlagRemaining = nbMines;
+    public Grid(int nbLignes, int nbCols, int nbMines) {
+        this.nbCols = nbCols;
+        this.nbLignes = nbLignes;
+        this.length = nbCols * nbLignes;
+        this.nbMines = nbMines;
+        this.nbFlagsRemaining = nbMines;
         this.nbMinesRemaining = nbMines;
+        this.gridPlayerView = new CASE[nbCols * nbLignes];
+
+        Arrays.fill(gridPlayerView, UNDISCOVERED);
 
 
-
-        gridPlayerView = new CASE[nbcol*nbligne];
-
-
-
-        Arrays.fill(gridPlayerView,UNDISCOVERED);
-
-
-        underneathValues = createRdmGrid(nbligne,nbcol,nbMines);
+        underneathValues = createRdmGrid(nbLignes, nbCols,nbMines);
         /*placeMinesRmd(underneathValues,nbMines);
         calculateCasesValues(underneathValues);*/
     }
@@ -95,7 +87,7 @@ public class Grid {
     }
     private void placeMinesRmd(CASE[] grid,int nbMines){
         for(int i=0; i<nbMines;i++){
-            int putMineThere = ran.nextInt(grid.length);
+            int putMineThere = rand.nextInt(grid.length);
             if(grid[putMineThere] == MINE){
                 i--;
             }else {
@@ -174,15 +166,15 @@ public class Grid {
         return list;
     }
 
-    public int getNbFlagRemaining(){
-        return nbFlagRemaining;
+    public int getNbFlagsRemaining(){
+        return nbFlagsRemaining;
     }
 
     public Set<COUP> getLegalCaseCoup (int index){
         CASE c = gridPlayerView[index];
         switch (c){
             case UNDISCOVERED:
-                if(nbFlagRemaining==0){
+                if(nbFlagsRemaining ==0){
                     return EnumSet.of(COUP.SHOW);
                 }else {
                     return EnumSet.of(COUP.SHOW,COUP.FLAG);
@@ -248,13 +240,13 @@ public class Grid {
 
         lost = false;
         win  = false;
-        nbFlagRemaining = NBMINES;
-        nbMinesRemaining= NBMINES;
+        nbFlagsRemaining = nbMines;
+        nbMinesRemaining= nbMines;
 
         for(int i =0; i< length; i++){
             gridPlayerView[i] = UNDISCOVERED;
         }
-        underneathValues = createRdmGrid(nbligne,nbcol,NBMINES);
+        underneathValues = createRdmGrid(nbLignes, nbCols, nbMines);
 
 
     }
@@ -266,7 +258,7 @@ public class Grid {
         if(win)
             return true;
 
-        if(nbMinesRemaining==0 && nbFlagRemaining==0){
+        if(nbMinesRemaining==0 && nbFlagsRemaining ==0){
             win = true;
 
             return true;
@@ -286,7 +278,7 @@ public class Grid {
     private void playFlag(int index){
         CASE theCase = gridPlayerView[index];
         if(theCase == UNDISCOVERED){
-            nbFlagRemaining--;
+            nbFlagsRemaining--;
             gridPlayerView[index] = FLAGED;
             if(underneathValues[index] == MINE){
                 nbMinesRemaining--;
@@ -297,7 +289,7 @@ public class Grid {
     private void playUNFlag(int index){
 
         if(gridPlayerView[index] == FLAGED){
-            nbFlagRemaining++;
+            nbFlagsRemaining++;
             gridPlayerView[index] = UNDISCOVERED;
         }
 
@@ -337,7 +329,7 @@ public class Grid {
                 case DOWN:
                     if(index < 0 || index >= length)
                         return false;
-                    if(!((index + nbcol * (2 - 1)) < length)){
+                    if(!((index + nbCols * (2 - 1)) < length)){
                         return false;
                     }
                     break;
@@ -351,12 +343,12 @@ public class Grid {
                 case LEFT:
                     if(index < 0 || index >= length)
                         return false;
-                    if(!(((index%nbcol + 1) >= 2))) { return false; }
+                    if(!(((index% nbCols + 1) >= 2))) { return false; }
                     break;
                 case RIGHT:
                     if(index < 0 || index >= length)
                         return false;
-                    if(!((nbcol - (index%nbcol)) >= 2)){ return false; }
+                    if(!((nbCols - (index% nbCols)) >= 2)){ return false; }
                     break;
             }
         }
@@ -384,8 +376,8 @@ public class Grid {
 
     private int stepUtility(Dir D){
         switch (D){
-            case DOWN:  return nbcol;
-            case TOP :  return -nbcol;
+            case DOWN:  return nbCols;
+            case TOP :  return -nbCols;
             case LEFT:  return -1;
             case RIGHT: return  1;
         }
@@ -417,11 +409,11 @@ public class Grid {
 
             FileWriter fw = new FileWriter(fileName);
 
-            fw.write(nbligne+" "+nbcol+" "+NBMINES+" "+nbFlagRemaining+" "+nbMinesRemaining+ "\n");
+            fw.write(nbLignes +" "+ nbCols +" "+ nbMines +" "+ nbFlagsRemaining +" "+nbMinesRemaining+ "\n");
             int i=1;String gridAllValue ="";
             for(CASE c : underneathValues){
                 gridAllValue+= c.indexValue+ " ";
-                if(i % nbcol==0){
+                if(i % nbCols ==0){
                     gridAllValue+="\n";
                 }
                 i++;
@@ -432,7 +424,7 @@ public class Grid {
             i=1;String stringGridPlayerView ="";
             for(CASE c : gridPlayerView){
                 stringGridPlayerView+= c.indexValue+" ";
-                if(i % nbcol==0){
+                if(i % nbCols ==0){
                     stringGridPlayerView+="\n";
                 }
                 i++;

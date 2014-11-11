@@ -22,12 +22,12 @@ public class GridControllerImpl implements GridController {
 
     @Override
     public void caseClicked (int ligne, int colonne) {
-        int index = ligne* gridBoard.nbcol + colonne;
+        int index = ligne* gridBoard.nbCols + colonne;
 
         gridBoard.play(index, COUP.SHOW);
 
 
-        flagRemain.setText(String.valueOf(gridBoard.nbFlagRemaining));
+        flagRemain.setText(String.valueOf(gridBoard.nbFlagsRemaining));
         gridView.repaint();
 
     }
@@ -43,14 +43,14 @@ public class GridControllerImpl implements GridController {
         for(Move m : moves){
             gridBoard.play(m.index, m.coup);
         }
-        flagRemain.setText(String.valueOf(gridBoard.getNbFlagRemaining()));
+        flagRemain.setText(String.valueOf(gridBoard.getNbFlagsRemaining()));
         gridView.repaint();
     }
 
     @Override
     public synchronized void movePlay (Move move) {
         gridBoard.play(move.index, move.coup);
-        flagRemain.setText(String.valueOf(gridBoard.getNbFlagRemaining()));
+        flagRemain.setText(String.valueOf(gridBoard.getNbFlagsRemaining()));
         gridView.repaint();
     }
 

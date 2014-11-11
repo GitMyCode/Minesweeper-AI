@@ -36,5 +36,4 @@ public class GLOBAL {
         p.add(c, gc);
     }
 
-
 }

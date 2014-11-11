@@ -1,12 +1,5 @@
 package root;
 
-import root.ENUM.CASE;
-import root.ENUM.COUP;
-import root.ai.CSP;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Set;
 
 /**
@@ -49,7 +42,7 @@ public class GameRunner implements Runnable {
         do{
            //
 
-            Set<Move> aiMoves = ai.getAiPlay(grid,thinkLimit);
+            Set<Move> aiMoves = ai.getNextMoves(grid, thinkLimit);
             controller.movesSetPlay(aiMoves);
             System.gc();
             try{
