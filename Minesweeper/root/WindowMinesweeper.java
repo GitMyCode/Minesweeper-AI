@@ -243,6 +243,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         t.start();
 
 
+
         System.gc();
 
     }

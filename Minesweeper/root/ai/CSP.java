@@ -9,6 +9,7 @@ import root.ai.utilCSP.TimeOver;
 import static root.ENUM.CASE.*;
 import static root.ENUM.COUP.*;
 
+import java.io.File;
 import java.util.*;
 import static root.Dir.*;
 
@@ -71,6 +72,12 @@ public class CSP implements ArtificialPlayer{
 
 
         if(sureMoves.isEmpty()){
+/*            try {
+                gameGrid.saveToFile("CSP");
+            }catch (Exception e){
+                System.out.println(e);
+            }
+            int t=0;*/
             for(int frontierIndex=0; frontierIndex< nbMatchByFrontier.size();frontierIndex++){
                 List<Integer> frontier = allFrontiere.get(frontierIndex);
                 int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
