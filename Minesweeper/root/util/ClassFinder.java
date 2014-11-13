@@ -67,7 +67,7 @@ public final class ClassFinder {
                 allFolder.add(imgFolder.getName());
             }
 
-        }catch (Exception e){
+        } catch (Exception e){
             System.out.println(e);
         }
         return allFolder;

@@ -35,7 +35,7 @@ public class GridControllerImpl implements GridController {
     @Override
     public synchronized void caseClicked (int indexCase) {
 
-        System.out.println("dsfsdf");
+        System.out.println("case cliquée");
     }
 
     @Override

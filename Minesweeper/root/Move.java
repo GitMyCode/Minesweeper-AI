@@ -14,6 +14,7 @@ public class Move {
         this.index = index;
     }
 
+
     @Override
     public boolean equals (Object o) {
         if (this == o) return true;
@@ -26,6 +27,7 @@ public class Move {
 
         return true;
     }
+
 
     @Override
     public int hashCode () {
