@@ -1,7 +1,6 @@
 package root;
 
-import com.sun.java.util.jar.pack.*;
-import root.ENUM.CASE;
+import root.ENUM.CASEGRILLE;
 import root.ENUM.COUP;
 
 import javax.imageio.ImageIO;
@@ -9,14 +8,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
 
-import static root.ENUM.CASE.*;
+import static root.ENUM.CASEGRILLE.*;
 /**
  * Created by MB on 10/29/2014.
  */
@@ -40,7 +38,7 @@ public class GridView extends JPanel {
         this.nbcol = nbcol;
         this.nbligne = nbligne;
         this.caseSize = caseSize;
-        this.cases = new Image[CASE.values().length];
+        this.cases = new Image[CASEGRILLE.values().length];
         this.designFolder = designFolder;
 
         grid = new Grid(nbligne,nbcol,20);
@@ -89,7 +87,7 @@ public class GridView extends JPanel {
                 }
                 int i=0;
                 for (File cellImg : t){
-                    if(i == CASE.values().length)
+                    if(i == CASEGRILLE.values().length)
                         break;
                     
 
