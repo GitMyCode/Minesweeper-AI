@@ -62,12 +62,12 @@ public class GameRunner implements Runnable {
 
         /*After game*/
         if(grid.lost){
-            SendMsg("Lost!");
+            SendMsg("Perdu!");
             outputObserver.updateLost();
            // grid.showAllCase();
 
         }else if(grid.win){
-            SendMsg("Win!");
+            SendMsg("Gagne!");
             outputObserver.updateWins();
         }
         if(!Thread.currentThread().isInterrupted()){
@@ -81,8 +81,6 @@ public class GameRunner implements Runnable {
         }
 
         outputObserver.callback();
-
-
     }
 
 

@@ -69,45 +69,41 @@ public class GridView extends JPanel {
     * je penses que ce devrait etre gerer par une autre class mais bon
     * */
     private void initCasesImages(){
-            try{
+        try {
 
-                final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                final String scannedPath = "root/design/"+designFolder;
-                Enumeration<URL> ressource = classLoader.getResources(scannedPath);
-                final File folder  = new File(ressource.nextElement().getFile());
-                File[] t = folder.listFiles();
+            final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            final String scannedPath = "root/design/"+designFolder;
+            Enumeration<URL> ressource = classLoader.getResources(scannedPath);
+            final File folder  = new File(ressource.nextElement().getFile());
+            File[] t = folder.listFiles();
 
-
-
-                try {
-
-                    Arrays.sort(t,new compImg());
-                }catch (Exception e){
-                    System.out.println(e);
-                }
-                int i=0;
-                for (File cellImg : t){
-                    if(i == CASEGRILLE.values().length)
-                        break;
-                    
-
-                    java.net.URL imageUrl =  cellImg.toURL();
-                    cases[i] =  new ImageIcon(imageUrl).getImage();
-                    BufferedImage im = ImageIO.read(cellImg);
-                    BufferedImage b2 = getScaledInstance(im,caseSize,caseSize,true);
-                    /*RescaleOp rescaleOp = new RescaleOp(0.88f, 20f, null);
-                    rescaleOp.filter(b2, b2);*/
-                    BufferedImage bi = new BufferedImage(cases[i].getWidth(null),cases[i].getHeight(null), BufferedImage.TYPE_INT_ARGB);
-                    Graphics g = bi.createGraphics();
-                    g.drawImage(cases[i],0,0, caseSize,caseSize,null);
-                    cases[i]=  new ImageIcon(b2).getImage();
-                    i++;
-                }
-
-            }catch (Exception e){
+            try {
+                Arrays.sort(t,new compImg());
+            } catch (Exception e){
                 System.out.println(e);
-
             }
+
+            int i=0;
+            for (File cellImg : t){
+                if (i == CASEGRILLE.values().length)
+                    break;
+
+                java.net.URL imageUrl =  cellImg.toURI().toURL();
+                cases[i] =  new ImageIcon(imageUrl).getImage();
+                BufferedImage im = ImageIO.read(cellImg);
+                BufferedImage b2 = getScaledInstance(im,caseSize,caseSize,true);
+                /*RescaleOp rescaleOp = new RescaleOp(0.88f, 20f, null);
+                rescaleOp.filter(b2, b2);*/
+                BufferedImage bi = new BufferedImage(cases[i].getWidth(null),cases[i].getHeight(null), BufferedImage.TYPE_INT_ARGB);
+                Graphics g = bi.createGraphics();
+                g.drawImage(cases[i],0,0, caseSize,caseSize,null);
+                cases[i]=  new ImageIcon(b2).getImage();
+                i++;
+            }
+
+        } catch (Exception e){
+            System.out.println(e);
+        }
     }
 
 
@@ -136,33 +132,31 @@ public class GridView extends JPanel {
 
                 if(l<nbligne && c< nbcol){
                     int index = l*nbcol+c;
-                    if(e.getButton() == MouseEvent.BUTTON3){
-                        if(grid.gridPlayerView[index]==FLAGED){
+                    if (e.getButton() == MouseEvent.BUTTON3){
+                        if (grid.gridPlayerView[index]==FLAGED){
                             controller.movePlay(new Move(index,COUP.UNFLAG));
-                        }else {
+                        } else {
                             controller.movePlay(new Move(index,COUP.FLAG));
                         }
-                    }else{
+                    } else {
                         controller.movePlay(new Move(index,COUP.SHOW));
                     }
 
-                    if(grid.gameFinish()){
-                    if(grid.lost){
+                    if (grid.gameFinish()){
+                    if (grid.lost){
                         //outputObserver.message("Lost!");
                         grid.showAllCase();
-                    }else if(grid.win){
+                    } else if(grid.win){
                         //outputObserver.message("Win!");
                     }
                 }
 
-
                 }
-
-
 
             }
         }
     }
+
 
     public class compImg implements Comparator<File>{
         @Override
@@ -180,14 +174,15 @@ public class GridView extends JPanel {
         }
     }
 
+
     /*
     * https://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
     * */
     public BufferedImage getScaledInstance(BufferedImage img,
                                            int targetWidth,
                                            int targetHeight,
-                                           boolean higherQuality)
-    {
+                                           boolean higherQuality)  {
+
         int type = (img.getTransparency() == Transparency.OPAQUE) ?
                 BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
         BufferedImage ret = (BufferedImage)img;

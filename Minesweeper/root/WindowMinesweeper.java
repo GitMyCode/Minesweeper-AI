@@ -11,7 +11,6 @@ import java.awt.*;
 import java.io.File;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -24,8 +23,8 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     * FAIRE LE MENAGE
     * */
 
-    int nbMines= GLOBAL.NBMINES;
-    int row = GLOBAL.NBLIGNE;
+    int nbMines = GLOBAL.NBMINES;
+    int nbLignes = GLOBAL.NBLIGNE;
     int col = GLOBAL.NBCOL;
     String choosedAi = GLOBAL.DEFAULT_AI;
     String choosedDesign = GLOBAL.DEFAULT_DESIGN;
@@ -75,7 +74,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         label_mine       = new JLabel("Nb mines: " + nbMines);
 
         Dimension dim_jtext = new Dimension(120,20);
-        choiceRow = new JTextField(""+row);
+        choiceRow = new JTextField(""+ nbLignes);
         choiceRow.setPreferredSize(dim_jtext);
         choiceRow.setMinimumSize(dim_jtext);
         choiceRow.getDocument().addDocumentListener(textListener);
@@ -197,7 +196,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
                     @Override
                     public void run() {
                         BoardGameView bv = new BoardGameView.GameBuilder().
-                                row(row).
+                                row(nbLignes).
                                 col(col).
                                 mines(nbMines).
                                 delay(timeDelay).
@@ -315,7 +314,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     public void updateParameter(){
         String text_row = choiceRow.getText();
         String text_col = choiceCol.getText();
-        row = Integer.parseInt(text_row);
+        nbLignes = Integer.parseInt(text_row);
         col = Integer.parseInt(text_col);
         choosedAi = (String)choixAI.getSelectedItem();
         timeDelay= Integer.parseInt(choiceTimer.getText());
@@ -329,12 +328,12 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     public void updateMine(){
         String text_row = choiceRow.getText();
         String text_col = choiceCol.getText();
-        int row = (text_row.equals("") || text_row ==null)? 0 :Integer.parseInt(text_row);
+        int lignes = (text_row.equals("") || text_row ==null)? 0 :Integer.parseInt(text_row);
         int col = (text_col.equals("") || text_col == null)? 0 :Integer.parseInt(text_col);
 
         float minePercentage = sliderMines.getValue();
 
-        nbMines = (int)((row*col) * (minePercentage/100));
+        nbMines = (int)((lignes*col) * (minePercentage/100));
         label_mine.setText("Nb mines: " + nbMines);
 
     }
