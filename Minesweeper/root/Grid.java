@@ -128,35 +128,35 @@ public class Grid {
         List<Integer> list = new ArrayList<Integer>();
 
 
-        if(isStepThisDirInGrid(Dir.RIGHT,index)){
-            list.add(index+step(Dir.RIGHT));
+        if(isStepThisDirInGrid(Direction.RIGHT,index)){
+            list.add(index+step(Direction.RIGHT));
         }
-        if(isStepThisDirInGrid(Dir.DOWN,index)){
-            list.add(index+step(Dir.DOWN));
-        }
-
-        if(isStepThisDirInGrid(Dir.TOP,index)){
-            list.add(index+step(Dir.TOP));
+        if(isStepThisDirInGrid(Direction.DOWN,index)){
+            list.add(index+step(Direction.DOWN));
         }
 
-        if(isStepThisDirInGrid(Dir.LEFT,index)){
-            list.add(index+step(Dir.LEFT));
+        if(isStepThisDirInGrid(Direction.TOP,index)){
+            list.add(index+step(Direction.TOP));
         }
 
-        if(isStepThisDirInGrid(Dir.TOPLEFT,index)){
-            list.add(index+step(Dir.TOPLEFT));
-        }
-        if(isStepThisDirInGrid(Dir.TOPRIGHT,index)){
-            list.add(index+step(Dir.TOPRIGHT));
-        }
-        if(isStepThisDirInGrid(Dir.DOWNLEFT,index)){
-            list.add(index+step(Dir.DOWNLEFT));
-        }
-        if(isStepThisDirInGrid(Dir.DOWNRIGHT,index)){
-            list.add(index+step(Dir.DOWNRIGHT));
+        if(isStepThisDirInGrid(Direction.LEFT,index)){
+            list.add(index+step(Direction.LEFT));
         }
 
-        /*for(Dir D : Dir.direction8){
+        if(isStepThisDirInGrid(Direction.TOPLEFT,index)){
+            list.add(index+step(Direction.TOPLEFT));
+        }
+        if(isStepThisDirInGrid(Direction.TOPRIGHT,index)){
+            list.add(index+step(Direction.TOPRIGHT));
+        }
+        if(isStepThisDirInGrid(Direction.DOWNLEFT,index)){
+            list.add(index+step(Direction.DOWNLEFT));
+        }
+        if(isStepThisDirInGrid(Direction.DOWNRIGHT,index)){
+            list.add(index+step(Direction.DOWNRIGHT));
+        }
+
+        /*for(Direction D : Direction.direction8){
             if(isStepThisDirInGrid(D,index)){
                 list.add((index+ step(D)));
 
@@ -191,7 +191,7 @@ public class Grid {
     public Set<Integer> getUndiscoveredNeigbour(CASE[] grid, int index){
         Set<Integer> set = new HashSet<Integer>();
 
-        for(Dir D: Dir.direction8){
+        for(Direction D: Direction.direction8){
             if(isStepThisDirInGrid(D,index)){
                 int voisin = index + step(D);
                 if(grid[voisin] == UNDISCOVERED){
@@ -307,7 +307,7 @@ public class Grid {
 
 
             if(underneathValues[index] == EMPTY){
-                for(Dir D : Dir.values()){
+                for(Direction D : Direction.values()){
                     int indexVoisin = index + step(D);
                     if(isStepThisDirInGrid(D, index) && gridPlayerView[indexVoisin].equals(UNDISCOVERED) ){
                         playUndiscoveredCase(indexVoisin);
@@ -322,9 +322,9 @@ public class Grid {
 
 
 
-    public boolean isStepThisDirInGrid (Dir D, int index){
+    public boolean isStepThisDirInGrid (Direction D, int index){
 
-        for(Dir d : D.getCompDir()){
+        for(Direction d : D.getCompDir()){
             switch (d){
                 case DOWN:
                     if(index < 0 || index >= length)
@@ -336,7 +336,7 @@ public class Grid {
                 case TOP:
                     if(index < 0 || index >= length)
                         return false;
-                    if(!((index + stepUtility(Dir.TOP) * (2 - 1)) >= 0)){
+                    if(!((index + stepUtility(Direction.TOP) * (2 - 1)) >= 0)){
                         return false;
                     }
                     break;
@@ -364,9 +364,9 @@ public class Grid {
     *          nextplace = current position  + step for direction(le OFFSET)
     * exemple: index =       40              +  step(RIGHT) = 41;
     * */
-    public int step(Dir D){
+    public int step(Direction D){
         int step=0;
-        for(Dir d : D.getCompDir()){
+        for(Direction d : D.getCompDir()){
             step += stepUtility(d);
         }
         return step;
@@ -374,7 +374,7 @@ public class Grid {
 
 
 
-    private int stepUtility(Dir D){
+    private int stepUtility(Direction D){
         switch (D){
             case DOWN:  return nbCols;
             case TOP :  return -nbCols;
@@ -393,7 +393,7 @@ public class Grid {
             int value =0;
 
             if(grid[i] != MINE){
-                for(Dir D : Dir.values()){
+                for(Direction D : Direction.values()){
                     int index = i+ step(D);
                     if(isStepThisDirInGrid(D, i) && grid[index] == MINE){
                         value++;

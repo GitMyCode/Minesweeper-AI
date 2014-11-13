@@ -1,9 +1,7 @@
 package root.ai.utilCSP;
 
-import root.Dir;
 import root.ENUM.CASE;
 import root.Grid;
-import root.ai.*;
 
 import java.util.*;
 

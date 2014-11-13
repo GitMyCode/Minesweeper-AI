@@ -3,15 +3,13 @@ package root.ai;
 import root.*;
 import root.ENUM.CASE;
 import root.ENUM.COUP;
-import root.ai.utilCSP.Tarjan;
 import root.ai.utilCSP.TimeOver;
 
 import static root.ENUM.CASE.*;
 import static root.ENUM.COUP.*;
 
-import java.io.File;
 import java.util.*;
-import static root.Dir.*;
+import static root.Direction.*;
 
 /**
  * Created by MB on 10/31/2014.
@@ -408,31 +406,31 @@ public class CSP implements ArtificialPlayer{
         return allFrontiers;
     }
 
-    public void putInFrontier(int nextIndex,List<Integer> front,Set<Integer> frontiereHash,Set<Integer> allFront, CASE[] grid,Dir lastDir){
+    public void putInFrontier(int nextIndex,List<Integer> front,Set<Integer> frontiereHash,Set<Integer> allFront, CASE[] grid, Direction lastDirection){
 
 
-        Set<Dir> thisDirection = getPossibleDirection(grid, nextIndex, frontiereHash);
+        Set<Direction> thisDirection = getPossibleDirection(grid, nextIndex, frontiereHash);
         if(thisDirection==null || thisDirection.isEmpty())
             return;
 
-        Dir nextDir =null;
-        for(Dir d : thisDirection){
-            nextDir =d;
-            int next = nextIndex+gameGrid.step(nextDir);
+        Direction nextDirection =null;
+        for(Direction d : thisDirection){
+            nextDirection =d;
+            int next = nextIndex+gameGrid.step(nextDirection);
             if(!frontiereHash.contains(next) && !allFront.contains(next) && !isIndiceSatisfied(grid, next)){
                 frontiereHash.add(next);front.add(next);
-                putInFrontier(next,front,frontiereHash,allFront,grid,nextDir);
+                putInFrontier(next,front,frontiereHash,allFront,grid, nextDirection);
             }
         }
     }
 
 
 
-    public Set<Dir> getPossibleDirection(CASE[] grid, int index,Set<Integer> frontiere){
-        Set<Dir> direction = new LinkedHashSet<Dir>();
+    public Set<Direction> getPossibleDirection(CASE[] grid, int index,Set<Integer> frontiere){
+        Set<Direction> direction = new LinkedHashSet<Direction>();
 
         int nbDirCardinal =0;
-        for(Dir D : direction8){
+        for(Direction D : direction8){
             int next = index+gameGrid.step(D);
             if(gameGrid.isStepThisDirInGrid(D,index) && !frontiere.contains(next) && CASE.isIndicatorCase(grid[next])
                     ){

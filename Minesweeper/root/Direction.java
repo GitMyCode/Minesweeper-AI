@@ -6,39 +6,39 @@ import java.util.*;
 /**
  * Created by MB on 10/9/2014.
  */
-public enum Dir {
+public enum Direction {
 
 
     RIGHT(){
-        @Override public Dir opp() { return LEFT; }
+        @Override public Direction opp() { return LEFT; }
 
         @Override
-        public Set<Dir> getCompDir () {
+        public Set<Direction> getCompDir () {
             return EnumSet.of(RIGHT);
         }
     },
 
     LEFT{
-        @Override public Dir opp() { return RIGHT; }
+        @Override public Direction opp() { return RIGHT; }
         @Override
-        public Set<Dir> getCompDir () {
+        public Set<Direction> getCompDir () {
             return EnumSet.of(LEFT);
         }
     },
     DOWN{
-        @Override public Dir opp() { return TOP; }
+        @Override public Direction opp() { return TOP; }
 
         @Override
-        public Set<Dir> getCompDir () {
+        public Set<Direction> getCompDir () {
             return EnumSet.of(DOWN);
         }
     },
 
     TOP{
-        @Override public Dir opp() { return DOWN; }
+        @Override public Direction opp() { return DOWN; }
 
         @Override
-        public Set<Dir> getCompDir () {
+        public Set<Direction> getCompDir () {
             return EnumSet.of(TOP);
         }
     },
@@ -48,45 +48,45 @@ public enum Dir {
 
 
     DOWNLEFT(){
-        @Override public Dir opp() { return TOPRIGHT; }
+        @Override public Direction opp() { return TOPRIGHT; }
 
         @Override
-        public Set<Dir> getCompDir () {
+        public Set<Direction> getCompDir () {
             return EnumSet.of(DOWN,LEFT);
         }
     },
 
     TOPLEFT(){
-        @Override public Dir opp() { return DOWNRIGHT; }
+        @Override public Direction opp() { return DOWNRIGHT; }
 
         @Override
-        public Set<Dir> getCompDir () {
+        public Set<Direction> getCompDir () {
             return EnumSet.of(TOP,LEFT);
         }
     },
 
     DOWNRIGHT(){
-        @Override public Dir opp() { return TOPLEFT; }
+        @Override public Direction opp() { return TOPLEFT; }
 
         @Override
-        public Set<Dir> getCompDir () {
+        public Set<Direction> getCompDir () {
             return EnumSet.of(DOWN,RIGHT);
         }
     },
 
     TOPRIGHT(){
-        @Override public Dir opp() { return DOWNLEFT; }
+        @Override public Direction opp() { return DOWNLEFT; }
 
         @Override
-        public Set<Dir> getCompDir () {
+        public Set<Direction> getCompDir () {
             return EnumSet.of(TOP,RIGHT);
         }
     };
 
     public int nbcol;
 
-    public static final Set<Dir> direction4 = new LinkedHashSet<Dir>();
-    public static final Set<Dir> direction8 = new LinkedHashSet<Dir>();
+    public static final Set<Direction> direction4 = new LinkedHashSet<Direction>();
+    public static final Set<Direction> direction8 = new LinkedHashSet<Direction>();
     static {
         /* Les 4 directions DOWN, RIGHT, DOWNRIGHT, TOPRIGHT d'un point */
         direction4.add(DOWN);
@@ -95,14 +95,14 @@ public enum Dir {
         direction4.add(TOPRIGHT);
 
         /* Toutes les directions d'un point */
-        direction8.addAll(EnumSet.allOf(Dir.class));
+        direction8.addAll(EnumSet.allOf(Direction.class));
     }
 
-    Dir(){ }
+    Direction(){ }
 
 
-    abstract public Set<Dir> getCompDir();
-    abstract public Dir opp(); // direction opposee
+    abstract public Set<Direction> getCompDir();
+    abstract public Direction opp(); // direction opposee
 
 
 
@@ -113,20 +113,20 @@ public enum Dir {
         DIAGR(DOWNLEFT, TOPRIGHT, 2), // Diagonale /
         DIAGL(TOPLEFT, DOWNRIGHT, 3); // Diagonale \
 
-        public Dir dirLeft;
-        public Dir dirRight;
+        public Direction dirLeft;
+        public Direction dirRight;
         public int i;
 
-        Axes(Dir dir, Dir dir2, int i){
+        Axes(Direction dir, Direction dir2, int i){
             this.dirLeft = dir;
             this.dirRight = dir2;
             this.i = i; //index
         }
 
-        public static final Map<Dir, Axes> lookup = new EnumMap<Dir, Axes>(Dir.class);
+        public static final Map<Direction, Axes> lookup = new EnumMap<Direction, Axes>(Direction.class);
 
         static {
-            for(Dir dir : Dir.values()){
+            for(Direction dir : Direction.values()){
                 if(VERTICAL.dirLeft == dir || VERTICAL.dirRight == dir)
                     lookup.put(dir, VERTICAL);
                 else if(HORIZONTAL.dirLeft == dir || HORIZONTAL.dirRight == dir){
@@ -139,7 +139,7 @@ public enum Dir {
             }
         }
 
-        public static Axes getAxe(Dir d){
+        public static Axes getAxe(Direction d){
             return lookup.get(d);
         }
 
