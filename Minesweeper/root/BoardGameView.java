@@ -71,7 +71,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         public GameBuilder(){ }
 
         public BoardGameView build() {
-            grid = (grid==null)? new Grid(nbLignes, nbCols,nbMines): grid;
+            grid = (grid == null)? new Grid(nbLignes, nbCols,nbMines): grid;
             return new BoardGameView(this);
         }
 
@@ -167,19 +167,19 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     @Override
     public void actionPerformed (ActionEvent actionEvent) {
 
-        if(actionEvent.getActionCommand() == "Start") {
+        if(actionEvent.getActionCommand() == "Demarrer") {
             startGame();
-        } else if(actionEvent.getActionCommand() == "Stop") {
+        } else if(actionEvent.getActionCommand() == "Arreter") {
             if(runner!= null) {
                 runner.terminate();
                 runner =null;
             }
-        } else if(actionEvent.getActionCommand() == "Reset") {
+        } else if(actionEvent.getActionCommand() == "Reinitialiser") {
             resetGame();
-        } else if(actionEvent.getActionCommand() == "Infinit play") {
+        } else if(actionEvent.getActionCommand() == "Parties infinies") {
             infiniteGame = true;
             startGame();
-        } else if(actionEvent.getActionCommand() == "Step") {
+        } else if(actionEvent.getActionCommand() == "Prochain pas") {
             ((JButton)actionEvent.getSource()).setEnabled(false);
             if(runner == null){
                 startGame();
@@ -227,7 +227,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         gv.repaint();
         flagRemaining.setText(String.valueOf(nbMines));
         step.setEnabled(true);
-        message("Reset");
+        message("Reinitialiser");
     }
 
 
@@ -272,7 +272,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     }
 
     private void closingCleanUp(){
-        System.out.println("closing");
+        System.out.println("Fermeture");
         if(t != null) {
             t.interrupt();
         }
@@ -292,7 +292,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             Format formatter = new SimpleDateFormat("MM-dd_hh-mm-ss");
             String fileName = "grid-" + (formatter.format(new Date()));
             grid.saveToFile(fileName);
-            message("Grid saved : " + fileName);
+            message("Grille enregistree : " + fileName);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -304,19 +304,19 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
         menu = new JPanel(new GridBagLayout());
 
-        reset = new JButton("Reset");
-        start = new JButton("Start");
-        infinite = new JButton("Infinit play");
-        step = new JButton("Step");
-        stop = new JButton("Stop");
+        reset = new JButton("Reinitialiser");
+        start = new JButton("Demarrer");
+        infinite = new JButton("Parties infinies");
+        step = new JButton("Prochain pas");
+        stop = new JButton("Arreter");
         stop.addActionListener(this);
         reset.addActionListener(this);
         start.addActionListener(this);
         infinite.addActionListener(this);
         step.addActionListener(this);
 
-        rbInfinite = new JRadioButton("Continue after game");
-        rbStopAfterGame = new JRadioButton("Stop after game");
+        rbInfinite = new JRadioButton("Continuer apres la partie");
+        rbStopAfterGame = new JRadioButton("Arreter apres la partie");
         buttonGroup = new ButtonGroup();
         buttonGroup.add(rbInfinite); buttonGroup.add(rbStopAfterGame);
         rbInfinite.addActionListener(new ActionListener() {
@@ -335,7 +335,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
         rbInfinite.setSelected(GLOBAL.CONTINUE_AFTER);
 
-        saveGridToFile = new JButton("Save grid");
+        saveGridToFile = new JButton("Enregistrer la grille");
         saveGridToFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed (ActionEvent e) {
@@ -365,20 +365,20 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         messageTextArea.setRows(5);
         pane.setViewportView(messageTextArea);
 
-        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb flag: "), 0, 0, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb drapeaux: "), 0, 0, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(bottomPanelScore, flagRemaining, 1, 0, 1, 1, GridBagConstraints.EAST);
 
-        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb lost: "), 0, 1, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb defaites: "), 0, 1, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(bottomPanelScore, lostTotal = new JLabel("0"), 1, 1, 1, 1, GridBagConstraints.EAST);
 
-        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb wins: "), 0, 2, 1, 1, GridBagConstraints.WEST);
+        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb victoires: "), 0, 2, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(bottomPanelScore, winsTotal = new JLabel("0"), 1, 2, 1, 1, GridBagConstraints.EAST);
 
         GLOBAL.addItem(bottomPanel, bottomPanelScore, 0, 0, 1, 1, GridBagConstraints.WEST);
         GLOBAL.addItem(bottomPanel, pane, 1, 0, 1, 1, GridBagConstraints.WEST);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        message("Initiate AI: " + ai.getName());
+        message("Initialiser l'IA: " + ai.getName());
     }
 
      public void createGridView(int row,int col, int caseSize, String designFolder){
