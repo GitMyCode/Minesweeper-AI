@@ -105,8 +105,6 @@ public enum Direction {
     abstract public Direction opp(); // direction opposee
 
 
-
-
     public enum Axes{
         VERTICAL(TOP, DOWN, 0),
         HORIZONTAL(LEFT, RIGHT, 1),
