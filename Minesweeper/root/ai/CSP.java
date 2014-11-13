@@ -87,7 +87,7 @@ public class CSP implements ArtificialPlayer{
                             }
                         } else if ( copyGrid[sur] == UNDISCOVERED && flagHits.get(sur) >=nbPossibilityHere){
                             if(flagHits.get(sur) > nbPossibilityHere){
-                                System.out.println("wird");
+                                System.out.println("weird");
                             }
                             sureMoves.add(new Move(sur, COUP.FLAG));
                             if (!gameGrid.checkMove(sureMoves)){

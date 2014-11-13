@@ -123,10 +123,12 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             return this;
         }
 
-        public GameBuilder grid (Grid grid) {
-            this.grid = grid;
-            return this;
-        }
+// --Commented out by Inspection START (2014-11-13 12:16):
+//        public GameBuilder grid (Grid grid) {
+//            this.grid = grid;
+//            return this;
+//        }
+// --Commented out by Inspection STOP (2014-11-13 12:16)
 
         /*Prend le nom du fichier et va chercher la class puis cree une instance*/
         private ArtificialPlayer getAI(String name) {

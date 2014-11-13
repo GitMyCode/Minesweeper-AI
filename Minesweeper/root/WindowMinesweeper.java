@@ -235,7 +235,7 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
                                 build();
                         bv.setVisible(true);
                         bv.setLocationRelativeTo(null);
-                        bv.message("Load file: "+savedGridToPlay.getName());
+                        bv.message("Chargement du fichier: "+savedGridToPlay.getName());
                     }
                 })
         );
