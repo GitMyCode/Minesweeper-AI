@@ -85,7 +85,7 @@ public enum Direction {
 
     public int nbcol;
 
-    public static final Set<Direction> direction4 = new LinkedHashSet<Direction>();
+    private static final Set<Direction> direction4 = new LinkedHashSet<Direction>();
     public static final Set<Direction> direction8 = new LinkedHashSet<Direction>();
     static {
         /* Les 4 directions DOWN, RIGHT, DOWNRIGHT, TOPRIGHT d'un point */
@@ -113,9 +113,9 @@ public enum Direction {
         DIAGR(DOWNLEFT, TOPRIGHT, 2), // Diagonale /
         DIAGL(TOPLEFT, DOWNRIGHT, 3); // Diagonale \
 
-        public Direction dirLeft;
-        public Direction dirRight;
-        public int i;
+        public final Direction dirLeft;
+        public final Direction dirRight;
+        public final int i;
 
         Axes(Direction dir, Direction dir2, int i){
             this.dirLeft = dir;

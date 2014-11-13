@@ -6,8 +6,8 @@ import root.ENUM.COUP;
 
 public class Move {
 
-    public COUP coup;
-    public int index;
+    public final COUP coup;
+    public final int index;
 
     public Move(int index, COUP coup){
         this.coup = coup;

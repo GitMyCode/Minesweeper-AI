@@ -18,7 +18,7 @@ public final class ClassFinder {
     private final static String CLASS_SUFFIX = ".class";
     private final static String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the given '%s' package exists?";
 
-    public final static List<Class<?>> find(final String scannedPackage) {
+    public static List<Class<?>> find(final String scannedPackage) {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         final String scannedPath = scannedPackage.replace(DOT, SLASH);
         final Enumeration<URL> resources;
@@ -35,7 +35,7 @@ public final class ClassFinder {
         return classes;
     }
 
-    private final static List<Class<?>> find(final File file, final String scannedPackage) {
+    private static List<Class<?>> find(final File file, final String scannedPackage) {
         final List<Class<?>> classes = new LinkedList<Class<?>>();
         final String resource = scannedPackage + DOT + file.getName();
         if (file.isDirectory()) {
@@ -63,12 +63,12 @@ public final class ClassFinder {
 
             Enumeration<URL> resources = classLoader.getResources(scannedPath);
             File theFolder = new File(resources.nextElement().getFile());
-            for(File imgFolder : theFolder.listFiles() ){
+            for (File imgFolder : theFolder.listFiles() ){
                 allFolder.add(imgFolder.getName());
             }
 
         } catch (Exception e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
         return allFolder;
     }

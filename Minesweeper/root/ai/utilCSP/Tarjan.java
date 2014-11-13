@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Created by MB on 11/5/2014.
  */
-public class Tarjan {
+class Tarjan {
 
     static private Set<Integer> marked;
     static private Stack<Integer> stack;

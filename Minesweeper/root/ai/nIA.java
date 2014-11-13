@@ -16,7 +16,7 @@ public class nIA implements ArtificialPlayer{
     @Override
     public Set<Move> getNextMoves(Grid g, int thinkLimit) {
 
-        CASEGRILLE[] gc = g.getCpyPlayerView();
+        //CASEGRILLE[] gc = g.getCpyPlayerView();
 
         Set<Move> test = new HashSet<Move>();
         g.getSurroundingIndex(40);

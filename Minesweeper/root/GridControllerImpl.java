@@ -10,9 +10,9 @@ import java.util.Set;
  */
 public class GridControllerImpl implements GridController {
 
-    public Grid gridBoard;
-    public GridView gridView;
-    public JLabel flagRemain;
+    private Grid gridBoard;
+    private GridView gridView;
+    private final JLabel flagRemain;
 
     public GridControllerImpl(Grid gm, GridView gv,JLabel refFlagRemain){
         gridBoard = gm;

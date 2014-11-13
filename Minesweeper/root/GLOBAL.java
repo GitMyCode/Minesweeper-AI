@@ -6,14 +6,14 @@ import java.awt.*;
 /**
  * Created by MB on 10/29/2014.
  */
-public class GLOBAL {
+class GLOBAL {
 
 
     /*DEFAULT*/
-    public static int DEFAULT_MAXTHINK = 2000;
-    public static int DEFAULT_DELAY    = 100;
-    public static int NBCOL = 50;
-    public static int NBLIGNE = 40;
+    public static final int DEFAULT_MAXTHINK = 2000;
+    public static final int DEFAULT_DELAY    = 100;
+    public static final int NBCOL = 50;
+    public static final int NBLIGNE = 40;
     public static final int CELL_SIZE = 16;
     public static final int NBMINES = 400;
     public static final String DEFAULT_AI = "root.ai.RandomAi";
