@@ -47,7 +47,7 @@ public enum CASEGRILLE {
     }
 
 
-    public int indexValue;
+    public final int indexValue;
     final String  pathfile= "../root.img/j";
 
     public static BufferedImage scale(BufferedImage sbi, int imageType, int dWidth, int dHeight, double fWidth, double fHeight) {

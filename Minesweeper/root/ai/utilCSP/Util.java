@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by MB on 11/1/2014.
  */
-public class Util {
+class Util {
 
 
 
@@ -159,7 +159,7 @@ public class Util {
 
     }
 
-        public static void printIndex(CASEGRILLE[] gridOrigin, int nbcol,Integer toShow){
+        private static void printIndex(CASEGRILLE[] gridOrigin, int nbcol, Integer toShow){
 
         String print="";
 

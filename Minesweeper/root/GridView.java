@@ -21,15 +21,15 @@ import static root.ENUM.CASEGRILLE.*;
 public class GridView extends JPanel {
 
 
-    int nbligne=0;
-    int nbcol =0;
-    int caseSize =GLOBAL.CELL_SIZE;
+    private int nbligne=0;
+    private int nbcol =0;
+    private int caseSize =GLOBAL.CELL_SIZE;
 
-    String designFolder = GLOBAL.DEFAULT_DESIGN;
-    Image[] cases;
+    private String designFolder = GLOBAL.DEFAULT_DESIGN;
+    private final Image[] cases;
 
-    Grid grid;
-    GridController controller;
+    private Grid grid;
+    private GridController controller;
 
 
 
@@ -78,12 +78,13 @@ public class GridView extends JPanel {
             File[] t = folder.listFiles();
 
             try {
+                assert t != null;
                 Arrays.sort(t,new compImg());
             } catch (Exception e){
-                System.out.println(e);
+                System.out.println(e.getMessage());
             }
 
-            int i=0;
+            int i = 0;
             for (File cellImg : t){
                 if (i == CASEGRILLE.values().length)
                     break;
@@ -102,7 +103,7 @@ public class GridView extends JPanel {
             }
 
         } catch (Exception e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -158,7 +159,7 @@ public class GridView extends JPanel {
     }
 
 
-    public class compImg implements Comparator<File>{
+    private class compImg implements Comparator<File>{
         @Override
         public int compare (File o1, File o2) {
             int name1 = Integer.valueOf(o1.getName().split("\\.")[0]);
@@ -178,14 +179,14 @@ public class GridView extends JPanel {
     /*
     * https://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
     * */
-    public BufferedImage getScaledInstance(BufferedImage img,
-                                           int targetWidth,
-                                           int targetHeight,
-                                           boolean higherQuality)  {
+    BufferedImage getScaledInstance(BufferedImage img,
+                                    int targetWidth,
+                                    int targetHeight,
+                                    boolean higherQuality)  {
 
         int type = (img.getTransparency() == Transparency.OPAQUE) ?
                 BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
-        BufferedImage ret = (BufferedImage)img;
+        BufferedImage ret = img;
         int w, h;
         if (higherQuality) {
             // Use multi-step technique: start with original size, then

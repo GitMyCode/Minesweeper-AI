@@ -5,14 +5,14 @@ import java.util.Set;
 /**
  * Created by MB on 10/30/2014.
  */
-public class GameRunner implements Runnable {
+class GameRunner implements Runnable {
 
-    private ArtificialPlayer ai;
+    private final ArtificialPlayer ai;
 
-    protected OutputObserver outputObserver= null;
+    private OutputObserver outputObserver= null;
 
-    private Grid grid;
-    private GridController controller;
+    private final Grid grid;
+    private final GridController controller;
     private int delayTime = 100;
     private int thinkLimit = 1000;
     private volatile boolean running = true;

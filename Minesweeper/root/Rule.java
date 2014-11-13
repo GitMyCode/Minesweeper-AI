@@ -6,10 +6,10 @@ import java.awt.*;
 /**
  * Created by MB on 10/29/2014.
  */
-public class Rule extends JPanel {
+class Rule extends JPanel {
 
 
-    JLabel[] indicateurs;
+    private JLabel[] indicateurs;
         public Rule(int xOry,int length){
             super();
             indicateurs=null;

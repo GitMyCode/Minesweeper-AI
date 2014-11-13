@@ -16,54 +16,54 @@ import java.util.List;
 /**
  * Created by MB on 10/29/2014.
  */
-public class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener{
+class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener{
 
     /*
     * TODO
     * FAIRE LE MENAGE
     * */
 
-    int nbMines = GLOBAL.NBMINES;
-    int nbLignes = GLOBAL.NBLIGNE;
-    int col = GLOBAL.NBCOL;
-    String choosedAi = GLOBAL.DEFAULT_AI;
-    String choosedDesign = GLOBAL.DEFAULT_DESIGN;
-    int timeDelay = GLOBAL.DEFAULT_DELAY;
-    int thinkLimit = GLOBAL.DEFAULT_MAXTHINK;
-    int caseSize =GLOBAL.CELL_SIZE;
+    private int nbMines = GLOBAL.NBMINES;
+    private int nbLignes = GLOBAL.NBLIGNE;
+    private int col = GLOBAL.NBCOL;
+    private String choosedAi = GLOBAL.DEFAULT_AI;
+    private String choosedDesign = GLOBAL.DEFAULT_DESIGN;
+    private int timeDelay = GLOBAL.DEFAULT_DELAY;
+    private int thinkLimit = GLOBAL.DEFAULT_MAXTHINK;
+    private int caseSize =GLOBAL.CELL_SIZE;
 
 
     private final TextListener textListener = new TextListener();
 
-    JButton create;
-    JButton importGrid;
-    JLabel importLabel;
-    JLabel label_choice_row;
-    JLabel label_choice_col;
-    JLabel label_mine;
-    JLabel labelAi;
-    JLabel labelTimer;
+    private final JButton create;
+    private final JButton importGrid;
+    private final JLabel importLabel;
+    private final JLabel label_choice_row;
+    private final JLabel label_choice_col;
+    private final JLabel label_mine;
+    private final JLabel labelAi;
+    private final JLabel labelTimer;
 
 
     JLabel slideMineLabel;
-    JSlider sliderMines;
-    JTextField choiceCol;
-    JTextField choiceRow;
+    private final JSlider sliderMines;
+    private final JTextField choiceCol;
+    private final JTextField choiceRow;
     JTextField choiceMines;
-    JTextField choiceTimer;
-    JTextField choiceMaxTime;
-    JTextField choiceSizeCase;
-    JPanel panelCreation;
-    JComboBox choixAI;
-    JComboBox choixDesign;
-    JFileChooser chooser;
-    List<Class<?>> classes;
-    List<String> allDesign;
+    private final JTextField choiceTimer;
+    private final JTextField choiceMaxTime;
+    private final JTextField choiceSizeCase;
+    private final JPanel panelCreation;
+    private final JComboBox choixAI;
+    private final JComboBox choixDesign;
+    private JFileChooser chooser;
+    private final List<Class<?>> classes;
+    private final List<String> allDesign;
 
-    File savedGridToPlay =null;
-    String emptyLabelName = "Charger une grille enregistree precedemment";
+    private File savedGridToPlay =null;
+    private final String emptyLabelName = "Charger une grille enregistree precedemment";
 
-    public WindowMinesweeper(){
+    private WindowMinesweeper(){
 
         create = new JButton("Creer une nouvelle partie");
         create.addActionListener(this);
@@ -168,7 +168,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
         add(panelCreation, BorderLayout.NORTH);
         add(create,BorderLayout.SOUTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
     }
 
@@ -188,7 +188,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     }
 
 
-    public void createBoard(){
+    void createBoard(){
 
         System.gc();
         new Thread(
@@ -217,7 +217,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         ).start();
         System.gc();
     }
-    public void loadGridToBoard(){
+    void loadGridToBoard(){
         System.out.println("Charger une grille");
         System.gc();
         Thread t = new Thread(
@@ -250,14 +250,14 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     @Override
     public void actionPerformed (ActionEvent actionEvent) {
 
-        if(actionEvent.getActionCommand() == "Creer une nouvelle partie"){
+        if(actionEvent.getActionCommand().equals("Creer une nouvelle partie")){
             updateParameter();
             createBoard();
 
-        }else if(actionEvent.getActionCommand() =="Importer") {
+        }else if(actionEvent.getActionCommand().equals("Importer")) {
             chooser = new JFileChooser(".");
                 /*To keep the last selected as default*/
-                if (importLabel.getText() != emptyLabelName){
+                if (!importLabel.getText().equals(emptyLabelName)){
                     chooser.setSelectedFile(new File(importLabel.getText()));
                 }
                 if (chooser.showDialog(new JFrame("Choisir un fichier"),"Ok") == JFileChooser.APPROVE_OPTION) {
@@ -279,7 +279,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
     }
 
-    public void readFile(File f){
+    void readFile(File f){
         savedGridToPlay = f;
     }
 
@@ -293,7 +293,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
         }
     }
 
-    public class TextListener implements DocumentListener{
+    private class TextListener implements DocumentListener{
         @Override
         public void insertUpdate (DocumentEvent e) {
             updateMine();
@@ -311,7 +311,7 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
     }
 
 
-    public void updateParameter(){
+    void updateParameter(){
         String text_row = choiceRow.getText();
         String text_col = choiceCol.getText();
         nbLignes = Integer.parseInt(text_row);
@@ -325,11 +325,11 @@ public class WindowMinesweeper extends JFrame implements ActionListener, ChangeL
 
     }
 
-    public void updateMine(){
+    void updateMine(){
         String text_row = choiceRow.getText();
         String text_col = choiceCol.getText();
-        int lignes = (text_row.equals("") || text_row ==null)? 0 :Integer.parseInt(text_row);
-        int col = (text_col.equals("") || text_col == null)? 0 :Integer.parseInt(text_col);
+        int lignes = (text_row.equals(""))? 0 :Integer.parseInt(text_row);
+        int col = (text_col.equals(""))? 0 :Integer.parseInt(text_col);
 
         float minePercentage = sliderMines.getValue();
 

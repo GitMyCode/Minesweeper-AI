@@ -20,17 +20,17 @@ public class Grid {
     public int nbCols;
     public int nbLignes;
     public int length;
-    protected int nbMines;
+    int nbMines;
 
-    protected int nbMinesRemaining;
-    protected int nbFlagsRemaining;
-    protected boolean lost = false;
-    protected boolean win = false;
+    private int nbMinesRemaining;
+    int nbFlagsRemaining;
+    boolean lost = false;
+    boolean win = false;
 
-    protected CASEGRILLE[] underneathValues;
+    private CASEGRILLE[] underneathValues;
     CASEGRILLE[] gridPlayerView;
 
-    Random rand = new Random();
+    private final Random rand = new Random();
 
     public Grid(File f) {
         try {
@@ -102,15 +102,17 @@ public class Grid {
     * Les AI
     * */
     public boolean checkMove(Set<Move> moves){
-        for(Move m : moves){
-            if(underneathValues[m.index] != CASEGRILLE.MINE && m.coup == COUP.FLAG){
+        for (Move m : moves){
+            if (underneathValues[m.index] != CASEGRILLE.MINE && m.coup == COUP.FLAG){
                 return false;
-            }else if(underneathValues[m.index] == CASEGRILLE.MINE && m.coup == COUP.SHOW){
+            } else if (underneathValues[m.index] == CASEGRILLE.MINE && m.coup == COUP.SHOW){
                 return false;
             }
         }
         return true;
     }
+
+
     public boolean checkIfPresentGridValid(){
         for(int i =0;i<length;i++){
             if(underneathValues[i] != MINE && gridPlayerView[i] == FLAGED ){
@@ -209,19 +211,18 @@ public class Grid {
         return cpy;
     }
 
-    protected void showAllCase(){
+    void showAllCase(){
         for(int i=0; i< length; i++) {
             if (gridPlayerView[i] == FLAGED && underneathValues[i] == MINE){
                 gridPlayerView[i] = DEFUSED;
-            }else if(gridPlayerView[i] == FLAGED && underneathValues[i] !=MINE){
+            } else if(gridPlayerView[i] == FLAGED && underneathValues[i] !=MINE){
                 gridPlayerView[i] = ERROR_FLAG;
-            }else if(gridPlayerView[i] == BLOW) {
-            }else {
+            } else if (gridPlayerView[i] != BLOW) {
                 gridPlayerView[i] = underneathValues[i];
             }
         }
     }
-    protected void play (int index, COUP coup){
+    void play(int index, COUP coup){
         switch (coup){
             case FLAG:
                 playFlag(index);
@@ -236,7 +237,7 @@ public class Grid {
         }
     }
 
-    protected void resetGrid(){
+    void resetGrid(){
 
         lost = false;
         win  = false;
@@ -251,7 +252,7 @@ public class Grid {
 
     }
 
-    protected boolean gameFinish(){
+    boolean gameFinish(){
         if(lost){
             return true;
         }
@@ -329,14 +330,14 @@ public class Grid {
                 case DOWN:
                     if(index < 0 || index >= length)
                         return false;
-                    if(!((index + nbCols * (2 - 1)) < length)){
+                    if(!((index + nbCols) < length)){
                         return false;
                     }
                     break;
                 case TOP:
                     if(index < 0 || index >= length)
                         return false;
-                    if(!((index + stepUtility(Direction.TOP) * (2 - 1)) >= 0)){
+                    if(!((index + stepUtility(Direction.TOP)) >= 0)){
                         return false;
                     }
                     break;

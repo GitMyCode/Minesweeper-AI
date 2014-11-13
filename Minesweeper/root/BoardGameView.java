@@ -36,10 +36,10 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private JButton infinite;
     private JButton saveGridToFile;
 
-    GridView gv;
-    GridController gridController;
-    public Grid grid;
-    private ArtificialPlayer ai;
+    private GridView gv;
+    private GridController gridController;
+    private final Grid grid;
+    private final ArtificialPlayer ai;
 
     private JTextArea messageTextArea ;
 
@@ -48,13 +48,13 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private Runnable task = null;
     private Thread t = null;
 
-    boolean infiniteGame = GLOBAL.CONTINUE_AFTER;
-    int nbMines = 0;
-    int delayTime = 100;
-    int nbLost = 0;
-    int nbWins = 0;
-    int thinkLimit = 1000;
-    int caseSize = 16;
+    private boolean infiniteGame = GLOBAL.CONTINUE_AFTER;
+    private final int nbMines = 0;
+    private int delayTime = 100;
+    private int nbLost = 0;
+    private int nbWins = 0;
+    private int thinkLimit = 1000;
+    private int caseSize = 16;
 
     public static class GameBuilder {
         int nbLignes = GLOBAL.NBLIGNE;
@@ -144,7 +144,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
 
     }
 
-    public BoardGameView(GameBuilder b){
+    private BoardGameView(GameBuilder b){
         this.grid = b.grid;
         this.caseSize = b.caseSize;
         this.ai = b.ai;
@@ -216,7 +216,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     }
 
 
-    public void resetGame() {
+    void resetGame() {
         grid.resetGrid();
 
         if(t != null) {
@@ -263,7 +263,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         winsTotal.setText(String.valueOf(nbWins));
     }
 
-    public void updateGameLoopChoice(){
+    void updateGameLoopChoice(){
         if(rbInfinite.isSelected()) {
             infiniteGame = true;
         } else {
@@ -287,7 +287,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         }
     }
 
-    public void saveGrid(){
+    void saveGrid(){
         try {
             Format formatter = new SimpleDateFormat("MM-dd_hh-mm-ss");
             String fileName = "grid-" + (formatter.format(new Date()));
@@ -381,7 +381,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         message("Initialiser l'IA: " + ai.getName());
     }
 
-     public void createGridView(int row,int col, int caseSize, String designFolder){
+     void createGridView(int row, int col, int caseSize, String designFolder){
         cadre = new Box(BoxLayout.Y_AXIS);
         cadre.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         cadre.add(Box.createVerticalGlue());
