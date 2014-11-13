@@ -48,16 +48,18 @@ public enum CASEGRILLE {
 
 
     public final int indexValue;
-    final String  pathfile= "../root.img/j";
+    // --Commented out by Inspection (2014-11-13 12:17):final String  pathfile= "../root.img/j";
 
-    public static BufferedImage scale(BufferedImage sbi, int imageType, int dWidth, int dHeight, double fWidth, double fHeight) {
-        BufferedImage dbi = null;
-        if (sbi != null) {
-            dbi = new BufferedImage(dWidth, dHeight, imageType);
-            Graphics2D g = dbi.createGraphics();
-            AffineTransform at = AffineTransform.getScaleInstance(fWidth, fHeight);
-            g.drawRenderedImage(sbi, at);
-        }
-        return dbi;
-    }
+// --Commented out by Inspection START (2014-11-13 12:17):
+//    public static BufferedImage scale(BufferedImage sbi, int imageType, int dWidth, int dHeight, double fWidth, double fHeight) {
+//        BufferedImage dbi = null;
+//        if (sbi != null) {
+//            dbi = new BufferedImage(dWidth, dHeight, imageType);
+//            Graphics2D g = dbi.createGraphics();
+//            AffineTransform at = AffineTransform.getScaleInstance(fWidth, fHeight);
+//            g.drawRenderedImage(sbi, at);
+//        }
+//        return dbi;
+//    }
+// --Commented out by Inspection STOP (2014-11-13 12:17)
 }
