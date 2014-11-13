@@ -1,7 +1,6 @@
 package root.ai;
 
 import root.ArtificialPlayer;
-import root.Dir;
 import root.ENUM.CASE;
 import root.ENUM.COUP;
 import root.Grid;
