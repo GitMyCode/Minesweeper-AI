@@ -1,6 +1,6 @@
 package root;
 
-import root.ENUM.CASE;
+import root.ENUM.CASEGRILLE;
 import root.ENUM.COUP;
 
 import java.io.File;
@@ -12,7 +12,7 @@ import java.util.*;
  * Created by MB on 10/29/2014.
  */
 
-import static root.ENUM.CASE.*;
+import static root.ENUM.CASEGRILLE.*;
 
 
 public class Grid {
@@ -27,8 +27,8 @@ public class Grid {
     protected boolean lost = false;
     protected boolean win = false;
 
-    protected CASE[] underneathValues;
-    CASE[] gridPlayerView;
+    protected CASEGRILLE[] underneathValues;
+    CASEGRILLE[] gridPlayerView;
 
     Random rand = new Random();
 
@@ -44,16 +44,16 @@ public class Grid {
             this.nbFlagsRemaining = nbMines;
             this.nbMinesRemaining = nbMines;
 
-            this.gridPlayerView = new CASE[length];
-            this.underneathValues = new CASE[length];
+            this.gridPlayerView = new CASEGRILLE[length];
+            this.underneathValues = new CASEGRILLE[length];
 
             for(int i = 0; i < length; i++){
-                this.underneathValues[i] = CASE.caseFromInt(sc.nextInt());
+                this.underneathValues[i] = CASEGRILLE.caseFromInt(sc.nextInt());
             }
 
             String s = sc.next();
             for(int i = 0; i < length; i++){
-                this.gridPlayerView[i] = CASE.caseFromInt(sc.nextInt());
+                this.gridPlayerView[i] = CASEGRILLE.caseFromInt(sc.nextInt());
             }
 
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class Grid {
         this.nbMines = nbMines;
         this.nbFlagsRemaining = nbMines;
         this.nbMinesRemaining = nbMines;
-        this.gridPlayerView = new CASE[nbCols * nbLignes];
+        this.gridPlayerView = new CASEGRILLE[nbCols * nbLignes];
 
         Arrays.fill(gridPlayerView, UNDISCOVERED);
 
@@ -78,14 +78,14 @@ public class Grid {
         calculateCasesValues(underneathValues);*/
     }
 
-    private CASE[] createRdmGrid(int nbligne,int nbcol, int nbMines){
-        CASE[] grid = new CASE[nbcol*nbligne];
+    private CASEGRILLE[] createRdmGrid(int nbligne,int nbcol, int nbMines){
+        CASEGRILLE[] grid = new CASEGRILLE[nbcol*nbligne];
         Arrays.fill(grid,EMPTY);
         placeMinesRmd(grid, nbMines);
         calculateCasesValues(grid);
         return grid;
     }
-    private void placeMinesRmd(CASE[] grid,int nbMines){
+    private void placeMinesRmd(CASEGRILLE[] grid,int nbMines){
         for(int i=0; i<nbMines;i++){
             int putMineThere = rand.nextInt(grid.length);
             if(grid[putMineThere] == MINE){
@@ -103,9 +103,9 @@ public class Grid {
     * */
     public boolean checkMove(Set<Move> moves){
         for(Move m : moves){
-            if(underneathValues[m.index] != CASE.MINE && m.coup == COUP.FLAG){
+            if(underneathValues[m.index] != CASEGRILLE.MINE && m.coup == COUP.FLAG){
                 return false;
-            }else if(underneathValues[m.index] == CASE.MINE && m.coup == COUP.SHOW){
+            }else if(underneathValues[m.index] == CASEGRILLE.MINE && m.coup == COUP.SHOW){
                 return false;
             }
         }
@@ -171,7 +171,7 @@ public class Grid {
     }
 
     public Set<COUP> getLegalCaseCoup (int index){
-        CASE c = gridPlayerView[index];
+        CASEGRILLE c = gridPlayerView[index];
         switch (c){
             case UNDISCOVERED:
                 if(nbFlagsRemaining ==0){
@@ -188,7 +188,7 @@ public class Grid {
     }
 
 
-    public Set<Integer> getUndiscoveredNeigbour(CASE[] grid, int index){
+    public Set<Integer> getUndiscoveredNeigbour(CASEGRILLE[] grid, int index){
         Set<Integer> set = new HashSet<Integer>();
 
         for(Direction D: Direction.direction8){
@@ -203,8 +203,8 @@ public class Grid {
     }
 
 
-    public CASE[] getCpyPlayerView(){
-        CASE[] cpy;
+    public CASEGRILLE[] getCpyPlayerView(){
+        CASEGRILLE[] cpy;
         cpy = gridPlayerView.clone();
         return cpy;
     }
@@ -264,7 +264,7 @@ public class Grid {
             return true;
         }
 
-        for(CASE c: gridPlayerView){
+        for(CASEGRILLE c: gridPlayerView){
             if(c == UNDISCOVERED){
                 return false;
             }
@@ -276,7 +276,7 @@ public class Grid {
 
 
     private void playFlag(int index){
-        CASE theCase = gridPlayerView[index];
+        CASEGRILLE theCase = gridPlayerView[index];
         if(theCase == UNDISCOVERED){
             nbFlagsRemaining--;
             gridPlayerView[index] = FLAGED;
@@ -387,7 +387,7 @@ public class Grid {
 
 
 
-    private void calculateCasesValues (CASE[] grid){
+    private void calculateCasesValues (CASEGRILLE[] grid){
 
         for(int i=0; i< grid.length; i++){
             int value =0;
@@ -399,7 +399,7 @@ public class Grid {
                         value++;
                     }
                 }
-                grid[i]= CASE.caseFromInt(value);
+                grid[i]= CASEGRILLE.caseFromInt(value);
             }
         }
     }
@@ -411,7 +411,7 @@ public class Grid {
 
             fw.write(nbLignes +" "+ nbCols +" "+ nbMines +" "+ nbFlagsRemaining +" "+nbMinesRemaining+ "\n");
             int i=1;String gridAllValue ="";
-            for(CASE c : underneathValues){
+            for(CASEGRILLE c : underneathValues){
                 gridAllValue+= c.indexValue+ " ";
                 if(i % nbCols ==0){
                     gridAllValue+="\n";
@@ -422,7 +422,7 @@ public class Grid {
 
             fw.write("-\n");
             i=1;String stringGridPlayerView ="";
-            for(CASE c : gridPlayerView){
+            for(CASEGRILLE c : gridPlayerView){
                 stringGridPlayerView+= c.indexValue+" ";
                 if(i % nbCols ==0){
                     stringGridPlayerView+="\n";

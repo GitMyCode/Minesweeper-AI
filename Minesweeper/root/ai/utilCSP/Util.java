@@ -1,6 +1,6 @@
 package root.ai.utilCSP;
 
-import root.ENUM.CASE;
+import root.ENUM.CASEGRILLE;
 import root.ENUM.COUP;
 import root.Move;
 
@@ -14,19 +14,19 @@ public class Util {
 
 
 
-    public static void printGrid(CASE[] grid,int nbcol){
+    public static void printGrid(CASEGRILLE[] grid,int nbcol){
         String print="";
 
         int i=1;
-        for(CASE c : grid){
-            if(c == CASE.UNDISCOVERED){
+        for(CASEGRILLE c : grid){
+            if(c == CASEGRILLE.UNDISCOVERED){
                 print+= '■';
-            }else if(c == CASE.EMPTY) {
+            }else if(c == CASEGRILLE.EMPTY) {
                 print+='_';
-            }else if(c == CASE.FLAGED){
+            }else if(c == CASEGRILLE.FLAGED){
                 print+= '⚑';
 
-            }else if(c == CASE.BLOW) {
+            }else if(c == CASEGRILLE.BLOW) {
                 print+= '●';
             }else {
                 print += c.indexValue;
@@ -39,34 +39,34 @@ public class Util {
         System.out.println(print);
     }
 
-    public static void printAllCoup(CASE[] gridOriginal, int nbcol,Set<Move> coups){
+    public static void printAllCoup(CASEGRILLE[] gridOriginal, int nbcol,Set<Move> coups){
 
         String print="";
 
         int i=1;
-        CASE[] grid = gridOriginal.clone();
+        CASEGRILLE[] grid = gridOriginal.clone();
 
         for(Move m : coups){
             if(m.coup == COUP.SHOW){
 
-                grid[m.index] = CASE.BLOW; //Just pour une valeur quelquonc
+                grid[m.index] = CASEGRILLE.BLOW; //Just pour une valeur quelquonc
             }else if(m.coup == COUP.FLAG){
-                grid[m.index] = CASE.DEFUSED; //Just pour une valeur quelquonc
+                grid[m.index] = CASEGRILLE.DEFUSED; //Just pour une valeur quelquonc
             }
         }
 
 
-        for(CASE c : grid){
-            if(c == CASE.UNDISCOVERED){
+        for(CASEGRILLE c : grid){
+            if(c == CASEGRILLE.UNDISCOVERED){
                 print+= '□';
-            }else if(c == CASE.EMPTY) {
+            }else if(c == CASEGRILLE.EMPTY) {
                 print+='_';
-            }else if(c == CASE.FLAGED){
+            }else if(c == CASEGRILLE.FLAGED){
                 print+= '⚑';
 
-            }else if(c == CASE.BLOW) {
+            }else if(c == CASEGRILLE.BLOW) {
                 print+= '●';
-            }else if(c== CASE.DEFUSED){
+            }else if(c== CASEGRILLE.DEFUSED){
                 print+= '◯'; //○
             }else {
                 print += c.indexValue;
@@ -80,36 +80,36 @@ public class Util {
 
     }
 
-    public static void printFrontiereInOrder(CASE[] gridOrigin,int nbcol, List<Integer> frontiere){
-        CASE[] cpy = gridOrigin.clone();
+    public static void printFrontiereInOrder(CASEGRILLE[] gridOrigin,int nbcol, List<Integer> frontiere){
+        CASEGRILLE[] cpy = gridOrigin.clone();
         for(Integer i: frontiere){
             printIndex(cpy,nbcol,i);
         }
     }
 
-    public static void printFrontiere(CASE[] gridOrigin, int nbcol,Set<Integer> frontiere){
+    public static void printFrontiere(CASEGRILLE[] gridOrigin, int nbcol,Set<Integer> frontiere){
 
         String print="";
 
         int i=1;
-        CASE[] grid = gridOrigin.clone();
+        CASEGRILLE[] grid = gridOrigin.clone();
 
         for(Integer f : frontiere){
-            grid[f] = CASE.BLOW;
+            grid[f] = CASEGRILLE.BLOW;
         }
 
 
-        for(CASE c : grid){
-            if(c == CASE.UNDISCOVERED){
+        for(CASEGRILLE c : grid){
+            if(c == CASEGRILLE.UNDISCOVERED){
                 print+= '□';
-            }else if(c == CASE.EMPTY) {
+            }else if(c == CASEGRILLE.EMPTY) {
                 print+='_';
-            }else if(c == CASE.FLAGED){
+            }else if(c == CASEGRILLE.FLAGED){
                 print+= '⚑';
 
-            }else if(c == CASE.BLOW) {
+            }else if(c == CASEGRILLE.BLOW) {
                 print+= '●';
-            }else if(c== CASE.DEFUSED){
+            }else if(c== CASEGRILLE.DEFUSED){
                 print+= '◯'; //○
             }else {
                 print += c.indexValue;
@@ -123,29 +123,29 @@ public class Util {
 
     }
 
-    public static void printFrontiere(CASE[] gridOrigin, int nbcol,List<Integer> frontiere){
+    public static void printFrontiere(CASEGRILLE[] gridOrigin, int nbcol,List<Integer> frontiere){
 
         String print="";
 
         int i=1;
-        CASE[] grid = gridOrigin.clone();
+        CASEGRILLE[] grid = gridOrigin.clone();
 
         for(Integer f : frontiere){
-            grid[f] = CASE.BLOW;
+            grid[f] = CASEGRILLE.BLOW;
         }
 
 
-        for(CASE c : grid){
-            if(c == CASE.UNDISCOVERED){
+        for(CASEGRILLE c : grid){
+            if(c == CASEGRILLE.UNDISCOVERED){
                 print+= '□';
-            }else if(c == CASE.EMPTY) {
+            }else if(c == CASEGRILLE.EMPTY) {
                 print+='_';
-            }else if(c == CASE.FLAGED){
+            }else if(c == CASEGRILLE.FLAGED){
                 print+= '⚑';
 
-            }else if(c == CASE.BLOW) {
+            }else if(c == CASEGRILLE.BLOW) {
                 print+= '●';
-            }else if(c== CASE.DEFUSED){
+            }else if(c== CASEGRILLE.DEFUSED){
                 print+= '◯'; //○
             }else {
                 print += c.indexValue;
@@ -159,27 +159,27 @@ public class Util {
 
     }
 
-        public static void printIndex(CASE[] gridOrigin, int nbcol,Integer toShow){
+        public static void printIndex(CASEGRILLE[] gridOrigin, int nbcol,Integer toShow){
 
         String print="";
 
         int i=1;
-        CASE[] grid = gridOrigin.clone();
+        CASEGRILLE[] grid = gridOrigin.clone();
 
-            grid[toShow] = CASE.BLOW;
+            grid[toShow] = CASEGRILLE.BLOW;
 
 
-        for(CASE c : grid){
-            if(c == CASE.UNDISCOVERED){
+        for(CASEGRILLE c : grid){
+            if(c == CASEGRILLE.UNDISCOVERED){
                 print+= '□';
-            }else if(c == CASE.EMPTY) {
+            }else if(c == CASEGRILLE.EMPTY) {
                 print+='_';
-            }else if(c == CASE.FLAGED){
+            }else if(c == CASEGRILLE.FLAGED){
                 print+= '⚑';
 
-            }else if(c == CASE.BLOW) {
+            }else if(c == CASEGRILLE.BLOW) {
                 print+= '●';
-            }else if(c== CASE.DEFUSED){
+            }else if(c== CASEGRILLE.DEFUSED){
                 print+= '◯'; //○
             }else {
                 print += c.indexValue;

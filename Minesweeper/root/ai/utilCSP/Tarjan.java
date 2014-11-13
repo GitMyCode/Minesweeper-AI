@@ -1,6 +1,6 @@
 package root.ai.utilCSP;
 
-import root.ENUM.CASE;
+import root.ENUM.CASEGRILLE;
 import root.Grid;
 
 import java.util.*;
@@ -19,7 +19,7 @@ public class Tarjan {
     static private int count =0;
     private Grid gameGrid;
 
-    public static List<Set<Integer>> findCycle(CASE[] grid,Grid gameGrid){
+    public static List<Set<Integer>> findCycle(CASEGRILLE[] grid,Grid gameGrid){
         Map<Integer,Set<Integer>> allPath = new HashMap<Integer, Set<Integer>>();
         marked = new HashSet<Integer>();
         low = new HashMap<Integer, Integer>();
@@ -30,7 +30,7 @@ public class Tarjan {
 
         stack = new Stack<Integer>();
         for(int i=0; i<grid.length;i++){
-            if(CASE.isIndicatorCase(grid[i])){
+            if(CASEGRILLE.isIndicatorCase(grid[i])){
                 frontier.add(i);
                 low.put(i,0);
             }
@@ -53,7 +53,7 @@ public class Tarjan {
         return new ArrayList<Set<Integer>>();
     }
 
-    static private void DFS(CASE[] grid,int index,Grid gameGrid){
+    static private void DFS(CASEGRILLE[] grid,int index,Grid gameGrid){
 
         marked.add(index);
         low.put(index,itera);
@@ -88,11 +88,11 @@ public class Tarjan {
     }
 
 
-    static private List<Integer> getVoisin(CASE[] grid,int index,Grid gameGrid){
+    static private List<Integer> getVoisin(CASEGRILLE[] grid,int index,Grid gameGrid){
         List<Integer> list = new ArrayList<Integer>();
 
         for(Integer v: gameGrid.getSurroundingIndex(index)){
-            if(CASE.isIndicatorCase(grid[v]) && !marked.contains(v)){
+            if(CASEGRILLE.isIndicatorCase(grid[v]) && !marked.contains(v)){
                 list.add(v);
             }
         }

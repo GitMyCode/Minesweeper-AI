@@ -1,20 +1,15 @@
 package root.ENUM;
 
-import root.GLOBAL;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by MB on 10/30/2014.
  */
-public enum CASE {
+public enum CASEGRILLE {
 
     EMPTY(0),
     ONE(1),
@@ -34,20 +29,20 @@ public enum CASE {
 
 
 
-    CASE(int i){
+    CASEGRILLE(int i){
         indexValue = i;
     }
 
-    private static final Map<Integer, CASE> intToTypeMap = new HashMap<Integer, CASE>();
+    private static final Map<Integer, CASEGRILLE> intToTypeMap = new HashMap<Integer, CASEGRILLE>();
     static {
-        for (CASE type : CASE.values()) {
+        for (CASEGRILLE type : CASEGRILLE.values()) {
             intToTypeMap.put(type.indexValue, type);
         }
     }
-    public static boolean isIndicatorCase(CASE c){
+    public static boolean isIndicatorCase(CASEGRILLE c){
         return (c.indexValue >= 1 && c.indexValue <=8);
     }
-    public static CASE caseFromInt(int i ){
+    public static CASEGRILLE caseFromInt(int i ){
         return intToTypeMap.get(i);
     }
 

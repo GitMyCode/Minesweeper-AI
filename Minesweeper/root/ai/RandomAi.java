@@ -2,10 +2,10 @@ package root.ai;
 
 
 import root.ArtificialPlayer;
-import static root.ENUM.CASE.*;
+import static root.ENUM.CASEGRILLE.*;
 import static root.ENUM.COUP.*;
 
-import root.ENUM.CASE;
+import root.ENUM.CASEGRILLE;
 import root.ENUM.COUP;
 import root.Grid;
 import root.Move;
@@ -27,7 +27,7 @@ public class RandomAi implements ArtificialPlayer {
     @Override
     public Set<Move> getNextMoves(Grid g, int thinkLimit) {
 
-        CASE[] myView = g.getCpyPlayerView();
+        CASEGRILLE[] myView = g.getCpyPlayerView();
         Random ran = new Random();
 
         List<Integer> legalMoves = new ArrayList<Integer>();
