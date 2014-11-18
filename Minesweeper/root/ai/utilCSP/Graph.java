@@ -19,8 +19,13 @@ public class Graph {
     Set<Node> allNode;
     Grid gameGrid;
 
+    public     List<List<Integer>> allFrontiere;
+
+
     public Graph(Grid gameGrid){
         this.gameGrid = gameGrid;
+        CASEGRILLE[] c = gameGrid.getCpyPlayerView();
+        allFrontiere = findFrontier(c);
 
     }
 
@@ -142,9 +147,6 @@ public class Graph {
     public class Node{
 
         int indexInGrid;
-        float probabilite;
-        int nbFlagedHits=0;
-
 
         Node(int indexInGrid){
             this.indexInGrid = indexInGrid;
@@ -159,10 +161,36 @@ public class Graph {
             }
             return false;
         }
+    }
+
+    public class IndexNode extends Node{
+
+        List<FringeNode> connectedFringe;
+
+        public IndexNode(int index){
+            super(index);
+        }
 
 
+        @Override
+        public boolean equals(Object obj) {
+            return super.equals(obj);
+        }
+    }
 
+    public class FringeNode extends Node{
+        float probability;
+        int nbFlagHits =0;
+        List<IndexNode> indexNodes;
 
+        public FringeNode(int index){
+            super(index);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return super.equals(obj);
+        }
     }
 
 

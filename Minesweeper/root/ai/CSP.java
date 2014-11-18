@@ -3,6 +3,7 @@ package root.ai;
 import root.*;
 import root.ENUM.CASEGRILLE;
 import root.ENUM.COUP;
+import root.ai.utilCSP.Graph;
 import root.ai.utilCSP.TimeOver;
 
 import static root.ENUM.CASEGRILLE.*;
@@ -150,7 +151,9 @@ public class CSP implements ArtificialPlayer{
 
         CASEGRILLE[] grid = g.getCpyPlayerView();
 
-        allFrontiere = findFrontier(grid);
+        Graph graph = new Graph(g);
+
+        allFrontiere = graph.allFrontiere;  //findFrontier(grid);
 
         //int stop = 0;
 
@@ -349,7 +352,7 @@ public class CSP implements ArtificialPlayer{
         return false;
     }
 
-
+/*
     public List<Integer> getIndexNotInFrontier (int index, Set<Integer> frontiere){
         List<Integer> nextToFrontieres = new ArrayList<Integer>();
         List<Integer> voisins = gameGrid.getSurroundingIndex(index);
@@ -467,5 +470,5 @@ public class CSP implements ArtificialPlayer{
        }
        return indice == nbFlagPosed;
    }
-    
+    */
 }
