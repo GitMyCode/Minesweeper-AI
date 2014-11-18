@@ -9,15 +9,9 @@ import root.Move;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by Martin on 11/4/2014.
- */
 public class nIA implements ArtificialPlayer{
     @Override
     public Set<Move> getNextPossibleMoves(Grid g, int thinkLimit) {
-
-        //CASEGRILLE[] gc = g.getCpyPlayerView();
-
         Set<Move> test = new HashSet<Move>();
         g.getSurroundingIndex(40);
 
@@ -25,8 +19,6 @@ public class nIA implements ArtificialPlayer{
         for(Integer s : g.getSurroundingIndex(index)){
             test.add(new Move(s, COUP.FLAG));
         }
-
-
 
         return test;
     }

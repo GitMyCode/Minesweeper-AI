@@ -9,6 +9,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Projet de joueur artificiel de Minesweeper avec différents algorithmes
+ * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
+ *
+ * Automne 2014
+ * Par l'équipe:
+ *   Martin Bouchard
+ *   Frédéric Vachon
+ *   Louis-Bertrand Varin
+ *   Geneviève Lalonde
+ *   Nilovna Bascunan-Vasquez
+ */
+
+/**
  * http://stackoverflow.com/questions/15519626/how-to-get-all-classes-names-in-a-package
  */
 public final class ClassFinder {

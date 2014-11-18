@@ -14,7 +14,16 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
- * Created by MB on 10/29/2014.
+ * Projet de joueur artificiel de Minesweeper avec différents algorithmes
+ * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
+ *
+ * Automne 2014
+ * Par l'équipe:
+ *   Martin Bouchard
+ *   Frédéric Vachon
+ *   Louis-Bertrand Varin
+ *   Geneviève Lalonde
+ *   Nilovna Bascunan-Vasquez
  */
 class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener{
 

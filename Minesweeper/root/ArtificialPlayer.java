@@ -1,3 +1,7 @@
+package root;
+
+import java.util.Set;
+
 /**
  * Projet de joueur artificiel de Minesweeper avec différents algorithmes
  * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
@@ -10,11 +14,6 @@
  *   Geneviève Lalonde
  *   Nilovna Bascunan-Vasquez
  */
-
-package root;
-
-import java.util.Set;
-
 public interface ArtificialPlayer {
     /**
      * Obtenir les prochains coups possibles

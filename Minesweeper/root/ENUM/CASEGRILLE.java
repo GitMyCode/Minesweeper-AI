@@ -1,16 +1,21 @@
 package root.ENUM;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by MB on 10/30/2014.
+ * Projet de joueur artificiel de Minesweeper avec différents algorithmes
+ * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
+ *
+ * Automne 2014
+ * Par l'équipe:
+ *   Martin Bouchard
+ *   Frédéric Vachon
+ *   Louis-Bertrand Varin
+ *   Geneviève Lalonde
+ *   Nilovna Bascunan-Vasquez
  */
 public enum CASEGRILLE {
-
     EMPTY(0),
     ONE(1),
     TWO(2),
