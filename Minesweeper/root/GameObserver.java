@@ -5,7 +5,6 @@ package root;
  */
 public interface GameObserver {
 
-       public void grilleChanged(Grid g);
-
+    public void grilleChanged(Grid g);
     public void message(String msg);
 }
