@@ -1,20 +1,28 @@
-Minesweeper-AI
-==============
-Voici le code pour notre 3e projet du cours d'Intelligence Artificielle avec Éric Beaudry (INF4230). Nous avons réalisé un joueur artificiel de Minesweeper (Démineur) qui utilise différents algorithmes.
-### Les auteurs sont:
+# Minesweeper-AI   
+
+Voici le code pour notre 3e projet du cours d'Intelligence Artificielle avec Éric Beaudry (INF4230). 
+Nous avons réalisé un joueur artificiel de Minesweeper (Démineur) qui utilise différents algorithmes.
+
+## Auteurs
 + Martin Bouchard, BOUM15078700
 + Frédéric Vachon, VACF30098405
-+ Louis-Bertrand Varin
++ Louis-Bertrand Varin, VARL23089000
 + Geneviève Lalonde, LALG08568204
 + Nilovna Bascunan-Vasquez, BASN22518900
 
-Exécution du jeu
-----------------
-Section à venir.
+## Compilation (version console)    
+``` bash
+$ cd Minesweeper/
+$ javac root/WindowMinesweeper.java
+$ javac root/ai/*.java
+```
 
+## Exécution du jeu   
+``` bash
+$ java root.WindowMinesweeper
+```
 
-Installation et compilation du code (pour correction ou contribution)
---------------------------------------------------------------------
+## Installation et compilation du code (pour correction ou contribution)    
 Téléchargez le code du jeu dans un dossier. Pour ce faire, vous pouvez cliquer sur le bouton __Download ZIP__ à droite de l'écran et décompresser le dossier, ou encore exécuter la commande `git clone https://github.com/GitMyCode/Minesweeper-AI.git`
 
 Ce projet utilise l'IDE IntelliJ IDEA. Si vous ne l'avez pas, vous pouvez télécharger la dernière version gratuitement en suivant ce [lien](https://www.jetbrains.com/idea/download/). 
@@ -41,8 +49,7 @@ Pour indiquer à IntelliJ à quel endroit le Main se trouve dans le projet (et p
 
 Voilà! Vous pouvez vous amuser à configurer votre Démineur et à le tester avec différents algorithmes.
 
-Structure du projet
---------------------
+## Structure du projet    
 Le dossier __root__ dans __Minesweeper__ contient tout le code du projet. Il est composé de plusieurs sous-dossiers:
 + __ai__ contient les différents algorithmes pour le joueur artificiel (CSP, aléatoire, réseau bayésien...)
 + __design__ contient les éléments de l'interface graphique du jeu.
