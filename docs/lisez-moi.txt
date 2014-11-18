@@ -1,0 +1,31 @@
+﻿Voici le code pour notre 3e projet du cours d'Intelligence Artificielle avec Éric Beaudry (INF4230). Nous avons réalisé un joueur artificiel de Minesweeper (Démineur) qui utilise différents algorithmes.
+
+Auteurs
+-------
+
+Martin Bouchard, BOUM15078700
+Frédéric Vachon, VACF30098405
+Louis-Bertrand Varin, VARL23089000
+Geneviève Lalonde, LALG08568204
+Nilovna Bascunan-Vasquez, BASN22518900
+
+
+Compilation (version console)
+-----------------------------
+
+$ cd Minesweeper/
+$ javac root/WindowMinesweeper.java
+$ javac root/ai/*.java
+
+
+Exécution du jeu
+----------------
+
+$ java root.WindowMinesweeper
+
+Références
+----------
+
+http://stackoverflow.com/questions/15519626/how-to-get-all-classes-names-in-a-package pour la classe nommée ClassFinder.java
+http://ericbeaudry.ca/INF4230/tp2/inf4230-connect5.jar pour la méthode message dans la classe BoardGameView.java
+https://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html pour la méthode getScaledInstance de la classe GridView.java
