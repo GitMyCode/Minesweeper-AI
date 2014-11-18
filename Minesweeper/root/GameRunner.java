@@ -2,9 +2,6 @@ package root;
 
 import java.util.Set;
 
-/**
- * Created by MB on 10/30/2014.
- */
 class GameRunner implements Runnable {
 
     private final ArtificialPlayer ai;
@@ -18,7 +15,6 @@ class GameRunner implements Runnable {
     private volatile boolean running = true;
 
     public void terminate() {
-
         running = false;
     }
 
@@ -35,14 +31,11 @@ class GameRunner implements Runnable {
         this.thinkLimit = thinkLimit;
     }
 
-
     @Override
     public void run () {
         System.out.println("start gamerunner");
         do{
-           //
-
-            Set<Move> aiMoves = ai.getNextMoves(grid, thinkLimit);
+            Set<Move> aiMoves = ai.getNextPossibleMoves(grid, thinkLimit);
             controller.movesSetPlay(aiMoves);
             System.gc();
             try{
@@ -57,7 +50,7 @@ class GameRunner implements Runnable {
                 System.out.println("observer null");
             }
 
-        }while(!grid.gameFinish() && running && outputObserver!=null);
+        } while(!grid.gameFinish() && running && outputObserver!=null);
 
 
         /*After game*/

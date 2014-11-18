@@ -1,8 +1,33 @@
+/**
+ * Projet de joueur artificiel de Minesweeper avec différents algorithmes
+ * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
+ *
+ * Automne 2014
+ * Par l'équipe:
+ *   Martin Bouchard
+ *   Frédéric Vachon
+ *   Louis-Bertrand Varin
+ *   Geneviève Lalonde
+ *   Nilovna Bascunan-Vasquez
+ */
+
 package root;
 
 import java.util.Set;
 
 public interface ArtificialPlayer {
-    public Set<Move> getNextMoves(Grid g, int thinkLimit);
+    /**
+     * Obtenir les prochains coups possibles
+     *
+     * @param g : La grille de jeu actuelle
+     * @param thinkLimit : Temps limite de reflexion. Arrete la recursion
+     * @return Set des prochains coups possibles
+     */
+    public Set<Move> getNextPossibleMoves(Grid g, int thinkLimit);
+
+    /**
+     * Name display of the AI
+     * @return the name of the AI
+     */
     public String getName();
 }

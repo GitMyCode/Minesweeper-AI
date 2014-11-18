@@ -14,7 +14,4 @@ interface GridController extends EventListener {
     public void movesSetPlay(Set<Move> moves);
     public void movePlay(Move move);
 
-
-
-
 }
