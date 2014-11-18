@@ -123,6 +123,43 @@ class Util {
 
     }
 
+    public static void printFrontiereNode(CASEGRILLE[] gridOrigin, int nbcol,List<Graph.HintNode> frontiere){
+
+        String print="";
+
+        int i=1;
+        CASEGRILLE[] grid = gridOrigin.clone();
+
+        for(Graph.Node f : frontiere){
+            grid[f.indexInGrid] = CASEGRILLE.BLOW;
+        }
+
+
+        for(CASEGRILLE c : grid){
+            if(c == CASEGRILLE.UNDISCOVERED){
+                print+= '□';
+            }else if(c == CASEGRILLE.EMPTY) {
+                print+='_';
+            }else if(c == CASEGRILLE.FLAGED){
+                print+= '⚑';
+
+            }else if(c == CASEGRILLE.BLOW) {
+                print+= '●';
+            }else if(c== CASEGRILLE.DEFUSED){
+                print+= '◯'; //○
+            }else {
+                print += c.indexValue;
+            }
+            if(i%nbcol ==0 && i!=0){
+                print += "\n";
+            }
+            i++;
+        }
+        System.out.println(print);
+
+    }
+
+
     public static void printFrontiere(CASEGRILLE[] gridOrigin, int nbcol,List<Integer> frontiere){
 
         String print="";

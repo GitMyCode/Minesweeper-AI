@@ -7,15 +7,13 @@ import root.ai.utilCSP.Graph;
 import root.ai.utilCSP.TimeOver;
 
 import static root.ENUM.CASEGRILLE.*;
-import static root.ENUM.COUP.*;
 
 import java.util.*;
-import static root.Direction.*;
 
 /**
- * Created by MB on 10/31/2014.
+ * Created by martin on 18/11/14.
  */
-public class CSP implements ArtificialPlayer{
+public class CSPGraph implements ArtificialPlayer {
 
 
     /*Timer*/
@@ -62,7 +60,7 @@ public class CSP implements ArtificialPlayer{
 
 
         try {
-            getSureCoup(g);
+            calculateMoves(g);
         } catch (TimeOver ignored){
 
         }
@@ -147,12 +145,15 @@ public class CSP implements ArtificialPlayer{
         return "CSP-Martin";
     }
 
-    void getSureCoup(Grid g) throws TimeOver{
+    void calculateMoves(Grid g) throws TimeOver{
 
         CASEGRILLE[] grid = g.getCpyPlayerView();
 
 
-        allFrontiere =  findFrontier(grid);
+
+        Graph graph = new Graph(g);
+
+       // allFrontiere =
 
         //int stop = 0;
 
@@ -208,7 +209,8 @@ public class CSP implements ArtificialPlayer{
         }
     }
 
-    boolean recurseCSP(CASEGRILLE[] grid, List<Integer> bordure, Set<Integer> undiscoveredFrontier, Map<Integer, Integer> mapFlagHit, int index) throws TimeOver{
+    boolean recurseCSP(CASEGRILLE[] grid, List<Integer> bordure, Set<Integer> undiscoveredFrontier,
+                       Map<Integer, Integer> mapFlagHit, int index) throws TimeOver{
 
 
         if (timeUp()){
@@ -363,7 +365,7 @@ public class CSP implements ArtificialPlayer{
         return nextToFrontieres;
     }
 
-
+/*
     List<List<Integer>> findFrontier(CASEGRILLE[] grid){
         List<List<Integer>> allFrontiers = new LinkedList<List<Integer>>();
         Set<Integer> inFrontiereSoFar = new HashSet<Integer>();
@@ -468,6 +470,6 @@ public class CSP implements ArtificialPlayer{
             }
        }
        return indice == nbFlagPosed;
-   }
+   }*/
 
 }
