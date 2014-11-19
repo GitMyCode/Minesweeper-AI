@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public interface ArtificialPlayer {
     /**
-     * Obtenir les prochains joué par le AI
+     * Obtenir les prochains coups joué par le AI
      *
      * @param g : La grille de jeu actuelle
      * @param thinkLimit : Temps limite de reflexion. Arrete la recursion
