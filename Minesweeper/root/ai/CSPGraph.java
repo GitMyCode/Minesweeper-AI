@@ -157,8 +157,7 @@ public class CSPGraph implements ArtificialPlayer {
 
 
         /*
-        * On commence pas regarder si il y a des coup certain qu'on peut faire
-        *
+        * On commence par regarder si il y a des coup certain qu'on peut faire
         * */
         checkForSafeMoves(grid);
 
@@ -188,7 +187,7 @@ public class CSPGraph implements ArtificialPlayer {
             //Reset nbPossibilite pour cette frontiere
             nbPossibilite=0;
             if (movesToPlay.isEmpty()){
-                recurseCSP( hintBorder,fringeNodes, 0); // CSP!!
+                recurseCSP( hintBorder,fringeNodes, 0); //   ON LANCE LE CSP SUR CETTE FRONTIERE!!
 
 
             //Juste un check pour debugger
@@ -226,7 +225,7 @@ public class CSPGraph implements ArtificialPlayer {
     }
 
     /*
-    * C'est du CSP très classique
+    * C'est du CSP classique
     * Les variables c'est les indices. Si j'ai un indice de 2 alors j'ai 2 flag a placer. Donc pour satisfaire cette variable
     * il va prendre tout les combinaison possible de placement des flags sur les cases disponible qui l'entour. Pour chaque
     * combinaison il va recurser et essayer de satisfaire la variable suivante.
@@ -260,25 +259,36 @@ public class CSPGraph implements ArtificialPlayer {
             /*
             * on passe sur tout les nodes et on check si il y un flag.
             * Si oui alors on incrément le compteur de flags
-            *   C'est ce qui sera utiliser pour les probabilité. Si le compter est a 5 et le nbPossiblité a 10 alors ce node a 50% d'avoir un flag
+            *   C'est ce qui sera utiliser pour les probabilité. Si le compteur est a 5 et le nbPossiblité a 10 alors ce node a 50% d'avoir un flag
             * */
             for(Graph.FringeNode fn : fringeNodes){
                 if(fn.state == FLAGED){
                     fn.nbFlagHits++;
                 }
             }
+            //Puisqu'on a trouvé une disposition valide on incrément le nombre de possibilité pour cette frontiere
             nbPossibilite++;
             return true;
         }
 
 
 
-
+        //On passe a la prochaine variable a satisfaire
         Graph.HintNode variableToSatisfy = hintNodes.get(index);
+        // Update la variable puisqu'on a peut etre flag certainte de ses cases autour.
         variableToSatisfy.updateSurroundingAwareness();
 
-        List<Graph.FringeNode> neighborsFringe = variableToSatisfy.connectedFringe;
+        //Un check pour voir si la variable a trop de flag autour d'elle on backtrack
+        if (variableToSatisfy.nbFlagToPlace <0){
+            return false;}
+        //Si la variable est déja satisfaite alors on passe a la suivante!
+        if (variableToSatisfy.nbFlagToPlace==0){
+            return recurseCSP(hintNodes,fringeNodes,index+1);
+        }
 
+
+        //On va chercher cases non decouvertes voisin
+        List<Graph.FringeNode> neighborsFringe = variableToSatisfy.connectedFringe;
         List<Graph.FringeNode> undiscoveredFringe = new ArrayList<Graph.FringeNode>();
         for(Graph.FringeNode fn : neighborsFringe){
             if(fn.state == UNDISCOVERED){
@@ -287,35 +297,46 @@ public class CSPGraph implements ArtificialPlayer {
         }
 
 
-        if (variableToSatisfy.nbFlagToPlace <0){
-            return false;}
-        if (variableToSatisfy.nbFlagToPlace==0){
-            return recurseCSP(hintNodes,fringeNodes,index+1);
-        }
 
-        int[] combinaison = new int[variableToSatisfy.nbFlagToPlace];
-        ArrayList<int[]> listC = new ArrayList<int[]>();
+        /*
+        * Okey ca c'est peut etre un peu tricky
+        * Mon but est d'avoir tout les combinaisons du nombre de flags qui me reste a placer pour cette variables sur
+        * les cases disponibles autour d'elle
+        *
+        *Ce que vont faire ces 2 ou 3 prochaine ligne c'est : http://fr.wikipedia.org/wiki/Combinaison_(math%C3%A9matiques)
+        *
+        *
+        * */
+        int[] combination = new int[variableToSatisfy.nbFlagToPlace];
+        ArrayList<int[]> listcombination = new ArrayList<int[]>();
         combinaisonFlag(0,variableToSatisfy.nbFlagToPlace,undiscoveredFringe.size()
-                ,combinaison,listC);
+                ,combination,listcombination);
 
 
 
-
-        for (int[] list : listC){
+        /*
+        * Itere sur les combinaisons trouvé
+        * */
+        for (int[] oneCombination : listcombination){
 
             //Garder en  memoire le nb de flag a placer ici parce que variableToSatisfy va changer au moment de recurser
             int nbFlagToPlaceHere = variableToSatisfy.nbFlagToPlace;
 
-
+            /*
+            * On place les flags sur cases
+            * */
             for (int i=0; i< nbFlagToPlaceHere; i++){
-                Graph.FringeNode fringeToFlag = undiscoveredFringe.get(list[i]);
+                Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
                 fringeToFlag.state = FLAGED;
             }
-
+            //CSP pour la prochaine variable!
             recurseCSP(hintNodes,fringeNodes,index+1);
 
+            /*
+            * On retire les flags préalablement posé
+            * */
             for (int i=0; i< nbFlagToPlaceHere; i++){
-                Graph.FringeNode fringeToFlag = undiscoveredFringe.get(list[i]);
+                Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
                 fringeToFlag.state = UNDISCOVERED;
             }
         }
