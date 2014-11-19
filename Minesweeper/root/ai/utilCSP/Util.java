@@ -88,6 +88,13 @@ class Util {
         }
     }
 
+    public static void printFrontiereNodeInOrder(CASEGRILLE[] gridOrigin,int nbcol, List<Graph.Node> frontiere){
+        CASEGRILLE[] cpy = gridOrigin.clone();
+        for(Graph.Node i: frontiere){
+            printIndex(cpy,nbcol,i.indexInGrid);
+        }
+    }
+
     public static void printFrontiere(CASEGRILLE[] gridOrigin, int nbcol,Set<Integer> frontiere){
 
         String print="";

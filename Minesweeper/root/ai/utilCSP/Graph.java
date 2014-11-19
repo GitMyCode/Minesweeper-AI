@@ -16,7 +16,7 @@ public class Graph {
 
     Set<Node> allNode;
     Grid gameGrid;
-
+    public int nbFrontiere =0;
     public List<List<Node>> allFrontiere;
 
 
@@ -36,6 +36,7 @@ public class Graph {
 
 
         allFrontiere = findFrontier(c);
+        nbFrontiere = allHintNode.size();
         int stop=0;
 
     }
@@ -60,7 +61,8 @@ public class Graph {
 
 
                     hintNode.connectedFringe = getFringeNeirbour(grid,hintNode);
-                    hintNode.nbFlagToPlace = getNbFlagToPlace(grid, hintNode.indexInGrid);
+                    hintNode.value = getNbFlagToPlace(grid, hintNode.indexInGrid);
+                    hintNode.updateSurroundingAwareness();
                     if (isIndexSatisfied(grid, i)){
                         for(Integer c: getUndiscoveredneighbours(grid,i)){
                             //movesToPlay.add(new Move(c, SHOW));
@@ -131,7 +133,10 @@ public class Graph {
             if (!hintNodeSet.contains(nextNode) && !inBorderSoFar.contains(nextNode) && !isIndexSatisfied(grid, next)){
 
                 nextNode.connectedFringe = getFringeNeirbour(grid,nextNode);
-                nextNode.nbFlagToPlace = getNbFlagToPlace(grid,nextIndex);
+                nextNode.value = getNbFlagToPlace(grid, nextNode.indexInGrid);
+                nextNode.updateSurroundingAwareness();
+                //nextNode.nbFlagToPlace = getNbFlagToPlace(grid,nextIndex);
+
 
                 hintNodeSet.add(nextNode);hintNodeList.add(nextNode);
 
@@ -251,7 +256,6 @@ public class Graph {
             super(index);
             this.value = value;
             connectedFringe = new ArrayList<FringeNode>();
-            updateSurroundingAwareness();
         }
 
         public void makeConnectedFringe(Set<Integer> undiscov){
@@ -267,17 +271,17 @@ public class Graph {
         * Il va ensuite updater ces varialbes
         * */
         public void updateSurroundingAwareness(){
-            int nbFlag=0;
+            int nbFlagToPlace = value;
             int nbHide=0;
             for(FringeNode fn : connectedFringe){
                 if(fn.state == FLAGED){
-                    nbFlag++;
+                    nbFlagToPlace--;
                 }else if(fn.state == UNDISCOVERED) {
                     nbHide++;
                 }
             }
             nbUndiscoveredNeighbors = nbHide;
-            nbFlagToPlace = (value - nbFlag);
+            this.nbFlagToPlace = nbFlagToPlace;
         }
 
 
