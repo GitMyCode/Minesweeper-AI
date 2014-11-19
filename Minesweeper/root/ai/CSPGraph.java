@@ -35,6 +35,7 @@ public class CSPGraph implements ArtificialPlayer {
     private Integer  nbPossibilite =0;
 
 
+    Graph graph;
     @Override
     public Set<Move> getNextMoves(Grid g, int thinkLimit) {
 
@@ -57,6 +58,9 @@ public class CSPGraph implements ArtificialPlayer {
         allFrontiere = new ArrayList<List<Integer>>();
         allHitFlag = new ArrayList<Map<Integer, Integer>>();
         nbMatchByFrontier = new ArrayList<Integer>();
+
+
+
 
 
         try {
@@ -151,7 +155,7 @@ public class CSPGraph implements ArtificialPlayer {
 
 
 
-        Graph graph = new Graph(g);
+        graph = new Graph(g);
 
        // allFrontiere =
 
@@ -160,7 +164,27 @@ public class CSPGraph implements ArtificialPlayer {
         if(!movesToPlay.isEmpty()){
             return;
         }
+        int i=0;
+        for(List<Graph.HintNode> hintBorder : graph.allHintNode){
+            List<Graph.FringeNode> fringeBorder = graph.allFringeBorder.get(i);
+            i++;
+            for(Graph.HintNode hintNode : hintBorder){
 
+                if(hintNode.connectedFringe.size() == hintNode.nbFlagToPlace){
+                    for(Graph.FringeNode fringeNode : hintNode.connectedFringe){
+                        movesToPlay.add(new Move(fringeNode.indexInGrid,COUP.FLAG));
+                    }
+                }else if(hintNode.nbFlagToPlace ==0 ){
+                    for(Graph.FringeNode fringeNode : hintNode.connectedFringe){
+                        movesToPlay.add(new Move(fringeNode.indexInGrid,COUP.SHOW));
+                    }
+                }
+
+            }
+
+
+
+/*
         for (List<Integer> oneFrontiere : allFrontiere){
 
             Set<Integer> undiscovFrontier = new HashSet<Integer>();
@@ -193,12 +217,12 @@ public class CSPGraph implements ArtificialPlayer {
 
                     }
                 }
-            }
+            }*/
 
             nbPossibilite=0;
             Map<Integer,Integer> mapHitFlags = new HashMap<Integer, Integer>();
             if (movesToPlay.isEmpty()){
-                recurseCSP(grid, oneFrontiere, undiscovFrontier, mapHitFlags, 0);
+                recurseCSP(grid, hintBorder,fringeBorder, mapHitFlags, 0);
             } else if (!gameGrid.checkMove(movesToPlay)){
                     System.out.println("ne devrait pas");
             }
@@ -207,9 +231,10 @@ public class CSPGraph implements ArtificialPlayer {
             allHitFlag.add(mapHitFlags);
             nbMatchByFrontier.add(nbPossibilite);
         }
+
     }
 
-    boolean recurseCSP(CASEGRILLE[] grid, List<Integer> bordure, Set<Integer> undiscoveredFrontier,
+    boolean recurseCSP(CASEGRILLE[] grid, List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes,
                        Map<Integer, Integer> mapFlagHit, int index) throws TimeOver{
 
 
@@ -217,27 +242,39 @@ public class CSPGraph implements ArtificialPlayer {
             throw new TimeOver();
         }
 
-        if (!allFlagsOkay(grid, bordure, index)){
+        Graph.HintNode variableToSatisfy = hintNodes.get(index);
+        variableToSatisfy.updateSurroundingAwareness();
+
+        if (!allFlagsOkay(grid, hintNodes, index)){
             return false;
         }
 
 
-        if (index >= bordure.size()){
+        if (index >= hintNodes.size()){
             //int stop=0;
 
-            for(Integer i : undiscoveredFrontier){
-                if(grid[i] == FLAGED){
-                    int lastTimeFlaged = (mapFlagHit.containsKey(i))? mapFlagHit.get(i)+1 : 1;
-                    mapFlagHit.put(i, lastTimeFlaged);
+            for(Graph.FringeNode fn : fringeNodes){
+                if(fn.state == FLAGED){
+                    fn.nbFlagHits++;
+                    //int lastTimeFlaged = (mapFlagHit.containsKey(fn))? mapFlagHit.get(fn)+1 : 1;
+                   // mapFlagHit.put(fn, lastTimeFlaged);
                 }
             }
             nbPossibilite++;
             return true;
         }
 
-        int variableToSatisfy = bordure.get(index);
 
-        List<Integer> surrounding = gameGrid.getSurroundingIndex(variableToSatisfy);
+        List<Graph.FringeNode> neighborsFringe = variableToSatisfy.connectedFringe;
+
+        List<Graph.FringeNode> undiscoveredFringe = new ArrayList<Graph.FringeNode>();
+        for(Graph.FringeNode fn : neighborsFringe){
+            if(fn.state == UNDISCOVERED){
+                undiscoveredFringe.add(fn);
+            }
+        }
+
+       /* List<Integer> surrounding = gameGrid.getSurroundingIndex(variableToSatisfy);
         List<Integer> undiscovered = new ArrayList<Integer>();
         int nbFlagToPlace=0;
         for (Integer i : surrounding){
@@ -253,26 +290,35 @@ public class CSPGraph implements ArtificialPlayer {
             System.out.println("dfg");
         }
 
-        nbFlagToPlace+= grid[variableToSatisfy].indexValue;
-        if (nbFlagToPlace <0){return false;}
-        if (nbFlagToPlace==0){
-            CASEGRILLE[] cpyG = grid.clone();
-            return recurseCSP(cpyG,bordure,undiscoveredFrontier,mapFlagHit,index+1);
+        nbFlagToPlace+= grid[variableToSatisfy].indexValue;*/
+
+        if (variableToSatisfy.nbFlagToPlace <0){return false;}
+        if (variableToSatisfy.nbFlagToPlace==0){
+            //CASEGRILLE[] cpyG = grid.clone();
+            return recurseCSP(grid,hintNodes,fringeNodes,mapFlagHit,index+1);
         }
 
-
-        int[] combinaison = new int[nbFlagToPlace];
+        int[] combinaison = new int[variableToSatisfy.nbFlagToPlace];
         ArrayList<int[]> listC = new ArrayList<int[]>();
-        combinaisonFlag(0,nbFlagToPlace,undiscovered.size(),combinaison,listC);
+        combinaisonFlag(0,variableToSatisfy.nbFlagToPlace,variableToSatisfy.nbUndiscoveredNeighbors
+                ,combinaison,listC);
+
+
+
 
         for (int[] list : listC){
-            CASEGRILLE[] gCpy = grid.clone();
-            for (int i=0; i< nbFlagToPlace; i++){
-                int indexToFlag = undiscovered.get(list[i]);
-                gCpy[indexToFlag] = FLAGED;
+            //CASEGRILLE[] gCpy = grid.clone();
+            for (int i=0; i< variableToSatisfy.nbFlagToPlace; i++){
+                Graph.FringeNode fringeToFlag = undiscoveredFringe.get(list[i]);
+                fringeToFlag.state = FLAGED;
             }
 
-            recurseCSP(gCpy,bordure,undiscoveredFrontier,mapFlagHit,index+1);
+            if(!recurseCSP(grid,hintNodes,fringeNodes,mapFlagHit,index+1)){
+                for (int i=0; i< variableToSatisfy.nbFlagToPlace; i++){
+                    Graph.FringeNode fringeToFlag = undiscoveredFringe.get(list[i]);
+                    fringeToFlag.state = UNDISCOVERED;
+                }
+            }
         }
 
         return false;
@@ -280,12 +326,24 @@ public class CSPGraph implements ArtificialPlayer {
 
 
 
-    boolean allFlagsOkay(CASEGRILLE[] grid, List<Integer> bordure, int nbDone){
+    boolean allFlagsOkay(CASEGRILLE[] grid, List<Graph.HintNode> hintNodes, int nbDone){
         for (int i=0; i< nbDone;i++){
-            int index = bordure.get(i);
-            int value = grid[index].indexValue;
-            List<Integer> voisins = gameGrid.getSurroundingIndex(index);
+            Graph.HintNode hintNode = hintNodes.get(i);
+            int value = hintNode.value;
+
+            List<Graph.FringeNode> neighborsFringe = hintNode.connectedFringe;
+
             int nbFlag=0;
+            for(Graph.FringeNode fn : neighborsFringe){
+                if(fn.state == FLAGED){
+                    nbFlag++;
+                }
+            }
+            if(nbFlag != value){
+                return false;
+            }
+           /*
+            List<Integer> voisins = gameGrid.getSurroundingIndex(hintNode);
             for (Integer v : voisins){
                 if(grid[v] ==FLAGED ){
                     nbFlag++;
@@ -293,7 +351,7 @@ public class CSPGraph implements ArtificialPlayer {
             }
             if (nbFlag != value){
                 return false;
-            }
+            }*/
         }
         return true;
     }

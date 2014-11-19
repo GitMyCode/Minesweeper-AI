@@ -87,6 +87,7 @@ public enum Direction {
 
     private static final Set<Direction> direction4 = new LinkedHashSet<Direction>();
     public static final Set<Direction> direction8 = new LinkedHashSet<Direction>();
+    private static final Set<Direction> clockWiseDirection = new LinkedHashSet<Direction>();
     static {
         /* Les 4 directions DOWN, RIGHT, DOWNRIGHT, TOPRIGHT d'un point */
         direction4.add(DOWN);
@@ -96,6 +97,16 @@ public enum Direction {
 
         /* Toutes les directions d'un point */
         direction8.addAll(EnumSet.allOf(Direction.class));
+
+        clockWiseDirection.add(TOP);
+        clockWiseDirection.add(TOPRIGHT);
+        clockWiseDirection.add(RIGHT);
+        clockWiseDirection.add(DOWNRIGHT);
+        clockWiseDirection.add(DOWN);
+        clockWiseDirection.add(DOWNLEFT);
+        clockWiseDirection.add(LEFT);
+        clockWiseDirection.add(TOPLEFT);
+
     }
 
     Direction(){ }

@@ -5,6 +5,7 @@ import root.ENUM.COUP;
 import root.Move;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -123,7 +124,7 @@ class Util {
 
     }
 
-    public static void printFrontiereNode(CASEGRILLE[] gridOrigin, int nbcol,List<Graph.HintNode> frontiere){
+    public static void printFrontiereNode(CASEGRILLE[] gridOrigin, int nbcol,List<? extends Graph.Node> frontiere){
 
         String print="";
 
@@ -131,7 +132,8 @@ class Util {
         CASEGRILLE[] grid = gridOrigin.clone();
 
         for(Graph.Node f : frontiere){
-            grid[f.indexInGrid] = CASEGRILLE.BLOW;
+            Graph.Node fn =  Graph.Node.class.cast(f);
+            grid[fn.indexInGrid] = CASEGRILLE.BLOW;
         }
 
 
@@ -195,8 +197,7 @@ class Util {
         System.out.println(print);
 
     }
-
-        private static void printIndex(CASEGRILLE[] gridOrigin, int nbcol, Integer toShow){
+    public static void printIndex(CASEGRILLE[] gridOrigin, int nbcol, Integer toShow){
 
         String print="";
 
