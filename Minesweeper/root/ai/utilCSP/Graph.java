@@ -266,6 +266,7 @@ public class Graph {
         }
 
         /*
+        * TODO je ne suis pas sur que ce soit safe
         * Il va regarder autour de lui les case qui on un flag
         * et celle qui sont encore non- decouverte
         * Il va ensuite updater ces varialbes
