@@ -83,7 +83,7 @@ public class CSP implements ArtificialPlayer{
                     for (Integer sur : gameGrid.getSurroundingIndex(b)){
                         if (copyGrid[sur] == UNDISCOVERED && !flagHits.containsKey(sur)){
                             movesToPlay.add(new Move(sur, COUP.SHOW));
-                            if(!gameGrid.checkMove(movesToPlay)){
+                            if(!gameGrid.checkMove(movesToPlay).isEmpty()){
                                 int adas=0;
                             }
                         } else if ( copyGrid[sur] == UNDISCOVERED && flagHits.get(sur) >=nbPossibilityHere){
@@ -91,7 +91,7 @@ public class CSP implements ArtificialPlayer{
                                 System.out.println("weird");
                             }
                             movesToPlay.add(new Move(sur, COUP.FLAG));
-                            if (!gameGrid.checkMove(movesToPlay)){
+                            if (!gameGrid.checkMove(movesToPlay).isEmpty()){
                                 int adas=0;
                             }
                         }
@@ -107,7 +107,7 @@ public class CSP implements ArtificialPlayer{
             //int bestChance =Integer.MAX_VALUE;
 
         }
-        if (!gameGrid.checkMove(movesToPlay)){
+        if (!gameGrid.checkMove(movesToPlay).isEmpty()){
             System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.checkIfPresentGridValid());
         }
         if (timeUp()){
@@ -198,7 +198,7 @@ public class CSP implements ArtificialPlayer{
             Map<Integer,Integer> mapHitFlags = new HashMap<Integer, Integer>();
             if (movesToPlay.isEmpty()){
                 recurseCSP(grid, oneFrontiere, undiscovFrontier, mapHitFlags, 0);
-            } else if (!gameGrid.checkMove(movesToPlay)){
+            } else if (!gameGrid.checkMove(movesToPlay).isEmpty()){
                     System.out.println("ne devrait pas");
             }
 
