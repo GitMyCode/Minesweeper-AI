@@ -46,7 +46,7 @@ class GameRunner implements Runnable {
     public void run () {
         System.out.println("start gamerunner");
         do{
-            Set<Move> aiMoves = ai.getNextPossibleMoves(grid, thinkLimit);
+            Set<Move> aiMoves = ai.getNextMoves(grid, thinkLimit);
             controller.movesSetPlay(aiMoves);
             System.gc();
             try{

@@ -35,7 +35,7 @@ public class CSPGraph implements ArtificialPlayer {
 
     Graph graph;
     @Override
-    public Set<Move> getNextPossibleMoves(Grid g, int thinkLimit) {
+    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
 
         gameGrid = g;
         CASEGRILLE[] copyGrid = g.getCpyPlayerView();

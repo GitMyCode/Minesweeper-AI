@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class nIA implements ArtificialPlayer{
     @Override
-    public Set<Move> getNextPossibleMoves(Grid g, int thinkLimit) {
+    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
         Set<Move> test = new HashSet<Move>();
         g.getSurroundingIndex(40);
 
