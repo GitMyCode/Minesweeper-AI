@@ -23,7 +23,7 @@ public class Graph {
 
     public HashMap<Integer,FringeNode> mapFringeNode;
     public List<List<HintNode>> allHintNode;
-    public List<List<FringeNode>> allFringeBorder;
+    public List<List<FringeNode>> allFringeNodes;
 
     public Graph(Grid gameGrid){
         this.gameGrid = gameGrid;
@@ -32,7 +32,7 @@ public class Graph {
         allFrontiere = new ArrayList<List<Node>>();
         mapFringeNode = new HashMap<Integer, FringeNode>();
         allHintNode = new ArrayList<List<HintNode>>();
-        allFringeBorder = new ArrayList<List<FringeNode>>();
+        allFringeNodes = new ArrayList<List<FringeNode>>();
 
 
         allFrontiere = findFrontier(c);
@@ -103,7 +103,7 @@ public class Graph {
             for(HintNode hn : l){
                 fringe.addAll(hn.connectedFringe);
             }
-            allFringeBorder.add(new ArrayList<FringeNode>(fringe));
+            allFringeNodes.add(new ArrayList<FringeNode>(fringe));
 
         }
 
