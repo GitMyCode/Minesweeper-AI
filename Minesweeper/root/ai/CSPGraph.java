@@ -37,12 +37,6 @@ public class CSPGraph implements ArtificialPlayer {
     @Override
     public Set<Move> getNextMoves(Grid g, int thinkLimit) {
 
-        /*TODO
-        * 1) Splitter les frontieres en plusieurs frontiere indépendante
-        * 2) Ordonner les variables pour qu'elle soient voisines (Heuristique de CSP)
-        * 3) FAIRE LE MENAGE DANS CE BORDEL
-        * */
-
         gameGrid = g;
         CASEGRILLE[] copyGrid = g.getCpyPlayerView();
         startTimer(thinkLimit);
@@ -54,8 +48,10 @@ public class CSPGraph implements ArtificialPlayer {
 
 
 
-
-
+        /*
+        * On lance le AI
+        * nb: Ne faites pas attention au Try Catch c'est juste pour quitter la fonction si on timeout
+        * */
         try {
             calculateMoves(g);
         } catch (TimeOver ignored){
@@ -63,6 +59,19 @@ public class CSPGraph implements ArtificialPlayer {
         }
 
 
+
+
+        /*
+        * Une fois qu'on a fini d'analyser on va maintenant choisir les coup a jouer
+        *
+        * param: nbMatchByFrontier
+        *           C'est dans cette liste que j'ai gardé le nombre de possibilité pour cette frontiere
+        *           Par exemple un frontiere qui permet 10 combinaison différente de position de flags aura 10 possibilité
+        *       fringeNodes
+        *           C'est les cases non-decouverte qui cotoient une case découverte (un indice)
+        *
+        *
+        * */
         if (movesToPlay.isEmpty()){
 
             System.out.println("essai avec les resultats csp");
@@ -72,8 +81,15 @@ public class CSPGraph implements ArtificialPlayer {
                 int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
                 for(Graph.FringeNode fn : fringeNodes){
 
+                    //Donc 0% des chances
                     if(fn.nbFlagHits ==0){
                         movesToPlay.add(new Move(fn.indexInGrid,COUP.SHOW));
+
+
+                    /*
+                    * Si ce noeud a recu un flag sur toute les dispositions valid de flags sur la frontiere
+                    * Alors c'est qu'il y a 100% des chance d'avoir un flag
+                    * */
                     }else if(fn.nbFlagHits == nbPossibilityHere){
                         movesToPlay.add(new Move(fn.indexInGrid,COUP.FLAG));
                     }
@@ -84,6 +100,11 @@ public class CSPGraph implements ArtificialPlayer {
         }
 
 
+
+        /*
+        * Juste un check pour debugger
+        * checkMove va renvoyer les Moves qui sont des erreurs (ex: un flag sur un case vide)
+        * */
         Set<Move> errors = gameGrid.checkMove(movesToPlay);
         if (!errors.isEmpty()){
             /*try{
@@ -100,7 +121,9 @@ public class CSPGraph implements ArtificialPlayer {
         }
 
 
-
+        /*
+        * Si aucun coup sur a été trouvé alors on essai au hasard
+        * */
         if (movesToPlay.isEmpty()){
             List<Integer> legalMoves = new ArrayList<Integer>();
             for(int i=0; i< g.length; i++){
@@ -124,29 +147,51 @@ public class CSPGraph implements ArtificialPlayer {
         return "CSP-Martin";
     }
 
+
+    /**
+     * C'est le AI en soit. Tout commence par cette method
+     */
     void calculateMoves(Grid g) throws TimeOver{
 
         CASEGRILLE[] grid = g.getCpyPlayerView();
 
 
+        /*
+        * On commence pas regarder si il y a des coup certain qu'on peut faire
+        *
+        * */
         checkForSafeMoves(grid);
 
 
-
+        //Si aucun coup certain trouvé alors on continue
         if(!movesToPlay.isEmpty()){
             return;
         }
 
+        /*
+        * Va organiser les données dans un Graph
+        * C'est plus ou moins un vrai graph. Il y a 2 Liste
+        * allHintNode et allFringeNode
+        * Ces deux listes contiennent toute les frontieres indépendante
+        * allHintNode: Les frontieres qui sont des indice
+        * allFringeNode: les frontieres qui sont des case non découvertes
+        * */
+
         graph = new Graph(g);
         System.out.println("va pour le csp");
         int i=0;
+        //Cette boucle ca lancer le CSP sur une frontiere a la fois.
         for(List<Graph.HintNode> hintBorder : graph.allHintNode){
             List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(i);
             i++;
 
+            //Reset nbPossibilite pour cette frontiere
             nbPossibilite=0;
             if (movesToPlay.isEmpty()){
-                recurseCSP( hintBorder,fringeNodes, 0);
+                recurseCSP( hintBorder,fringeNodes, 0); // CSP!!
+
+
+            //Juste un check pour debugger
             } else if (gameGrid.checkMove(movesToPlay).isEmpty()){
                     System.out.println("ne devrait pas");
             }
@@ -180,20 +225,43 @@ public class CSPGraph implements ArtificialPlayer {
 
     }
 
+    /*
+    * C'est du CSP très classique
+    * Les variables c'est les indices. Si j'ai un indice de 2 alors j'ai 2 flag a placer. Donc pour satisfaire cette variable
+    * il va prendre tout les combinaison possible de placement des flags sur les cases disponible qui l'entour. Pour chaque
+    * combinaison il va recurser et essayer de satisfaire la variable suivante.
+    * Si la variable n'est pas possible à satisfaire. Par exemple une case avec un indice de 2 est entouré de 3 flag alors on backtrack et
+    * une autre combinaison est essayé.
+    *
+    * */
+
     boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOver{
 
-
+        //Si on dépasse le thinkDelay
         if (timeUp()){
             throw new TimeOver();
         }
 
+        /*
+        * Vérifie si jusqu`a maintenant toute les variables (la frontiere avec les indices) sont satisfaites
+
+        */
 
         if (!allFlagsOkay(hintNodes, index)){
             return false;
         }
 
 
+        /*
+        * Quand on est arrivé au bout de la frontiere et que tout marche!
+        * Une disposition(solution CSP) est trouvé!
+        * */
         if (index >= hintNodes.size()){
+            /*
+            * on passe sur tout les nodes et on check si il y un flag.
+            * Si oui alors on incrément le compteur de flags
+            *   C'est ce qui sera utiliser pour les probabilité. Si le compter est a 5 et le nbPossiblité a 10 alors ce node a 50% d'avoir un flag
+            * */
             for(Graph.FringeNode fn : fringeNodes){
                 if(fn.state == FLAGED){
                     fn.nbFlagHits++;
@@ -202,6 +270,9 @@ public class CSPGraph implements ArtificialPlayer {
             nbPossibilite++;
             return true;
         }
+
+
+
 
         Graph.HintNode variableToSatisfy = hintNodes.get(index);
         variableToSatisfy.updateSurroundingAwareness();
