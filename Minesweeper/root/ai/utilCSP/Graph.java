@@ -29,6 +29,7 @@ public class Graph {
         this.gameGrid = gameGrid;
         CASEGRILLE[] c = gameGrid.getCpyPlayerView();
 
+        allFrontiere = new ArrayList<List<Node>>();
         mapFringeNode = new HashMap<Integer, FringeNode>();
         allHintNode = new ArrayList<List<HintNode>>();
         allFringeBorder = new ArrayList<List<FringeNode>>();
@@ -53,19 +54,20 @@ public class Graph {
 
                 HintNode hintNode = new HintNode(i,grid[i].indexValue);
 
+
                 if(!inFrontiereSoFar.contains(hintNode)){
 
 
 
                     hintNode.connectedFringe = getFringeNeirbour(grid,hintNode);
-
+                    hintNode.nbFlagToPlace = getNbFlagToPlace(grid, hintNode.indexInGrid);
                     if (isIndexSatisfied(grid, i)){
                         for(Integer c: getUndiscoveredneighbours(grid,i)){
                             //movesToPlay.add(new Move(c, SHOW));
 
                         }
 
-                    } else if(nbFlagToPlace(grid,i) == getUndiscoveredneighbours(grid,i).size()) {
+                    } else if(getNbFlagToPlace(grid, i) == getUndiscoveredneighbours(grid,i).size()) {
                         for (Integer v : getUndiscoveredneighbours(grid,i)) {
                             //movesToPlay.add(new Move(v, FLAG));
                         }
@@ -95,11 +97,11 @@ public class Graph {
         }
 
         for(List<HintNode> l : allHintNode){
-            List<FringeNode> fringe = new ArrayList<FringeNode>();
+            Set<FringeNode> fringe = new LinkedHashSet<FringeNode>();
             for(HintNode hn : l){
                 fringe.addAll(hn.connectedFringe);
             }
-            allFringeBorder.add(fringe);
+            allFringeBorder.add(new ArrayList<FringeNode>(fringe));
 
         }
 
@@ -108,35 +110,16 @@ public class Graph {
         return allFrontiers;
     }
 
-    public Set<FringeNode> getFringeNeirbour(CASEGRILLE[] g, HintNode hintNode){
 
-        Set<FringeNode> fringeSet = new LinkedHashSet<FringeNode>();
-        for(Integer indexFringe : getUndiscoveredneighbours(g,hintNode.indexInGrid)){
-            if(mapFringeNode.containsKey(indexFringe)){
-                FringeNode fn = mapFringeNode.get(indexFringe);
-                fn.hintNodes.add(hintNode);
-                fringeSet.add(fn);
-
-            }else {
-                FringeNode fn = new FringeNode(indexFringe);
-                fn.hintNodes.add(hintNode);
-                fringeSet.add(fn);
-                mapFringeNode.put(indexFringe,fn);
-            }
-
-        }
-        return fringeSet;
-
-    }
 
     public void test(List<? extends Node> listToAdd){
         allFrontiere.add(new ArrayList<Node>( listToAdd));
     }
 
-    void putInFrontier(int nextIndex, List<HintNode> front, Set<HintNode> frontiereHash, Set<HintNode> allFront, CASEGRILLE[] grid){
+    void putInFrontier(int nextIndex, List<HintNode> hintNodeList, Set<HintNode> hintNodeSet, Set<HintNode> inBorderSoFar, CASEGRILLE[] grid){
 
         /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
-        Set<Direction> thisDirection = getPossibleDirection(grid, nextIndex, frontiereHash);
+        Set<Direction> thisDirection = getPossibleDirection(grid, nextIndex, hintNodeSet);
         if (thisDirection == null || thisDirection.isEmpty())
             return;
 
@@ -145,10 +128,14 @@ public class Graph {
             HintNode nextNode = new HintNode(next,grid[next].indexValue);
 
 
-            if (!frontiereHash.contains(nextNode) && !allFront.contains(nextNode) && !isIndexSatisfied(grid, next)){
-                frontiereHash.add(nextNode);front.add(nextNode);
+            if (!hintNodeSet.contains(nextNode) && !inBorderSoFar.contains(nextNode) && !isIndexSatisfied(grid, next)){
 
-                putInFrontier(next,front,frontiereHash,allFront,grid);
+                nextNode.connectedFringe = getFringeNeirbour(grid,nextNode);
+                nextNode.nbFlagToPlace = getNbFlagToPlace(grid,nextIndex);
+
+                hintNodeSet.add(nextNode);hintNodeList.add(nextNode);
+
+                putInFrontier(next,hintNodeList,hintNodeSet,inBorderSoFar,grid);
             }
         }
     }
@@ -158,18 +145,13 @@ public class Graph {
     Set<Direction> getPossibleDirection(CASEGRILLE[] grid, int index, Set<HintNode> frontiere){
         Set<Direction> directions = new LinkedHashSet<Direction>();
 
-        int nbDirCardinal =0;
         for (Direction D : direction8){
             int next = index+gameGrid.step(D);
-            HintNode nextNode = new HintNode(next,grid[next].indexValue);
+            HintNode nextNode = new HintNode(next);
 
             if (gameGrid.isStepThisDirInGrid(D,index) && !frontiere.contains(nextNode) && CASEGRILLE.isIndicatorCase(grid[next])
                     ){
                 directions.add(D);
-                if (D.getCompDir().size() ==1){
-                    nbDirCardinal++;
-                }
-
             }
         }
         return directions;
@@ -187,7 +169,7 @@ public class Graph {
     }
 
 
-    int nbFlagToPlace(CASEGRILLE[] grid, int index){
+    int getNbFlagToPlace(CASEGRILLE[] grid, int index){
         int nbFlagRemaining = grid[index].indexValue;
         for (Integer v : gameGrid.getSurroundingIndex(index)){
             if (grid[v] == FLAGED){
@@ -208,12 +190,31 @@ public class Graph {
        }
        return indice == nbFlagPosed;
    }
+    public List<FringeNode> getFringeNeirbour(CASEGRILLE[] g, HintNode hintNode){
 
+        List<FringeNode> fringeSet = new ArrayList<FringeNode>();
+        for(Integer indexFringe : getUndiscoveredneighbours(g,hintNode.indexInGrid)){
+            if(mapFringeNode.containsKey(indexFringe)){
+                FringeNode fn = mapFringeNode.get(indexFringe);
+                fn.hintNodes.add(hintNode);
+                fringeSet.add(fn);
+
+            }else {
+                FringeNode fn = new FringeNode(indexFringe);
+                fn.hintNodes.add(hintNode);
+                fringeSet.add(fn);
+                mapFringeNode.put(indexFringe,fn);
+            }
+
+        }
+        return fringeSet;
+
+    }
 
 
     public class Node{
 
-        int indexInGrid;
+        public int indexInGrid;
 
         Node(int indexInGrid){
             this.indexInGrid = indexInGrid;
@@ -228,17 +229,29 @@ public class Graph {
             }
             return false;
         }
+
+        @Override
+        public int hashCode() {
+            return indexInGrid;
+        }
     }
 
     public class HintNode extends Node{
 
-        Set<FringeNode> connectedFringe;
+        public List<FringeNode> connectedFringe;
         public int value;
+        public int nbFlagToPlace;
+        public int nbUndiscoveredNeighbors;
 
+
+        public HintNode(int index){
+            super(index);
+        }
         public HintNode(int index,int value){
             super(index);
             this.value = value;
-            connectedFringe = new LinkedHashSet<FringeNode>();
+            connectedFringe = new ArrayList<FringeNode>();
+            updateSurroundingAwareness();
         }
 
         public void makeConnectedFringe(Set<Integer> undiscov){
@@ -248,17 +261,41 @@ public class Graph {
 
         }
 
+        /*
+        * Il va regarder autour de lui les case qui on un flag
+        * et celle qui sont encore non- decouverte
+        * Il va ensuite updater ces varialbes
+        * */
+        public void updateSurroundingAwareness(){
+            int nbFlag=0;
+            int nbHide=0;
+            for(FringeNode fn : connectedFringe){
+                if(fn.state == FLAGED){
+                    nbFlag++;
+                }else if(fn.state == UNDISCOVERED) {
+                    nbHide++;
+                }
+            }
+            nbUndiscoveredNeighbors = nbHide;
+            nbFlagToPlace = (value - nbFlag);
+        }
+
 
         @Override
         public boolean equals(Object obj) {
             return super.equals(obj);
         }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
     }
 
     public class FringeNode extends Node{
-        float probabilityMine;
-        int nbFlagHits =0;
-        List<HintNode> hintNodes;
+        public float probabilityMine = 0.5f;
+        public int nbFlagHits =0;
+        public List<HintNode> hintNodes;
 
         public CASEGRILLE state = UNDISCOVERED;
 
@@ -271,6 +308,11 @@ public class Graph {
         @Override
         public boolean equals(Object obj) {
             return super.equals(obj);
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
         }
     }
 
