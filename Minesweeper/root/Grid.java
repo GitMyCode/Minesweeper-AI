@@ -5,6 +5,8 @@ import root.ENUM.COUP;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -112,15 +114,16 @@ public class Grid {
     * Pour debuggage seulement Ne doit pas etre utiliser comme strategie dans
     * Les AI
     * */
-    public boolean checkMove(Set<Move> moves){
+    public Set<Move> checkMove(Set<Move> moves){
+        Set<Move> badMoves = new LinkedHashSet<Move>();
         for (Move m : moves){
             if (underneathValues[m.index] != CASEGRILLE.MINE && m.coup == COUP.FLAG){
-                return false;
+                badMoves.add(m);
             } else if (underneathValues[m.index] == CASEGRILLE.MINE && m.coup == COUP.SHOW){
-                return false;
+                badMoves.add(m);
             }
         }
-        return true;
+        return badMoves;
     }
 
 
@@ -416,6 +419,10 @@ public class Grid {
         }
     }
 
+    public String getATimeStampedGridName(){
+        Format formatter = new SimpleDateFormat("MM-dd_hh-mm-ss");
+        return  "grid-" + (formatter.format(new Date()));
+    }
     public void saveToFile(String fileName) throws Exception{
 
 

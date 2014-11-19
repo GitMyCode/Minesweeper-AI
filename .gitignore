@@ -3,6 +3,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# Vim temp files
+*.swp
+
 # Package Files #
 *.jar
 *.war
@@ -15,6 +18,7 @@ Minesweeper/.idea/
 Minesweeper/out/
 *.iml
 
+out/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 

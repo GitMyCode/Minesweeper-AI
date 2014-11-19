@@ -3,6 +3,7 @@ package root.ai;
 import root.*;
 import root.ENUM.CASEGRILLE;
 import root.ENUM.COUP;
+import root.ai.utilCSP.Graph;
 import root.ai.utilCSP.TimeOver;
 
 import static root.ENUM.CASEGRILLE.*;
@@ -31,7 +32,7 @@ public class CSP implements ArtificialPlayer{
     private final int LIMITE = 10;
 
     private Grid gameGrid;
-    private Set<Move> sureMoves;
+    private Set<Move> movesToPlay;
 
     //Set<Integer> undiscoveredFrontier;
     private Map<Integer,Integer> possibleMine;
@@ -57,7 +58,7 @@ public class CSP implements ArtificialPlayer{
 
 
         nbPossibilite =0;
-        sureMoves = new HashSet<Move>();
+        movesToPlay = new HashSet<Move>();
         possibleMine = new HashMap<Integer, Integer>();
         //undiscoveredFrontier = new HashSet<Integer>();
         allUndiscovFrontier = new ArrayList<Set<Integer>>();
@@ -73,7 +74,7 @@ public class CSP implements ArtificialPlayer{
         }
 
 
-        if (sureMoves.isEmpty()){
+        if (movesToPlay.isEmpty()){
             /*try {
                 gameGrid.saveToFile("CSP");
             }catch (Exception e){
@@ -87,16 +88,16 @@ public class CSP implements ArtificialPlayer{
                 for(Integer b : frontier){
                     for (Integer sur : gameGrid.getSurroundingIndex(b)){
                         if (copyGrid[sur] == UNDISCOVERED && !flagHits.containsKey(sur)){
-                            sureMoves.add(new Move(sur, COUP.SHOW));
-                            if(!gameGrid.checkMove(sureMoves)){
+                            movesToPlay.add(new Move(sur, COUP.SHOW));
+                            if(!gameGrid.checkMove(movesToPlay).isEmpty()){
                                 int adas=0;
                             }
                         } else if ( copyGrid[sur] == UNDISCOVERED && flagHits.get(sur) >=nbPossibilityHere){
                             if(flagHits.get(sur) > nbPossibilityHere){
                                 System.out.println("weird");
                             }
-                            sureMoves.add(new Move(sur, COUP.FLAG));
-                            if (!gameGrid.checkMove(sureMoves)){
+                            movesToPlay.add(new Move(sur, COUP.FLAG));
+                            if (!gameGrid.checkMove(movesToPlay).isEmpty()){
                                 int adas=0;
                             }
                         }
@@ -108,11 +109,11 @@ public class CSP implements ArtificialPlayer{
         }
 
 
-        if (sureMoves.isEmpty()){
+        if (movesToPlay.isEmpty()){
             //int bestChance =Integer.MAX_VALUE;
 
         }
-        if (!gameGrid.checkMove(sureMoves)){
+        if (!gameGrid.checkMove(movesToPlay).isEmpty()){
             System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.checkIfPresentGridValid());
         }
         if (timeUp()){
@@ -120,14 +121,14 @@ public class CSP implements ArtificialPlayer{
         }
 
         /*
-        if(sureMoves.isEmpty() && bestChance != Integer.MAX_VALUE){
+        if(movesToPlay.isEmpty() && bestChance != Integer.MAX_VALUE){
 
             System.out.println("best chance: "+ bestChance);
-            sureMoves.add(new Move(bestChance,SHOW));
-            return sureMoves;
+            movesToPlay.add(new Move(bestChance,SHOW));
+            return movesToPlay;
         }*/
 
-        if (sureMoves.isEmpty()){
+        if (movesToPlay.isEmpty()){
             List<Integer> legalMoves = new ArrayList<Integer>();
             for(int i=0; i< g.length; i++){
                 if(copyGrid[i] == UNDISCOVERED){
@@ -139,10 +140,10 @@ public class CSP implements ArtificialPlayer{
             }*/
             Random ran = new Random();
             int index = legalMoves.get(ran.nextInt(legalMoves.size()));
-            sureMoves.add(new Move(index,COUP.SHOW));
+            movesToPlay.add(new Move(index,COUP.SHOW));
         }
 
-        return sureMoves;
+        return movesToPlay;
     }
 
 
@@ -156,11 +157,12 @@ public class CSP implements ArtificialPlayer{
 
         CASEGRILLE[] grid = g.getCpyPlayerView();
 
-        allFrontiere = findFrontier(grid);
+
+        allFrontiere =  findFrontier(grid);
 
         //int stop = 0;
 
-        if(!sureMoves.isEmpty()){
+        if(!movesToPlay.isEmpty()){
             return;
         }
 
@@ -184,14 +186,14 @@ public class CSP implements ArtificialPlayer{
                     //bordure.remove((Object) i);
                     if (unknownNeighbors.size()!=0){
                         for (Integer v2 : unknownNeighbors){
-                            sureMoves.add(new Move(v2,COUP.SHOW));
+                            movesToPlay.add(new Move(v2, COUP.SHOW));
                         }
                     }
                 } else if((nbFlaged-grid[i].indexValue) == unknownNeighbors.size()){
                     //bordure.remove((Object) i);
                     if (unknownNeighbors.size()!=0){
                         for (Integer v2 : unknownNeighbors){
-                            sureMoves.add(new Move(v2,COUP.FLAG));
+                            movesToPlay.add(new Move(v2, COUP.FLAG));
                         }
 
                     }
@@ -200,9 +202,9 @@ public class CSP implements ArtificialPlayer{
 
             nbPossibilite=0;
             Map<Integer,Integer> mapHitFlags = new HashMap<Integer, Integer>();
-            if (sureMoves.isEmpty()){
-                recurseCSP(grid, oneFrontiere, undiscovFrontier,mapHitFlags, 0);
-            } else if (!gameGrid.checkMove(sureMoves)){
+            if (movesToPlay.isEmpty()){
+                recurseCSP(grid, oneFrontiere, undiscovFrontier, mapHitFlags, 0);
+            } else if (!gameGrid.checkMove(movesToPlay).isEmpty()){
                     System.out.println("ne devrait pas");
             }
 
@@ -375,12 +377,12 @@ public class CSP implements ArtificialPlayer{
             if (CASEGRILLE.isIndicatorCase(grid[i])){
                 if (isIndexSatisfied(grid, i)){
                     for(Integer c: getUndiscoveredneighbours(grid,i)){
-                        sureMoves.add(new Move(c,SHOW));
+                        movesToPlay.add(new Move(c, SHOW));
                     }
 
                 } else if(nbFlagToPlace(grid,i) == getUndiscoveredneighbours(grid,i).size()) {
                     for (Integer v : getUndiscoveredneighbours(grid,i)) {
-                        sureMoves.add(new Move(v,FLAG));
+                        movesToPlay.add(new Move(v, FLAG));
                     }
                 } else if( !inFrontiereSoFar.contains(i)){
                     Set<Integer> frontHash = new HashSet<Integer>();
@@ -473,5 +475,5 @@ public class CSP implements ArtificialPlayer{
        }
        return indice == nbFlagPosed;
    }
-    
+
 }
