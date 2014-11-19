@@ -156,6 +156,17 @@ public class CSPGraph implements ArtificialPlayer {
         CASEGRILLE[] grid = g.getCpyPlayerView();
 
 
+
+        /*
+        * TODO
+        * POUR DEBUG ENLEVER APRES
+        *
+        * */
+        graph = new Graph(g);
+
+
+
+
         /*
         * On commence par regarder si il y a des coup certain qu'on peut faire
         * */
