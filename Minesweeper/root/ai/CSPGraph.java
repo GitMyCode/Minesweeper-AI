@@ -71,13 +71,32 @@ public class CSPGraph implements ArtificialPlayer {
 
 
         if (movesToPlay.isEmpty()){
+
+            System.out.println("essai avec les resultats csp");
+            for(int frontierIndex =0; frontierIndex < graph.nbFrontiere; frontierIndex++){
+                List<Graph.FringeNode> fringeNodes = graph.allFringeBorder.get(frontierIndex);
+
+                int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
+                for(Graph.FringeNode fn : fringeNodes){
+
+                    if(fn.nbFlagHits ==0){
+                        movesToPlay.add(new Move(fn.indexInGrid,COUP.SHOW));
+                    }else if(fn.nbFlagHits == nbPossibilityHere){
+                        movesToPlay.add(new Move(fn.indexInGrid,COUP.FLAG));
+                    }
+                }
+
+            }
+
+
             /*try {
                 gameGrid.saveToFile("CSP");
             }catch (Exception e){
                 System.out.println(e);
             }
             int t=0;*/
-            for (int frontierIndex = 0; frontierIndex < nbMatchByFrontier.size(); frontierIndex++){
+
+            /*for (int frontierIndex = 0; frontierIndex < nbMatchByFrontier.size(); frontierIndex++){
                 List<Integer> frontier = allFrontiere.get(frontierIndex);
                 int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
                 Map<Integer,Integer> flagHits = allHitFlag.get(frontierIndex);
@@ -101,7 +120,7 @@ public class CSPGraph implements ArtificialPlayer {
                     }
                 }
 
-            }
+            }*/
         }
 
 
@@ -161,63 +180,35 @@ public class CSPGraph implements ArtificialPlayer {
 
         //int stop = 0;
 
-        if(!movesToPlay.isEmpty()){
-            return;
-        }
         int i=0;
-        for(List<Graph.HintNode> hintBorder : graph.allHintNode){
+        for(List<Graph.HintNode> hintBorder : graph.allHintNode) {
             List<Graph.FringeNode> fringeBorder = graph.allFringeBorder.get(i);
             i++;
-            for(Graph.HintNode hintNode : hintBorder){
+            for (Graph.HintNode hintNode : hintBorder) {
 
-                if(hintNode.connectedFringe.size() == hintNode.nbFlagToPlace){
-                    for(Graph.FringeNode fringeNode : hintNode.connectedFringe){
-                        movesToPlay.add(new Move(fringeNode.indexInGrid,COUP.FLAG));
+                if (hintNode.nbUndiscoveredNeighbors == hintNode.nbFlagToPlace) {
+                    for (Graph.FringeNode fringeNode : hintNode.connectedFringe) {
+                        movesToPlay.add(new Move(fringeNode.indexInGrid, COUP.FLAG));
                     }
-                }else if(hintNode.nbFlagToPlace ==0 ){
-                    for(Graph.FringeNode fringeNode : hintNode.connectedFringe){
-                        movesToPlay.add(new Move(fringeNode.indexInGrid,COUP.SHOW));
+                } else if (hintNode.nbFlagToPlace == 0) {
+                    for (Graph.FringeNode fringeNode : hintNode.connectedFringe) {
+                        movesToPlay.add(new Move(fringeNode.indexInGrid, COUP.SHOW));
                     }
                 }
 
             }
+        }
 
 
 
-/*
-        for (List<Integer> oneFrontiere : allFrontiere){
-
-            Set<Integer> undiscovFrontier = new HashSet<Integer>();
-
-            for (Integer i : oneFrontiere){
-                List<Integer> unknownNeighbors = new ArrayList<Integer>();
-                List<Integer> voisins = gameGrid.getSurroundingIndex(i);
-                int nbFlaged =0;
-                for (Integer v : voisins){
-                    if (grid[v] == UNDISCOVERED){
-                        unknownNeighbors.add(v);
-                        undiscovFrontier.add(v);
-                    } else if(grid[v] == FLAGED){
-                        nbFlaged++;
-                    }
-                }
-                if (nbFlaged == grid[i].indexValue){
-                    //bordure.remove((Object) i);
-                    if (unknownNeighbors.size()!=0){
-                        for (Integer v2 : unknownNeighbors){
-                            movesToPlay.add(new Move(v2, COUP.SHOW));
-                        }
-                    }
-                } else if((nbFlaged-grid[i].indexValue) == unknownNeighbors.size()){
-                    //bordure.remove((Object) i);
-                    if (unknownNeighbors.size()!=0){
-                        for (Integer v2 : unknownNeighbors){
-                            movesToPlay.add(new Move(v2, COUP.FLAG));
-                        }
-
-                    }
-                }
-            }*/
+        if(!movesToPlay.isEmpty()){
+            return;
+        }
+        System.out.println("va pour le csp");
+        i=0;
+        for(List<Graph.HintNode> hintBorder : graph.allHintNode){
+            List<Graph.FringeNode> fringeBorder = graph.allFringeBorder.get(i);
+            i++;
 
             nbPossibilite=0;
             Map<Integer,Integer> mapHitFlags = new HashMap<Integer, Integer>();
@@ -227,7 +218,6 @@ public class CSPGraph implements ArtificialPlayer {
                     System.out.println("ne devrait pas");
             }
 
-            allUndiscovFrontier.add(undiscovFrontier);
             allHitFlag.add(mapHitFlags);
             nbMatchByFrontier.add(nbPossibilite);
         }
@@ -242,8 +232,6 @@ public class CSPGraph implements ArtificialPlayer {
             throw new TimeOver();
         }
 
-        Graph.HintNode variableToSatisfy = hintNodes.get(index);
-        variableToSatisfy.updateSurroundingAwareness();
 
         if (!allFlagsOkay(grid, hintNodes, index)){
             return false;
@@ -264,6 +252,8 @@ public class CSPGraph implements ArtificialPlayer {
             return true;
         }
 
+        Graph.HintNode variableToSatisfy = hintNodes.get(index);
+        variableToSatisfy.updateSurroundingAwareness();
 
         List<Graph.FringeNode> neighborsFringe = variableToSatisfy.connectedFringe;
 
@@ -292,7 +282,9 @@ public class CSPGraph implements ArtificialPlayer {
 
         nbFlagToPlace+= grid[variableToSatisfy].indexValue;*/
 
-        if (variableToSatisfy.nbFlagToPlace <0){return false;}
+        if (variableToSatisfy.nbFlagToPlace <0){
+            System.out.println("nb flag a placer negatif!");
+            return false;}
         if (variableToSatisfy.nbFlagToPlace==0){
             //CASEGRILLE[] cpyG = grid.clone();
             return recurseCSP(grid,hintNodes,fringeNodes,mapFlagHit,index+1);
@@ -307,14 +299,18 @@ public class CSPGraph implements ArtificialPlayer {
 
 
         for (int[] list : listC){
-            //CASEGRILLE[] gCpy = grid.clone();
-            for (int i=0; i< variableToSatisfy.nbFlagToPlace; i++){
+
+            //Garder en  memoire le nb de flag a placer ici parce que variableToSatisfy va changer au moment de recurser
+            int nbFlagToPlaceHere = variableToSatisfy.nbFlagToPlace;
+
+
+            for (int i=0; i< nbFlagToPlaceHere; i++){
                 Graph.FringeNode fringeToFlag = undiscoveredFringe.get(list[i]);
                 fringeToFlag.state = FLAGED;
             }
 
             if(!recurseCSP(grid,hintNodes,fringeNodes,mapFlagHit,index+1)){
-                for (int i=0; i< variableToSatisfy.nbFlagToPlace; i++){
+                for (int i=0; i< nbFlagToPlaceHere; i++){
                     Graph.FringeNode fringeToFlag = undiscoveredFringe.get(list[i]);
                     fringeToFlag.state = UNDISCOVERED;
                 }
@@ -411,123 +407,5 @@ public class CSPGraph implements ArtificialPlayer {
         return false;
     }
 
-
-    public List<Integer> getIndexNotInFrontier (int index, Set<Integer> frontiere){
-        List<Integer> nextToFrontieres = new ArrayList<Integer>();
-        List<Integer> voisins = gameGrid.getSurroundingIndex(index);
-        for (Integer v : voisins){
-            if (!frontiere.contains(v)){
-                nextToFrontieres.add(v);
-            }
-        }
-        return nextToFrontieres;
-    }
-
-/*
-    List<List<Integer>> findFrontier(CASEGRILLE[] grid){
-        List<List<Integer>> allFrontiers = new LinkedList<List<Integer>>();
-        Set<Integer> inFrontiereSoFar = new HashSet<Integer>();
-        for (int i =0; i < grid.length; i++){
-            if (CASEGRILLE.isIndicatorCase(grid[i])){
-                if (isIndexSatisfied(grid, i)){
-                    for(Integer c: getUndiscoveredneighbours(grid,i)){
-                        movesToPlay.add(new Move(c, SHOW));
-                    }
-
-                } else if(nbFlagToPlace(grid,i) == getUndiscoveredneighbours(grid,i).size()) {
-                    for (Integer v : getUndiscoveredneighbours(grid,i)) {
-                        movesToPlay.add(new Move(v, FLAG));
-                    }
-                } else if( !inFrontiereSoFar.contains(i)){
-                    Set<Integer> frontHash = new HashSet<Integer>();
-                    List<Integer> front = new ArrayList<Integer>();
-                    front.add(i);
-                    frontHash.add(i);
-
-
-                    putInFrontier(i,front,frontHash,inFrontiereSoFar,grid);
-                    inFrontiereSoFar.addAll(frontHash);
-                    if (front.size() >= 2){
-                        allFrontiers.add(front);
-                    }
-                }
-            }
-
-
-        }
-        return allFrontiers;
-    }
-
-    void putInFrontier(int nextIndex, List<Integer> front, Set<Integer> frontiereHash, Set<Integer> allFront, CASEGRILLE[] grid){
-
-        Set<Direction> thisDirection = getPossibleDirection(grid, nextIndex, frontiereHash);
-        if (thisDirection == null || thisDirection.isEmpty())
-            return;
-
-        Direction nextDirection;
-        for (Direction d : thisDirection){
-            nextDirection =d;
-            int next = nextIndex+gameGrid.step(nextDirection);
-            if (!frontiereHash.contains(next) && !allFront.contains(next) && !isIndexSatisfied(grid, next)){
-                frontiereHash.add(next);front.add(next);
-                putInFrontier(next,front,frontiereHash,allFront,grid);
-            }
-        }
-    }
-
-
-
-    Set<Direction> getPossibleDirection(CASEGRILLE[] grid, int index, Set<Integer> frontiere){
-        Set<Direction> direction = new LinkedHashSet<Direction>();
-
-        int nbDirCardinal =0;
-        for (Direction D : direction8){
-            int next = index+gameGrid.step(D);
-            if (gameGrid.isStepThisDirInGrid(D,index) && !frontiere.contains(next) && CASEGRILLE.isIndicatorCase(grid[next])
-                    ){
-                direction.add(D);
-                if (D.getCompDir().size() ==1){
-                    nbDirCardinal++;
-                }
-
-            }
-        }
-        return direction;
-
-    }
-
-
-    Set<Integer> getUndiscoveredneighbours(CASEGRILLE[] grid, int index){
-        Set<Integer> undiscovered = new HashSet<Integer>();
-        for (Integer i: gameGrid.getSurroundingIndex(index)){
-            if (grid[i] == UNDISCOVERED){
-                undiscovered.add(i);
-            }
-        }
-        return undiscovered;
-    }
-
-
-    int nbFlagToPlace(CASEGRILLE[] grid, int index){
-        int nbFlagRemaining = grid[index].indexValue;
-        for (Integer v : gameGrid.getSurroundingIndex(index)){
-            if (grid[v] == FLAGED){
-                nbFlagRemaining--;
-            }
-        }
-        return nbFlagRemaining;
-    }
-
-
-   boolean isIndexSatisfied(CASEGRILLE[] grid, int index){
-       int indice = grid[index].indexValue;
-       int nbFlagPosed =0;
-       for (Integer v: gameGrid.getSurroundingIndex(index)){
-            if (grid[v] == FLAGED){
-                nbFlagPosed++;
-            }
-       }
-       return indice == nbFlagPosed;
-   }*/
 
 }
