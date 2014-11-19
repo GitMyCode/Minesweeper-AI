@@ -22,6 +22,13 @@ $ javac root/ai/*.java
 $ java root.WindowMinesweeper
 ```
 
+## Style de programmation
+Le style de programmation devrait être uniforme à travers les fichiers sources du projet.
+L'outil checkstyle peut être utilisé pour vérifier que le style du code est uniforme:
+``` bash
+$ checkstyle -c checkstyle.xml Minesweeper/root/WindowMinesweeper.java
+```
+
 ## Installation et compilation du code (pour correction ou contribution)    
 Téléchargez le code du jeu dans un dossier. Pour ce faire, vous pouvez cliquer sur le bouton __Download ZIP__ à droite de l'écran et décompresser le dossier, ou encore exécuter la commande `git clone https://github.com/GitMyCode/Minesweeper-AI.git`
 
