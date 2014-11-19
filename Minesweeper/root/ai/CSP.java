@@ -44,7 +44,7 @@ public class CSP implements ArtificialPlayer{
 
 
     @Override
-    public Set<Move> getNextPossibleMoves(Grid g, int thinkLimit) {
+    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
 
         /*TODO
         * 1) Splitter les frontieres en plusieurs frontiere indépendante

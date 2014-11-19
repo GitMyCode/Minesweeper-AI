@@ -16,13 +16,13 @@ import java.util.Set;
  */
 public interface ArtificialPlayer {
     /**
-     * Obtenir les prochains coups possibles
+     * Obtenir les prochains joué par le AI
      *
      * @param g : La grille de jeu actuelle
      * @param thinkLimit : Temps limite de reflexion. Arrete la recursion
      * @return Set des prochains coups possibles
      */
-    public Set<Move> getNextPossibleMoves(Grid g, int thinkLimit);
+    public Set<Move> getNextMoves(Grid g, int thinkLimit);
 
     /**
      * Name display of the AI
