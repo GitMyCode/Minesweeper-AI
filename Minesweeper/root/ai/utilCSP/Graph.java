@@ -309,14 +309,17 @@ public class Graph {
         List<HintNode> hintNodes = new ArrayList<HintNode>();
         for(Integer indexHint : gameGrid.getSurroundingIndex(fringeNode.indexInGrid)){
 
-            HintNode hn =null;
-            if(mapHintNode.containsKey(indexHint)){
-                hn = mapHintNode.get(indexHint);
-            }else {
-                hn = new HintNode(indexHint,g[indexHint].indexValue);
+            if(CASEGRILLE.isIndicatorCase(g[indexHint])){
+                HintNode hn =null;
+                if(mapHintNode.containsKey(indexHint)){
+                    hn = mapHintNode.get(indexHint);
+                }else {
+                    hn = new HintNode(indexHint,g[indexHint].indexValue);
+                }
+                hintNodes.add(hn);
+                hn.connectedFringe.add(fringeNode);
             }
-            hintNodes.add(hn);
-            hn.connectedFringe.add(fringeNode);
+
         }
         return hintNodes;
 
