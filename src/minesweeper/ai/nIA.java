@@ -11,12 +11,12 @@ import java.util.Set;
 
 public class nIA implements ArtificialPlayer{
     @Override
-    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
+    public Set<Move> getNextMoves(Grid grid, int delay) {
         Set<Move> test = new HashSet<Move>();
-        g.getSurroundingIndex(40);
+        grid.getSurroundingIndex(40);
 
         int index = 45;
-        for(Integer s : g.getSurroundingIndex(index)){
+        for(Integer s : grid.getSurroundingIndex(index)){
             test.add(new Move(s, COUP.FLAG));
         }
 

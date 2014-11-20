@@ -72,7 +72,7 @@ public class Grid {
         CASEGRILLE[] grid = new CASEGRILLE[nbColonnes * nbLignes];
         Arrays.fill(grid, EMPTY);
         placeMinesRandomly(grid, nbMines);
-        calculateCasesValues(grid);
+        generateValues(grid);
         return grid;
     }
 
@@ -90,7 +90,7 @@ public class Grid {
         }
     }
 
-    private void calculateCasesValues (CASEGRILLE[] grid) {
+    private void generateValues(CASEGRILLE[] grid) {
 
         for(int i=0; i< grid.length; i++) {
             int value =0;
@@ -106,7 +106,6 @@ public class Grid {
             }
         }
     }
-
 
     /*
     * TODO
@@ -125,16 +124,14 @@ public class Grid {
         return badMoves;
     }
 
-
-    public boolean checkIfPresentGridValid() {
-        for(int i =0;i<length;i++) {
-            if(underneathValues[i] != MINE && gridPlayerView[i] == FLAGED ) {
+    public boolean isValid() {
+        for (int i = 0; i < this.length; i++) {
+            if (this.underneathValues[i] != MINE && this.gridPlayerView[i] == FLAGED) {
                 return false;
             }
         }
         return true;
     }
-
 
     /*
     * DES if parce que je veux m<assurer que la list retourner suivre cet ordre
@@ -195,7 +192,6 @@ public class Grid {
         }
     }
 
-
     public Set<Integer> getUndiscoveredNeigbour(CASEGRILLE[] grid, int index) {
         Set<Integer> set = new HashSet<Integer>();
 
@@ -209,7 +205,6 @@ public class Grid {
         }
         return set;
     }
-
 
     // #TODO devrait pas exister selon moi, à l'appelant de faire une copie.
     public CASEGRILLE[] getCpyPlayerView() {
@@ -329,8 +324,6 @@ public class Grid {
             }
 
         }
-
-
     }
 
     public boolean isStepThisDirInGrid(Direction D, int index) {
