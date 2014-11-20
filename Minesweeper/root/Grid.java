@@ -236,6 +236,7 @@ public class Grid {
             }
         }
     }
+
     void play(int index, COUP coup){
         switch (coup){
             case FLAG:
@@ -266,29 +267,31 @@ public class Grid {
 
     }
 
-    boolean gameFinish(){
-        if(lost){
-            return true;
-        }
-        if(win)
-            return true;
+    boolean gameIsFinished(){
 
-        if(nbMinesRemaining==0 && nbFlagsRemaining ==0){
+        boolean reponse = true;
+
+        if(this.lost){
+            reponse = true;
+        } else if (this.win){
+            reponse = true;
+        } else if(nbMinesRemaining == 0 && nbFlagsRemaining == 0){
             win = true;
+            reponse = true;
+        } else {
 
-            return true;
-        }
-
-        for(CASEGRILLE c: gridPlayerView){
-            if(c == UNDISCOVERED){
-                return false;
+            for(CASEGRILLE c: gridPlayerView){
+                if(c == UNDISCOVERED){
+                    reponse = false;
+                    break;
+                }
             }
+
         }
-        return true;
+
+        return reponse;
+
     }
-
-
-
 
     private void playFlag(int index){
         CASEGRILLE theCase = gridPlayerView[index];
