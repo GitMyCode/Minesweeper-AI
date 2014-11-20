@@ -67,27 +67,45 @@ public class Grid {
         Arrays.fill(gridPlayerView, UNDISCOVERED);
 
 
-        underneathValues = createRdmGrid(nbLignes, nbCols,nbMines);
+        underneathValues = createRandomGrid(nbLignes, nbCols,nbMines);
     }
 
-    private CASEGRILLE[] createRdmGrid(int nbligne,int nbcol, int nbMines){
-        CASEGRILLE[] grid = new CASEGRILLE[nbcol*nbligne];
-        Arrays.fill(grid,EMPTY);
-        placeMinesRmd(grid, nbMines);
+    private CASEGRILLE[] createRandomGrid(int nbLignes, int nbColonnes, int nbMines){
+        CASEGRILLE[] grid = new CASEGRILLE[nbColonnes * nbLignes];
+        Arrays.fill(grid, EMPTY);
+        placeMinesRandomly(grid, nbMines);
         calculateCasesValues(grid);
         return grid;
     }
 
-    private void placeMinesRmd(CASEGRILLE[] grid,int nbMines){
-        for(int i=0; i<nbMines;i++){
-            int putMineThere = rand.nextInt(grid.length);
-            if(grid[putMineThere] == MINE){
+    private void placeMinesRandomly(CASEGRILLE[] grid, int nbMines){
+        for(int i=0; i<nbMines; i++){
+            int nextMine = rand.nextInt(grid.length);
+            if(grid[nextMine] == MINE){
                 i--;
-            }else {
-                grid[putMineThere] = MINE;
+            } else {
+                grid[nextMine] = MINE;
             }
         }
     }
+
+    private void calculateCasesValues (CASEGRILLE[] grid){
+
+        for(int i=0; i< grid.length; i++){
+            int value =0;
+
+            if(grid[i] != MINE){
+                for(Direction D : Direction.values()){
+                    int index = i+ step(D);
+                    if(isStepThisDirInGrid(D, i) && grid[index] == MINE){
+                        value++;
+                    }
+                }
+                grid[i]= CASEGRILLE.caseFromInt(value);
+            }
+        }
+    }
+
 
     /*
     * TODO
@@ -199,25 +217,28 @@ public class Grid {
     }
 
 
+    // #TODO devrait pas exister selon moi, à l'appelant de faire une copie.
     public CASEGRILLE[] getCpyPlayerView(){
         CASEGRILLE[] cpy;
         cpy = gridPlayerView.clone();
         return cpy;
     }
 
-    void showAllCase(){
-        for(int i=0; i< length; i++) {
+    public void showAllCases(){
+
+        for(int i=0; i < length; i++) {
             if (gridPlayerView[i] == FLAGED && underneathValues[i] == MINE){
                 gridPlayerView[i] = DEFUSED;
-            } else if(gridPlayerView[i] == FLAGED && underneathValues[i] !=MINE){
+            } else if(gridPlayerView[i] == FLAGED && underneathValues[i] != MINE){
                 gridPlayerView[i] = ERROR_FLAG;
             } else if (gridPlayerView[i] != BLOW) {
                 gridPlayerView[i] = underneathValues[i];
             }
         }
+
     }
 
-    void play(int index, COUP coup){
+    public void play(int index, COUP coup){
         switch (coup){
             case FLAG:
                 playFlag(index);
@@ -232,18 +253,18 @@ public class Grid {
         }
     }
 
-    void resetGrid(){
+    public void resetGrid(){
 
         this.gameLost = false;
         this.gameWon  = false;
-        nbFlagsRemaining = nbMines;
-        nbMinesRemaining= nbMines;
+        this.nbFlagsRemaining = nbMines;
+        this.nbMinesRemaining= nbMines;
 
-        for(int i =0; i< length; i++){
-            gridPlayerView[i] = UNDISCOVERED;
+        for(int i =0; i < length; i++){
+            this.gridPlayerView[i] = UNDISCOVERED;
         }
-        underneathValues = createRdmGrid(nbLignes, nbCols, nbMines);
 
+        underneathValues = createRandomGrid(nbLignes, nbCols, nbMines);
 
     }
 
@@ -293,7 +314,7 @@ public class Grid {
 
     }
 
-    private void playUndiscoveredCase (int index){
+    private void playUndiscoveredCase(int index){
 
         if(gridPlayerView[index] == UNDISCOVERED){
 
@@ -318,7 +339,7 @@ public class Grid {
 
     }
 
-    public boolean isStepThisDirInGrid (Direction D, int index){
+    public boolean isStepThisDirInGrid(Direction D, int index){
 
         for(Direction d : D.getCompDir()){
             switch (d){
@@ -378,26 +399,6 @@ public class Grid {
             case RIGHT: return  1;
         }
         return 0;
-    }
-
-
-
-
-    private void calculateCasesValues (CASEGRILLE[] grid){
-
-        for(int i=0; i< grid.length; i++){
-            int value =0;
-
-            if(grid[i] != MINE){
-                for(Direction D : Direction.values()){
-                    int index = i+ step(D);
-                    if(isStepThisDirInGrid(D, i) && grid[index] == MINE){
-                        value++;
-                    }
-                }
-                grid[i]= CASEGRILLE.caseFromInt(value);
-            }
-        }
     }
 
     public String getATimeStampedGridName(){
