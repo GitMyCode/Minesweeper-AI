@@ -98,14 +98,21 @@ public class Graph {
             }
         }
 
-        for(List<FringeNode> l : allFringeNodes){
-            Set<HintNode> fringe = new LinkedHashSet<HintNode>();
-            for(FringeNode fn : l){
-                fringe.addAll(fn.hintNodes);
-            }
-            allHintNode.add(new ArrayList<HintNode>(fringe));
 
+        List<List<FringeNode>> fringesToRemove = new ArrayList<List<FringeNode>>();
+        for(List<FringeNode> l : allFringeNodes){
+            Set<HintNode> hintNodes = new LinkedHashSet<HintNode>();
+            for(FringeNode fn : l){
+                hintNodes.addAll(fn.hintNodes);
+            }
+            if(hintNodes.size() >1){
+                allHintNode.add(new ArrayList<HintNode>(hintNodes));
+            }else{
+                fringesToRemove.add(l);
+            }
         }
+        allFringeNodes.removeAll(fringesToRemove);
+
 
 
     }
