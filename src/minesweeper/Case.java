@@ -1,4 +1,4 @@
-package minesweeper.ENUM;
+package minesweeper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
  *   Geneviève Lalonde
  *   Nilovna Bascunan-Vasquez
  */
-public enum CASEGRILLE {
+public enum Case {
     EMPTY(0),
     ONE(1),
     TWO(2),
@@ -34,20 +34,20 @@ public enum CASEGRILLE {
 
 
 
-    CASEGRILLE(int i){
+    Case(int i){
         indexValue = i;
     }
 
-    private static final Map<Integer, CASEGRILLE> intToTypeMap = new HashMap<Integer, CASEGRILLE>();
+    private static final Map<Integer, Case> intToTypeMap = new HashMap<Integer, Case>();
     static {
-        for (CASEGRILLE type : CASEGRILLE.values()) {
+        for (Case type : Case.values()) {
             intToTypeMap.put(type.indexValue, type);
         }
     }
-    public static boolean isIndicatorCase(CASEGRILLE c){
+    public static boolean isIndicatorCase(Case c){
         return (c.indexValue >= 1 && c.indexValue <=8);
     }
-    public static CASEGRILLE caseFromInt(int i ){
+    public static Case caseFromInt(int i ){
         return intToTypeMap.get(i);
     }
 
