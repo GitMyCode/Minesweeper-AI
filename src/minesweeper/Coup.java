@@ -1,4 +1,4 @@
-package minesweeper.ENUM;
+package minesweeper;
 
 /**
  * Projet de joueur artificiel de Minesweeper avec différents algorithmes
@@ -12,7 +12,7 @@ package minesweeper.ENUM;
  *   Geneviève Lalonde
  *   Nilovna Bascunan-Vasquez
  */
-public enum COUP {
+public enum Coup {
     SHOW,
     FLAG,
     UNFLAG,
