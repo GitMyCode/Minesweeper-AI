@@ -1,8 +1,7 @@
 package minesweeper.ai;
 
 import minesweeper.ArtificialPlayer;
-import minesweeper.ENUM.CASEGRILLE;
-import minesweeper.ENUM.COUP;
+import minesweeper.Coup;
 import minesweeper.Grid;
 import minesweeper.Move;
 
@@ -17,7 +16,7 @@ public class nIA implements ArtificialPlayer{
 
         int index = 45;
         for(Integer s : grid.getSurroundingIndex(index)){
-            test.add(new Move(s, COUP.FLAG));
+            test.add(new Move(s, Coup.FLAG));
         }
 
         return test;

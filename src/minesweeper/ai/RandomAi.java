@@ -1,13 +1,11 @@
 package minesweeper.ai;
 
-import minesweeper.ArtificialPlayer;
-import static minesweeper.ENUM.CASEGRILLE.*;
-import static minesweeper.ENUM.COUP.*;
+import minesweeper.*;
 
-import minesweeper.ENUM.CASEGRILLE;
-import minesweeper.ENUM.COUP;
-import minesweeper.Grid;
-import minesweeper.Move;
+import static minesweeper.Case.*;
+import static minesweeper.Coup.*;
+
+import minesweeper.Case;
 
 import java.util.*;
 
@@ -30,7 +28,7 @@ public class RandomAi implements ArtificialPlayer {
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
 
-        CASEGRILLE[] myView = grid.getCpyPlayerView();
+        Case[] myView = grid.getCpyPlayerView();
         Random ran = new Random();
 
         List<Integer> legalMoves = new ArrayList<Integer>();
@@ -43,11 +41,11 @@ public class RandomAi implements ArtificialPlayer {
 
         int index = legalMoves.get(ran.nextInt(legalMoves.size()));
 
-        Set<COUP> coupSet = grid.getLegalCaseCoup(index);
+        Set<Coup> coupSet = grid.getLegalCaseCoup(index);
         int ranCoup = ran.nextInt(coupSet.size());
         int i = 0;
-        COUP coup = INVALID;
-        for (COUP c : coupSet){
+        Coup coup = INVALID;
+        for (Coup c : coupSet){
             if (i==ranCoup){
                 coup=c;
                 break;

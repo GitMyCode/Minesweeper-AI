@@ -1,9 +1,10 @@
 package minesweeper.ui;
 
+import minesweeper.Case;
+import minesweeper.Coup;
 import minesweeper.Grid;
-import minesweeper.ENUM.CASEGRILLE;
-import minesweeper.ENUM.COUP;
-import static minesweeper.ENUM.CASEGRILLE.*;
+
+import static minesweeper.Case.*;
 
 import minesweeper.Move;
 
@@ -49,7 +50,7 @@ public class GridView extends JPanel {
         this.nbcol = nbcol;
         this.nbligne = nbligne;
         this.caseSize = caseSize;
-        this.cases = new Image[CASEGRILLE.values().length];
+        this.cases = new Image[Case.values().length];
         this.designFolder = designFolder;
 
         grid = new Grid(nbligne,nbcol,20);
@@ -83,7 +84,7 @@ public class GridView extends JPanel {
         try {
 
             final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            final String scannedPath = "minesweeper/design/"+designFolder;
+            final String scannedPath = "minesweeper/ui/design/" +designFolder;
             Enumeration<URL> ressource = classLoader.getResources(scannedPath);
             final File folder  = new File(ressource.nextElement().getFile());
             File[] t = folder.listFiles();
@@ -97,7 +98,7 @@ public class GridView extends JPanel {
 
             int i = 0;
             for (File cellImg : t){
-                if (i == CASEGRILLE.values().length)
+                if (i == Case.values().length)
                     break;
 
                 java.net.URL imageUrl =  cellImg.toURI().toURL();
@@ -146,12 +147,12 @@ public class GridView extends JPanel {
                     int index = l*nbcol+c;
                     if (e.getButton() == MouseEvent.BUTTON3){
                         if (grid.gridPlayerView[index]==FLAGED){
-                            controller.movePlay(new Move(index,COUP.UNFLAG));
+                            controller.movePlay(new Move(index, Coup.UNFLAG));
                         } else {
-                            controller.movePlay(new Move(index,COUP.FLAG));
+                            controller.movePlay(new Move(index, Coup.FLAG));
                         }
                     } else {
-                        controller.movePlay(new Move(index,COUP.SHOW));
+                        controller.movePlay(new Move(index, Coup.SHOW));
                     }
 
                     if (grid.gameIsFinished()){
