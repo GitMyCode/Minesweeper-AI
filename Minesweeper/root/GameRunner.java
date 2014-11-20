@@ -88,6 +88,7 @@ class GameRunner implements Runnable {
     private synchronized void SendMsg(String msg){
         outputObserver.message(msg);
     }
+
     public void setOutputObserver(OutputObserver outputObserver){
         this.outputObserver = outputObserver;
     }
