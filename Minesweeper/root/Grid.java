@@ -9,39 +9,20 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
-/**
- * Created by MB on 10/29/2014.
- */
-
 import static root.ENUM.CASEGRILLE.*;
 
-/**
- * Projet de joueur artificiel de Minesweeper avec différents algorithmes
- * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
- *
- * Automne 2014
- * Par l'équipe:
- *   Martin Bouchard
- *   Frédéric Vachon
- *   Louis-Bertrand Varin
- *   Geneviève Lalonde
- *   Nilovna Bascunan-Vasquez
- */
 public class Grid {
 
     public int nbCols;
     public int nbLignes;
     public int length;
-    int nbMines;
-
-    private int nbMinesRemaining;
-    int nbFlagsRemaining;
-    boolean lost = false;
-    boolean win = false;
-
-    private CASEGRILLE[] underneathValues;
-    CASEGRILLE[] gridPlayerView;
+    public int nbMines;
+    public int nbMinesRemaining;
+    public int nbFlagsRemaining;
+    public boolean gameLost = false;
+    public boolean gameWon = false;
+    public CASEGRILLE[] underneathValues;
+    public CASEGRILLE[] gridPlayerView;
 
     private final Random rand = new Random();
 
@@ -87,8 +68,6 @@ public class Grid {
 
 
         underneathValues = createRdmGrid(nbLignes, nbCols,nbMines);
-        /*placeMinesRmd(underneathValues,nbMines);
-        calculateCasesValues(underneathValues);*/
     }
 
     private CASEGRILLE[] createRdmGrid(int nbligne,int nbcol, int nbMines){
@@ -98,6 +77,7 @@ public class Grid {
         calculateCasesValues(grid);
         return grid;
     }
+
     private void placeMinesRmd(CASEGRILLE[] grid,int nbMines){
         for(int i=0; i<nbMines;i++){
             int putMineThere = rand.nextInt(grid.length);
@@ -254,8 +234,8 @@ public class Grid {
 
     void resetGrid(){
 
-        lost = false;
-        win  = false;
+        this.gameLost = false;
+        this.gameWon  = false;
         nbFlagsRemaining = nbMines;
         nbMinesRemaining= nbMines;
 
@@ -271,12 +251,12 @@ public class Grid {
 
         boolean reponse = true;
 
-        if(this.lost){
+        if(this.gameLost){
             reponse = true;
-        } else if (this.win){
+        } else if (this.gameWon){
             reponse = true;
         } else if(nbMinesRemaining == 0 && nbFlagsRemaining == 0){
-            win = true;
+            this.gameWon = true;
             reponse = true;
         } else {
 
@@ -320,7 +300,7 @@ public class Grid {
             gridPlayerView[index] = underneathValues[index];
             if(underneathValues[index]==MINE){
                 gridPlayerView[index] = BLOW;
-                lost = true;
+                this.gameLost = true;
             }
 
 
@@ -337,8 +317,6 @@ public class Grid {
 
 
     }
-
-
 
     public boolean isStepThisDirInGrid (Direction D, int index){
 
@@ -426,8 +404,8 @@ public class Grid {
         Format formatter = new SimpleDateFormat("MM-dd_hh-mm-ss");
         return  "grid-" + (formatter.format(new Date()));
     }
-    public void saveToFile(String fileName) throws Exception{
 
+    public void saveToFile(String fileName) throws Exception{
 
             FileWriter fw = new FileWriter(fileName);
 
@@ -454,9 +432,5 @@ public class Grid {
             fw.write(stringGridPlayerView);
             fw.close();
     }
-
-
-
-
 
 }

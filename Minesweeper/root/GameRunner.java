@@ -65,12 +65,12 @@ class GameRunner implements Runnable {
 
 
         /*After game*/
-        if(grid.lost){
+        if(grid.gameLost){
             SendMsg("Perdu!");
             outputObserver.updateLost();
            // grid.showAllCase();
 
-        }else if(grid.win){
+        }else if(grid.gameWon){
             SendMsg("Gagne!");
             outputObserver.updateWins();
         }
