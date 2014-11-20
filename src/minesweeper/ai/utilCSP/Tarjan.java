@@ -1,6 +1,6 @@
 package minesweeper.ai.utilCSP;
 
-import minesweeper.ENUM.CASEGRILLE;
+import minesweeper.Case;
 import minesweeper.Grid;
 
 import java.util.*;
@@ -28,7 +28,7 @@ class Tarjan {
     static private int count =0;
     private Grid gameGrid;
 
-    public static List<Set<Integer>> findCycle(CASEGRILLE[] grid,Grid gameGrid){
+    public static List<Set<Integer>> findCycle(Case[] grid,Grid gameGrid){
         Map<Integer,Set<Integer>> allPath = new HashMap<Integer, Set<Integer>>();
         marked = new HashSet<Integer>();
         low = new HashMap<Integer, Integer>();
@@ -39,7 +39,7 @@ class Tarjan {
 
         stack = new Stack<Integer>();
         for(int i=0; i<grid.length;i++){
-            if(CASEGRILLE.isIndicatorCase(grid[i])){
+            if(Case.isIndicatorCase(grid[i])){
                 frontier.add(i);
                 low.put(i,0);
             }
@@ -62,7 +62,7 @@ class Tarjan {
         return new ArrayList<Set<Integer>>();
     }
 
-    static private void DFS(CASEGRILLE[] grid,int index,Grid gameGrid){
+    static private void DFS(Case[] grid,int index,Grid gameGrid){
 
         marked.add(index);
         low.put(index,itera);
@@ -97,11 +97,11 @@ class Tarjan {
     }
 
 
-    static private List<Integer> getVoisin(CASEGRILLE[] grid,int index,Grid gameGrid){
+    static private List<Integer> getVoisin(Case[] grid,int index,Grid gameGrid){
         List<Integer> list = new ArrayList<Integer>();
 
         for(Integer v: gameGrid.getSurroundingIndex(index)){
-            if(CASEGRILLE.isIndicatorCase(grid[v]) && !marked.contains(v)){
+            if(Case.isIndicatorCase(grid[v]) && !marked.contains(v)){
                 list.add(v);
             }
         }

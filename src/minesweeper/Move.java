@@ -1,7 +1,5 @@
 package minesweeper;
 
-import minesweeper.ENUM.COUP;
-
 /**
  * Projet de joueur artificiel de Minesweeper avec différents algorithmes
  * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
@@ -16,10 +14,10 @@ import minesweeper.ENUM.COUP;
  */
 public class Move {
 
-    public final COUP coup;
+    public final Coup coup;
     public final int index;
 
-    public Move(int index, COUP coup){
+    public Move(int index, Coup coup){
         this.coup = coup;
         this.index = index;
     }

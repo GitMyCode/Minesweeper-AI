@@ -1,9 +1,6 @@
 package minesweeper.ui;
 
-import minesweeper.util.ClassFinder;
-import minesweeper.Grid;
-import minesweeper.Move;
-import minesweeper.ArtificialPlayer;
+import minesweeper.utils.ClassFinder;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -137,7 +134,7 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
         }
 
         choixDesign = new JComboBox<String>();
-        allDesign = ClassFinder.findFolder("minesweeper.design");
+        allDesign = ClassFinder.findFolder("minesweeper.ui.design");
         for(String s : allDesign){
             choixDesign.addItem(s);
         }

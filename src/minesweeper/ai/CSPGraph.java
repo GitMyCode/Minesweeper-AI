@@ -1,14 +1,14 @@
 package minesweeper.ai;
 
 import minesweeper.*;
-import minesweeper.ENUM.CASEGRILLE;
-import minesweeper.ENUM.COUP;
+import minesweeper.Case;
+import minesweeper.Coup;
 import minesweeper.ai.utilCSP.Graph;
 import minesweeper.ai.utilCSP.TimeOver;
 
-import static minesweeper.ENUM.COUP.*;
+import static minesweeper.Coup.*;
 
-import static minesweeper.ENUM.CASEGRILLE.*;
+import static minesweeper.Case.*;
 
 import java.util.*;
 
@@ -30,19 +30,20 @@ public class CSPGraph implements ArtificialPlayer {
 
     //Set<Integer> undiscoveredFrontier;
     private List<Integer> nbMatchByFrontier;
-    private Integer  nbPossibilite =0;
+    private Integer nbPossibilite = 0;
 
 
     Graph graph;
+
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
 
         gameGrid = grid;
-        CASEGRILLE[] copyGrid = grid.getCpyPlayerView();
+        Case[] copyGrid = grid.getCpyPlayerView();
         startTimer(delay);
 
 
-        nbPossibilite =0;
+        nbPossibilite = 0;
         movesToPlay = new HashSet<Move>();
         nbMatchByFrontier = new ArrayList<Integer>();
 
@@ -54,7 +55,7 @@ public class CSPGraph implements ArtificialPlayer {
         * */
         try {
             calculateMoves(grid);
-        } catch (TimeOver ignored){
+        } catch (TimeOver ignored) {
             System.out.println("timeout");
         }
 
@@ -72,26 +73,26 @@ public class CSPGraph implements ArtificialPlayer {
         *
         *
         * */
-        if (movesToPlay.isEmpty()){
+        if (movesToPlay.isEmpty()) {
 
             System.out.println("essai avec les resultats csp");
-            for(int frontierIndex =0; frontierIndex < graph.nbFrontiere; frontierIndex++){
+            for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
                 List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
 
                 int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
-                for(Graph.FringeNode fn : fringeNodes){
+                for (Graph.FringeNode fn : fringeNodes) {
 
                     //Donc 0% des chances
-                    if(fn.nbFlagHits ==0){
-                        movesToPlay.add(new Move(fn.indexInGrid,COUP.SHOW));
+                    if (fn.nbFlagHits == 0) {
+                        movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
 
 
                     /*
                     * Si ce noeud a recu un flag sur toute les dispositions valid de flags sur la frontiere
                     * Alors c'est qu'il y a 100% des chance d'avoir un flag
                     * */
-                    }else if(fn.nbFlagHits == nbPossibilityHere){
-                        movesToPlay.add(new Move(fn.indexInGrid,COUP.FLAG));
+                    } else if (fn.nbFlagHits == nbPossibilityHere) {
+                        movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
                     }
                 }
 
@@ -99,24 +100,22 @@ public class CSPGraph implements ArtificialPlayer {
 
         }
 
-
-
         /*
         * Juste un check pour debugger
         * checkMove va renvoyer les Moves qui sont des erreurs (ex: un flag sur un case vide)
         * */
         Set<Move> errors = gameGrid.checkMove(movesToPlay);
-        if (!errors.isEmpty()){
+        if (!errors.isEmpty()) {
             /*try{
                 gameGrid.saveToFile(gameGrid.getATimeStampedGridName());
             }catch (Exception e){
                 System.out.println(e);
             }*/
 
-            System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.isValid());
+            System.out.println(" Problem and is timeout:" + (timeUp()) + "   grid is valid?:" + gameGrid.isValid());
         }
 
-        if (timeUp()){
+        if (timeUp()) {
             System.out.println("Time UP!");
         }
 
@@ -124,22 +123,21 @@ public class CSPGraph implements ArtificialPlayer {
         /*
         * Si aucun coup sur a été trouvé alors on essai au hasard
         * */
-        if (movesToPlay.isEmpty()){
+        if (movesToPlay.isEmpty()) {
             List<Integer> legalMoves = new ArrayList<Integer>();
-            for(int i=0; i< grid.length; i++){
-                if(copyGrid[i] == UNDISCOVERED){
+            for (int i = 0; i < grid.length; i++) {
+                if (copyGrid[i] == UNDISCOVERED) {
                     legalMoves.add(i);
                 }
             }
 
             Random ran = new Random();
             int index = legalMoves.get(ran.nextInt(legalMoves.size()));
-            movesToPlay.add(new Move(index,COUP.SHOW));
+            movesToPlay.add(new Move(index, Coup.SHOW));
         }
 
         return movesToPlay;
     }
-
 
 
     @Override
@@ -151,16 +149,9 @@ public class CSPGraph implements ArtificialPlayer {
     /**
      * C'est le AI en soit. Tout commence par cette method
      */
-    void calculateMoves(Grid g) throws TimeOver{
+    void calculateMoves(Grid g) throws TimeOver {
 
-        CASEGRILLE[] grid = g.getCpyPlayerView();
-
-
-
-
-
-
-
+        Case[] grid = g.getCpyPlayerView();
 
         /*
         * On commence par regarder si il y a des coup certain qu'on peut faire
@@ -169,7 +160,7 @@ public class CSPGraph implements ArtificialPlayer {
 
 
         //Si aucun coup certain trouvé alors on continue
-        if(!movesToPlay.isEmpty()){
+        if (!movesToPlay.isEmpty()) {
             return;
         }
 
@@ -184,21 +175,21 @@ public class CSPGraph implements ArtificialPlayer {
 
         graph = new Graph(g);
         System.out.println("va pour le csp");
-        int i=0;
+        int i = 0;
         //Cette boucle ca lancer le CSP sur une frontiere a la fois.
-        for(List<Graph.HintNode> hintBorder : graph.allHintNode){
+        for (List<Graph.HintNode> hintBorder : graph.allHintNode) {
             List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(i);
             i++;
 
             //Reset nbPossibilite pour cette frontiere
-            nbPossibilite=0;
-            if (movesToPlay.isEmpty()){
-                recurseCSP( hintBorder,fringeNodes, 0); //   ON LANCE LE CSP SUR CETTE FRONTIERE!!
+            nbPossibilite = 0;
+            if (movesToPlay.isEmpty()) {
+                recurseCSP(hintBorder, fringeNodes, 0); //   ON LANCE LE CSP SUR CETTE FRONTIERE!!
 
 
-            //Juste un check pour debugger
-            } else if (gameGrid.checkMove(movesToPlay).isEmpty()){
-                    System.out.println("ne devrait pas");
+                //Juste un check pour debugger
+            } else if (gameGrid.checkMove(movesToPlay).isEmpty()) {
+                System.out.println("ne devrait pas");
             }
 
             nbMatchByFrontier.add(nbPossibilite);
@@ -206,25 +197,25 @@ public class CSPGraph implements ArtificialPlayer {
 
     }
 
-    public void checkForSafeMoves(CASEGRILLE[] grid){
+    public void checkForSafeMoves(Case[] grid) {
 
-        for(int index =0; index < grid.length; index++){
+        for (int index = 0; index < grid.length; index++) {
 
-            if(CASEGRILLE.isIndicatorCase(grid[index])){
-                if (isIndexSatisfied(grid, index)){
-                    for(Integer c: getUndiscoveredneighbours(grid,index)){
+            if (Case.isIndicatorCase(grid[index])) {
+                if (isIndexSatisfied(grid, index)) {
+                    for (Integer c : getUndiscoveredneighbours(grid, index)) {
                         movesToPlay.add(new Move(c, SHOW));
                     }
 
-                } else if(getNbFlagToPlace(grid, index) == getUndiscoveredneighbours(grid,index).size()) {
-                    for (Integer v : getUndiscoveredneighbours(grid,index)) {
+                } else if (getNbFlagToPlace(grid, index) == getUndiscoveredneighbours(grid, index).size()) {
+                    for (Integer v : getUndiscoveredneighbours(grid, index)) {
                         movesToPlay.add(new Move(v, FLAG));
                     }
 
                 }
 
 
-        }
+            }
         }
 
 
@@ -245,10 +236,10 @@ public class CSPGraph implements ArtificialPlayer {
         4) pour chacune des combinaison trouvé. Les drapeau sont placées et on récurse.
     * */
 
-    boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOver{
+    boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOver {
 
         //Si on dépasse le thinkDelay
-        if (timeUp()){
+        if (timeUp()) {
             throw new TimeOver();
         }
 
@@ -257,7 +248,7 @@ public class CSPGraph implements ArtificialPlayer {
 
         */
 
-        if (!allFlagsOkay(hintNodes, index)){
+        if (!allFlagsOkay(hintNodes, index)) {
             return false;
         }
 
@@ -266,14 +257,14 @@ public class CSPGraph implements ArtificialPlayer {
         * Quand on est arrivé au bout de la frontiere et que tout marche!
         * Une disposition(solution CSP) est trouvé!
         * */
-        if (index >= hintNodes.size()){
+        if (index >= hintNodes.size()) {
             /*
             * on passe sur tout les nodes et on check si il y un flag.
             * Si oui alors on incrément le compteur de flags
             *   C'est ce qui sera utiliser pour les probabilité. Si le compteur est a 5 et le nbPossiblité a 10 alors ce node a 50% d'avoir un flag
             * */
-            for(Graph.FringeNode fn : fringeNodes){
-                if(fn.state == FLAGED){
+            for (Graph.FringeNode fn : fringeNodes) {
+                if (fn.state == FLAGED) {
                     fn.nbFlagHits++;
                 }
             }
@@ -283,26 +274,26 @@ public class CSPGraph implements ArtificialPlayer {
         }
 
 
-
         //On passe a la prochaine variable a satisfaire
         Graph.HintNode variableToSatisfy = hintNodes.get(index);
         // Update la variable puisqu'on a peut etre flag certainte de ses cases autour.
         variableToSatisfy.updateSurroundingAwareness();
 
         //Un check pour voir si la variable a trop de flag autour d'elle on backtrack
-        if (variableToSatisfy.nbFlagToPlace <0){
-            return false;}
+        if (variableToSatisfy.nbFlagToPlace < 0) {
+            return false;
+        }
         //Si la variable est déja satisfaite alors on passe a la suivante!
-        if (variableToSatisfy.nbFlagToPlace==0){
-            return recurseCSP(hintNodes,fringeNodes,index+1);
+        if (variableToSatisfy.nbFlagToPlace == 0) {
+            return recurseCSP(hintNodes, fringeNodes, index + 1);
         }
 
 
         //On va chercher cases non decouvertes voisin
         Set<Graph.FringeNode> neighborsFringe = variableToSatisfy.connectedFringe;
         List<Graph.FringeNode> undiscoveredFringe = new ArrayList<Graph.FringeNode>();
-        for(Graph.FringeNode fn : neighborsFringe){
-            if(fn.state == UNDISCOVERED){
+        for (Graph.FringeNode fn : neighborsFringe) {
+            if (fn.state == UNDISCOVERED) {
                 undiscoveredFringe.add(fn);
             }
         }
@@ -320,15 +311,15 @@ public class CSPGraph implements ArtificialPlayer {
         * */
         int[] combination = new int[variableToSatisfy.nbFlagToPlace];
         ArrayList<int[]> listcombination = new ArrayList<int[]>();
-        combinaisonFlag(0,variableToSatisfy.nbFlagToPlace,undiscoveredFringe.size()
-                ,combination,listcombination);
+        combinaisonFlag(0, variableToSatisfy.nbFlagToPlace, undiscoveredFringe.size()
+                , combination, listcombination);
 
 
 
         /*
         * Itere sur les combinaisons trouvé
         * */
-        for (int[] oneCombination : listcombination){
+        for (int[] oneCombination : listcombination) {
 
             //Garder en  memoire le nb de flag a placer ici parce que variableToSatisfy va changer au moment de recurser
             int nbFlagToPlaceHere = variableToSatisfy.nbFlagToPlace;
@@ -336,17 +327,17 @@ public class CSPGraph implements ArtificialPlayer {
             /*
             * On place les flags sur cases
             * */
-            for (int i=0; i< nbFlagToPlaceHere; i++){
+            for (int i = 0; i < nbFlagToPlaceHere; i++) {
                 Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
                 fringeToFlag.state = FLAGED;
             }
             //CSP pour la prochaine variable!
-            recurseCSP(hintNodes,fringeNodes,index+1);
+            recurseCSP(hintNodes, fringeNodes, index + 1);
 
             /*
             * On retire les flags préalablement posé
             * */
-            for (int i=0; i< nbFlagToPlaceHere; i++){
+            for (int i = 0; i < nbFlagToPlaceHere; i++) {
                 Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
                 fringeToFlag.state = UNDISCOVERED;
             }
@@ -356,29 +347,26 @@ public class CSPGraph implements ArtificialPlayer {
     }
 
 
-
-    boolean allFlagsOkay(List<Graph.HintNode> hintNodes, int nbDone){
-        for (int i=0; i< nbDone;i++){
+    boolean allFlagsOkay(List<Graph.HintNode> hintNodes, int nbDone) {
+        for (int i = 0; i < nbDone; i++) {
             Graph.HintNode hintNode = hintNodes.get(i);
             int value = hintNode.value;
 
             Set<Graph.FringeNode> neighborsFringe = hintNode.connectedFringe;
 
-            int nbFlag=0;
-            for(Graph.FringeNode fn : neighborsFringe){
-                if(fn.state == FLAGED){
+            int nbFlag = 0;
+            for (Graph.FringeNode fn : neighborsFringe) {
+                if (fn.state == FLAGED) {
                     nbFlag++;
                 }
             }
-            if(nbFlag != value){
+            if (nbFlag != value) {
                 return false;
             }
 
         }
         return true;
     }
-
-
 
 
     /*
@@ -392,30 +380,32 @@ public class CSPGraph implements ArtificialPlayer {
     *  [0, 2],
     *  [1, 2]
     * */
-    void combinaisonFlag(int index, int nbFlag, int nbCase, int[] combinaison, ArrayList<int[]> listeC){
-        if (nbFlag ==0){return;}
-        if (index >= nbFlag){
+    void combinaisonFlag(int index, int nbFlag, int nbCase, int[] combinaison, ArrayList<int[]> listeC) {
+        if (nbFlag == 0) {
+            return;
+        }
+        if (index >= nbFlag) {
 
             int[] newCombinaison = combinaison.clone();
             listeC.add(newCombinaison);
-            return ;
+            return;
         }
-        int start =0;
-        if (index >0) start = combinaison[index-1]+1;
-        for (int i=start; i<nbCase;i++){
-            combinaison[index]=i;
-            combinaisonFlag(index+1, nbFlag, nbCase, combinaison, listeC);
+        int start = 0;
+        if (index > 0) start = combinaison[index - 1] + 1;
+        for (int i = start; i < nbCase; i++) {
+            combinaison[index] = i;
+            combinaisonFlag(index + 1, nbFlag, nbCase, combinaison, listeC);
         }
     }
 
-    private void startTimer(int delai){
+    private void startTimer(int delai) {
         END = false;
         timer = System.currentTimeMillis();
         remain = delai;
     }
 
 
-   private String showTimeRemain(){
+    private String showTimeRemain() {
         return ("Time: " + (remain - (System.currentTimeMillis() - timer)) + " ms");
     }
 
@@ -424,31 +414,33 @@ public class CSPGraph implements ArtificialPlayer {
      */
 
 
-    long timeRemaining(){
+    long timeRemaining() {
         long passed = (System.currentTimeMillis() - timer);
         return remain - passed;
     }
 
-    /***
+    /**
      * Indique si le temps est écoulé
+     *
      * @return true si temps écoulé
      */
-    boolean timeUp(){
-        if (END){
+    boolean timeUp() {
+        if (END) {
             return true;
         }
 
-        if (timeRemaining() < LIMITE){
+        if (timeRemaining() < LIMITE) {
             END = true;
             return true;
         }
 
         return false;
     }
-    int getNbFlagToPlace(CASEGRILLE[] grid, int index){
+
+    int getNbFlagToPlace(Case[] grid, int index) {
         int nbFlagRemaining = grid[index].indexValue;
-        for (Integer v : gameGrid.getSurroundingIndex(index)){
-            if (grid[v] == FLAGED){
+        for (Integer v : gameGrid.getSurroundingIndex(index)) {
+            if (grid[v] == FLAGED) {
                 nbFlagRemaining--;
             }
         }
@@ -456,20 +448,21 @@ public class CSPGraph implements ArtificialPlayer {
     }
 
 
-   boolean isIndexSatisfied(CASEGRILLE[] grid, int index){
-       int indice = grid[index].indexValue;
-       int nbFlagPosed =0;
-       for (Integer v: gameGrid.getSurroundingIndex(index)){
-            if (grid[v] == FLAGED){
+    boolean isIndexSatisfied(Case[] grid, int index) {
+        int indice = grid[index].indexValue;
+        int nbFlagPosed = 0;
+        for (Integer v : gameGrid.getSurroundingIndex(index)) {
+            if (grid[v] == FLAGED) {
                 nbFlagPosed++;
             }
-       }
-       return indice == nbFlagPosed;
-   }
-    Set<Integer> getUndiscoveredneighbours(CASEGRILLE[] grid, int index){
+        }
+        return indice == nbFlagPosed;
+    }
+
+    Set<Integer> getUndiscoveredneighbours(Case[] grid, int index) {
         Set<Integer> undiscovered = new LinkedHashSet<Integer>();
-        for (Integer i: gameGrid.getSurroundingIndex(index)){
-            if (grid[i] == UNDISCOVERED){
+        for (Integer i : gameGrid.getSurroundingIndex(index)) {
+            if (grid[i] == UNDISCOVERED) {
                 undiscovered.add(i);
             }
         }

@@ -1,6 +1,6 @@
 package minesweeper.ui;
 
-import minesweeper.ENUM.COUP;
+import minesweeper.Coup;
 import minesweeper.Grid;
 import minesweeper.Move;
 
@@ -35,7 +35,7 @@ public class GridControllerImpl implements GridController {
     public void caseClicked (int ligne, int colonne) {
         int index = ligne* gridBoard.nbCols + colonne;
 
-        gridBoard.play(index, COUP.SHOW);
+        gridBoard.play(index, Coup.SHOW);
 
 
         flagRemain.setText(String.valueOf(gridBoard.nbFlagsRemaining));
