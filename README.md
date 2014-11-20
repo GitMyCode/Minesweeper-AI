@@ -13,20 +13,20 @@ Nous avons réalisé un joueur artificiel de Minesweeper (Démineur) qui utilise
 ## Compilation (version console)    
 ``` bash
 $ cd Minesweeper/
-$ javac root/WindowMinesweeper.java
-$ javac root/ai/*.java
+$ javac minesweeper/WindowMinesweeper.java
+$ javac minesweeper/ai/*.java
 ```
 
 ## Exécution du jeu   
 ``` bash
-$ java root.WindowMinesweeper
+$ java minesweeper.WindowMinesweeper
 ```
 
 ## Style de programmation
 Le style de programmation devrait être uniforme à travers les fichiers sources du projet.
 L'outil checkstyle peut être utilisé pour vérifier que le style du code est uniforme:
 ``` bash
-$ checkstyle -c checkstyle.xml Minesweeper/root/WindowMinesweeper.java
+$ checkstyle -c checkstyle.xml src/minesweeper/WindowMinesweeper.java
 ```
 
 ## Installation et compilation du code (pour correction ou contribution)    
@@ -40,7 +40,7 @@ Attendez que IntelliJ termine de compiler les modules. Ensuite, vous devriez avo
 
 Sélectionnez le dossier MineSweeper dans Minesweeper-AI et appuyez sur F4 pour ouvrir la fenêtre des Module Settings. 
 
-À l'aide du bouton __Mark as:__, marquez le dossier MineSweeper comme étant un dossier __Sources__. 
+À l'aide du bouton __Mark as:__, marquez le dossier src comme étant un dossier __Sources__. 
 
 Fermez la fenêtre des Settings.
 
@@ -52,18 +52,18 @@ Choisissez ensuite Version Control>Github si vous désirez faire des mises à jo
 
 Fermez la fenêtre des Settings.
 
-Pour indiquer à IntelliJ à quel endroit le Main se trouve dans le projet (et pour exécuter le programme en même temps), ouvrez l'arborescence et cliquez avec le bouton droit de la souris sur : MineSweeper>Root>WindowMinesweeper. Choisissez __Run WindowMineswee...main()__.
+Pour indiquer à IntelliJ à quel endroit le Main se trouve dans le projet (et pour exécuter le programme en même temps), ouvrez l'arborescence et cliquez avec le bouton droit de la souris sur : src>minesweeper>WindowMinesweeper. Choisissez __Run WindowMineswee...main()__.
 
 Voilà! Vous pouvez vous amuser à configurer votre Démineur et à le tester avec différents algorithmes.
 
 ## Structure du projet    
-Le dossier __root__ dans __Minesweeper__ contient tout le code du projet. Il est composé de plusieurs sous-dossiers:
+Le dossier __src dans __Minesweeper__ contient tout le code du projet. Il est composé de plusieurs sous-dossiers:
 + __ai__ contient les différents algorithmes pour le joueur artificiel (CSP, aléatoire, réseau bayésien...)
 + __design__ contient les éléments de l'interface graphique du jeu.
 + __ENUM__ contient les classes de type ENUM, qui n'ont pas de méthodes.
 + __util__ contient une classe permettant de charger toutes les classes dans le paquetage sans connaître leurs noms.
 
-À la racine de root, les fichiers suivants sont utiles à connaître:
+À la racine de src, les fichiers suivants sont utiles à connaître:
 + __BoardGameView__ contient tous les événements liés au jeu (création de la grille, options de la grille, etc.).
 + __GameRunner__ contient les méthodes nécessaires pour l'exécution du jeu.
 + __GLOBAL__ contient toutes les valeurs *hardcodées* du jeu. Pratique pour faire des changements à la taille de la grille, aux délais, au nombre de mines, etc.
