@@ -154,7 +154,7 @@ public class GridView extends JPanel {
                     if (grid.gameIsFinished()){
                     if (grid.gameLost){
                         //outputObserver.message("Lost!");
-                        grid.showAllCase();
+                        grid.showAllCases();
                     } else if(grid.gameWon){
                         //outputObserver.message("Win!");
                     }
