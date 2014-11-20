@@ -35,11 +35,11 @@ public class CSPGraph implements ArtificialPlayer {
 
     Graph graph;
     @Override
-    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
+    public Set<Move> getNextMoves(Grid grid, int delay) {
 
-        gameGrid = g;
-        CASEGRILLE[] copyGrid = g.getCpyPlayerView();
-        startTimer(thinkLimit);
+        gameGrid = grid;
+        CASEGRILLE[] copyGrid = grid.getCpyPlayerView();
+        startTimer(delay);
 
 
         nbPossibilite =0;
@@ -53,7 +53,7 @@ public class CSPGraph implements ArtificialPlayer {
         * nb: Ne faites pas attention au Try Catch c'est juste pour quitter la fonction si on timeout
         * */
         try {
-            calculateMoves(g);
+            calculateMoves(grid);
         } catch (TimeOver ignored){
             System.out.println("timeout");
         }
@@ -113,7 +113,7 @@ public class CSPGraph implements ArtificialPlayer {
                 System.out.println(e);
             }*/
 
-            System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.checkIfPresentGridValid());
+            System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.isValid());
         }
 
         if (timeUp()){
@@ -126,7 +126,7 @@ public class CSPGraph implements ArtificialPlayer {
         * */
         if (movesToPlay.isEmpty()){
             List<Integer> legalMoves = new ArrayList<Integer>();
-            for(int i=0; i< g.length; i++){
+            for(int i=0; i< grid.length; i++){
                 if(copyGrid[i] == UNDISCOVERED){
                     legalMoves.add(i);
                 }

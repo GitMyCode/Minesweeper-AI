@@ -18,11 +18,11 @@ public interface ArtificialPlayer {
     /**
      * Obtenir les prochains coups joué par le AI
      *
-     * @param g : La grille de jeu actuelle
-     * @param thinkLimit : Temps limite de reflexion. Arrete la recursion
+     * @param grid : La grille de jeu actuelle
+     * @param delay : Temps limite de reflexion. Arrete la recursion
      * @return Set des prochains coups possibles
      */
-    public Set<Move> getNextMoves(Grid g, int thinkLimit);
+    public Set<Move> getNextMoves(Grid grid, int delay);
 
     /**
      * Name display of the AI

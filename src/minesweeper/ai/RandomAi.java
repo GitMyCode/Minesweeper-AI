@@ -28,13 +28,13 @@ public class RandomAi implements ArtificialPlayer {
     }
 
     @Override
-    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
+    public Set<Move> getNextMoves(Grid grid, int delay) {
 
-        CASEGRILLE[] myView = g.getCpyPlayerView();
+        CASEGRILLE[] myView = grid.getCpyPlayerView();
         Random ran = new Random();
 
         List<Integer> legalMoves = new ArrayList<Integer>();
-        for(int i=0; i< g.length; i++){
+        for(int i=0; i< grid.length; i++){
             if (myView[i] == UNDISCOVERED){
                 legalMoves.add(i);
             }
@@ -43,7 +43,7 @@ public class RandomAi implements ArtificialPlayer {
 
         int index = legalMoves.get(ran.nextInt(legalMoves.size()));
 
-        Set<COUP> coupSet = g.getLegalCaseCoup(index);
+        Set<COUP> coupSet = grid.getLegalCaseCoup(index);
         int ranCoup = ran.nextInt(coupSet.size());
         int i = 0;
         COUP coup = INVALID;

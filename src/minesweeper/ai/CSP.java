@@ -3,7 +3,6 @@ package minesweeper.ai;
 import minesweeper.*;
 import minesweeper.ENUM.CASEGRILLE;
 import minesweeper.ENUM.COUP;
-import minesweeper.ai.utilCSP.Graph;
 import minesweeper.ai.utilCSP.TimeOver;
 
 import static minesweeper.ENUM.CASEGRILLE.*;
@@ -44,7 +43,7 @@ public class CSP implements ArtificialPlayer{
 
 
     @Override
-    public Set<Move> getNextMoves(Grid g, int thinkLimit) {
+    public Set<Move> getNextMoves(Grid grid, int delay) {
 
         /*TODO
         * 1) Splitter les frontieres en plusieurs frontiere indépendante
@@ -52,9 +51,9 @@ public class CSP implements ArtificialPlayer{
         * 3) FAIRE LE MENAGE DANS CE BORDEL
         * */
 
-        gameGrid = g;
-        CASEGRILLE[] copyGrid = g.getCpyPlayerView();
-        startTimer(thinkLimit);
+        gameGrid = grid;
+        CASEGRILLE[] copyGrid = grid.getCpyPlayerView();
+        startTimer(delay);
 
 
         nbPossibilite =0;
@@ -68,7 +67,7 @@ public class CSP implements ArtificialPlayer{
 
 
         try {
-            getSureCoup(g);
+            getSureCoup(grid);
         } catch (TimeOver ignored){
 
         }
@@ -114,7 +113,7 @@ public class CSP implements ArtificialPlayer{
 
         }
         if (!gameGrid.checkMove(movesToPlay).isEmpty()){
-            System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.checkIfPresentGridValid());
+            System.out.println(" Problem and is timeout:"+(timeUp())+"   grid is valid?:" +gameGrid.isValid());
         }
         if (timeUp()){
             System.out.println("Time UP!");
@@ -130,7 +129,7 @@ public class CSP implements ArtificialPlayer{
 
         if (movesToPlay.isEmpty()){
             List<Integer> legalMoves = new ArrayList<Integer>();
-            for(int i=0; i< g.length; i++){
+            for(int i=0; i< grid.length; i++){
                 if(copyGrid[i] == UNDISCOVERED){
                     legalMoves.add(i);
                 }
