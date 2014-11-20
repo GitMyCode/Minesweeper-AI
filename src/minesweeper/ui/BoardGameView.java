@@ -1,4 +1,7 @@
-package minesweeper;
+package minesweeper.ui;
+
+import minesweeper.ArtificialPlayer;
+import minesweeper.Grid;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +86,9 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         public GameBuilder(){ }
 
         public BoardGameView build() {
-            grid = (grid == null)? new Grid(nbLignes, nbCols,nbMines): grid;
+            if (this.grid == null) {
+                this.grid = new Grid(nbLignes, nbCols, nbMines);
+            }
             return new BoardGameView(this);
         }
 

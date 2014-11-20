@@ -1,4 +1,8 @@
-package minesweeper;
+package minesweeper.ui;
+
+import minesweeper.Grid;
+import minesweeper.Move;
+import minesweeper.ArtificialPlayer;
 import java.util.Set;
 
 /**

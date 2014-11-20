@@ -1,6 +1,8 @@
-package minesweeper;
+package minesweeper.ui;
 
 import minesweeper.ENUM.COUP;
+import minesweeper.Grid;
+import minesweeper.Move;
 
 import javax.swing.*;
 import java.util.Set;
