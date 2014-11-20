@@ -24,6 +24,7 @@ public class Graph {
     public HashMap<Integer,HintNode> mapHintNode;
     public List<List<HintNode>> allHintNode2;
     public List<List<FringeNode>> allFringeNodes2;
+    public Set<Integer> deactivatedNode;
     Set<Node> allNode;
     Grid gameGrid;
 
@@ -44,10 +45,12 @@ public class Graph {
         nbFrontiere = allHintNode.size();
 
         /*Deuxieme version*/
+        deactivatedNode = new HashSet<Integer>();
         mapHintNode = new HashMap<Integer, HintNode>();
         allHintNode2 = new ArrayList<List<HintNode>>();
         allFringeNodes2 = new ArrayList<List<FringeNode>>();
 
+        lookForInvalidFringeNode(c);
         findFrontier2(c);
 
         int stop=0;
@@ -55,6 +58,16 @@ public class Graph {
     }
 
 
+
+    void lookForInvalidFringeNode(CASEGRILLE[] grid){
+        for(Integer i =0 ; i< grid.length; i++){
+            if(CASEGRILLE.isIndicatorCase(grid[i])){
+                if(getUndiscoveredneighbours(grid,i).size() == 8){
+                    deactivatedNode.add(i);
+                }
+            }
+        }
+    }
 
     void findFrontier2(CASEGRILLE[] grid){
 
@@ -116,7 +129,6 @@ public class Graph {
 
 
                 hintNodeSet.add(nextNode);hintNodeList.add(nextNode);
-
                 putInFrontier2(next, hintNodeList, hintNodeSet, inBorderSoFar, grid);
             }
         }
@@ -210,13 +222,33 @@ public class Graph {
 
         for (Direction D : direction8){
             int next = index+gameGrid.step(D);
-            //HintNode nextNode = new HintNode(next);
-            if (gameGrid.isStepThisDirInGrid(D,index) && !frontiere.contains(next) && isAFringeNode(grid,next)){
-                directions.add(D);
+
+
+            if (gameGrid.isStepThisDirInGrid(D,index) &&
+                    !frontiere.contains(next) &&
+                    isAFringeNode(grid,next))
+            {
+                Collection<Integer> indiceNeirboursCurrentNode = getIndiceNeirbours(grid,index);
+                Collection<Integer> indiceNeirboursNextNode = getIndiceNeirbours(grid,next);
+
+
+                if(!Collections.disjoint(indiceNeirboursCurrentNode,indiceNeirboursNextNode)){
+                    directions.add(D);
+                }
+
             }
         }
         return directions;
 
+    }
+    Set<Integer> getIndiceNeirbours(CASEGRILLE[] grid, int index){
+        Set<Integer> indices = new LinkedHashSet<Integer>();
+        for(Integer i : gameGrid.getSurroundingIndex(index)){
+            if(CASEGRILLE.isIndicatorCase(grid[i]) && !deactivatedNode.contains(i)){
+                indices.add(i);
+            }
+        }
+        return indices;
     }
 
     Set<Integer> getUndiscoveredneighbours(CASEGRILLE[] grid, int index){
@@ -326,7 +358,7 @@ public class Graph {
         public boolean equals(Object obj) {
 
             /*
-            * Tres wierd et certainement comforme aux bonnes pratiques.
+            * Tres wierd et certainement pas comforme aux bonnes pratiques.
             * Permet de comparer un Node avec un Integer
             * */
             if(obj.getClass() == Integer.class){
