@@ -337,7 +337,7 @@ public class CSPGraph implements ArtificialPlayer {
             * On place les flags sur cases
             * */
             for (int i=0; i< nbFlagToPlaceHere; i++){
-                Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
+                Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
                 fringeToFlag.state = FLAGED;
             }
             //CSP pour la prochaine variable!
@@ -379,6 +379,19 @@ public class CSPGraph implements ArtificialPlayer {
     }
 
 
+
+
+    /*
+    * C'est simlement l'implementation de C(n,p) exemple : http://calculis.net/combinaison
+    * nbFlag  = p
+    * nbCase = n
+    * EXEMPLE:
+    * Si  : nbFlag = 2 et nbCase= 3  -> C(2,3)
+    * voici ce qui sera retourné dans listC
+    *  [0, 1],
+    *  [0, 2],
+    *  [1, 2]
+    * */
     void combinaisonFlag(int index, int nbFlag, int nbCase, int[] combinaison, ArrayList<int[]> listeC){
         if (nbFlag ==0){return;}
         if (index >= nbFlag){
