@@ -55,7 +55,7 @@ public class CSPGraph implements ArtificialPlayer {
         try {
             calculateMoves(g);
         } catch (TimeOver ignored){
-
+            System.out.println("timeout");
         }
 
 
@@ -157,12 +157,7 @@ public class CSPGraph implements ArtificialPlayer {
 
 
 
-        /*
-        * TODO
-        * POUR DEBUG ENLEVER APRES
-        *
-        * */
-        //graph = new Graph(g);
+
 
 
 
