@@ -1,4 +1,6 @@
-package minesweeper;
+package minesweeper.ui;
+
+import minesweeper.Move;
 
 /**
  * Projet de joueur artificiel de Minesweeper avec différents algorithmes
@@ -12,7 +14,11 @@ package minesweeper;
  *   Geneviève Lalonde
  *   Nilovna Bascunan-Vasquez
  */
-public interface GameObserver {
-    public void grilleChanged(Grid g);
+public interface OutputObserver {
     public void message(String msg);
+
+    public void updateLost();
+    public void updateWins();
+
+    public void callback();
 }

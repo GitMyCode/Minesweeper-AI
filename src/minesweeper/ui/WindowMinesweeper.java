@@ -1,6 +1,9 @@
-package minesweeper;
+package minesweeper.ui;
 
 import minesweeper.util.ClassFinder;
+import minesweeper.Grid;
+import minesweeper.Move;
+import minesweeper.ArtificialPlayer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

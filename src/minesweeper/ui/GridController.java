@@ -1,4 +1,6 @@
-package minesweeper;
+package minesweeper.ui;
+
+import minesweeper.Move;
 
 import java.util.EventListener;
 import java.util.Set;

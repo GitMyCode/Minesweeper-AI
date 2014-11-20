@@ -1,8 +1,11 @@
-package minesweeper;
+package minesweeper.ui;
 
+import minesweeper.Grid;
 import minesweeper.ENUM.CASEGRILLE;
 import minesweeper.ENUM.COUP;
 import static minesweeper.ENUM.CASEGRILLE.*;
+
+import minesweeper.Move;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

@@ -257,7 +257,7 @@ public class Grid {
 
     }
 
-    boolean gameIsFinished() {
+    public boolean gameIsFinished() {
 
         boolean reponse = true;
 
