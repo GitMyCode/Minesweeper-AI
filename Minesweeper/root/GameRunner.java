@@ -61,7 +61,7 @@ class GameRunner implements Runnable {
                 System.out.println("observer null");
             }
 
-        } while(!grid.gameFinish() && running && outputObserver!=null);
+        } while(!grid.gameIsFinished() && running && outputObserver!=null);
 
 
         /*After game*/

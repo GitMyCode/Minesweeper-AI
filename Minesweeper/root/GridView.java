@@ -151,7 +151,7 @@ public class GridView extends JPanel {
                         controller.movePlay(new Move(index,COUP.SHOW));
                     }
 
-                    if (grid.gameFinish()){
+                    if (grid.gameIsFinished()){
                     if (grid.lost){
                         //outputObserver.message("Lost!");
                         grid.showAllCase();

@@ -63,8 +63,8 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
     private final JTextField choiceMaxTime;
     private final JTextField choiceSizeCase;
     private final JPanel panelCreation;
-    private final JComboBox choixAI;
-    private final JComboBox choixDesign;
+    private final JComboBox<String> choixAI;
+    private final JComboBox<String> choixDesign;
     private JFileChooser chooser;
     private final List<Class<?>> classes;
     private final List<String> allDesign;
@@ -125,7 +125,7 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
         panelCreation.setMinimumSize(panel_creation_dim);
         panelCreation.setMaximumSize(panel_creation_dim);
 
-        choixAI = new JComboBox();
+        choixAI = new JComboBox<String>();
         labelAi = new JLabel("AI");
         classes = ClassFinder.find("root.ai");
         for(Class<?> c : classes){
@@ -133,7 +133,7 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
             choixAI.addItem(name);
         }
 
-        choixDesign = new JComboBox();
+        choixDesign = new JComboBox<String>();
         allDesign = ClassFinder.findFolder("root.design");
         for(String s : allDesign){
             choixDesign.addItem(s);
