@@ -17,21 +17,11 @@ import java.util.*;
  */
 public class ProbabilisticAI implements ArtificialPlayer {
 
-
-    /*Timer*/
-    private long timer;
-    private long remain;
-    private boolean END = false;
-    private final int LIMITE = 10;
-
-
     private Grid gameGrid;
     private Set<Move> movesToPlay;
 
-    //Set<Integer> undiscoveredFrontier;
     private List<Integer> nbMatchByFrontier;
     private Integer nbPossibilite = 0;
-
 
     Graph graph;
 
@@ -40,27 +30,10 @@ public class ProbabilisticAI implements ArtificialPlayer {
 
         gameGrid = grid;
         Case[] copyGrid = grid.getCpyPlayerView();
-        startTimer(delay);
-
 
         nbPossibilite = 0;
         movesToPlay = new HashSet<Move>();
         nbMatchByFrontier = new ArrayList<Integer>();
-
-
-
-        /*
-        * On lance le AI
-        * nb: Ne faites pas attention au Try Catch c'est juste pour quitter la fonction si on timeout
-        * */
-        try {
-            calculateMoves(grid);
-        } catch (TimeOver ignored) {
-            System.out.println("timeout");
-        }
-
-
-
 
         /*
         * Une fois qu'on a fini d'analyser on va maintenant choisir les coup a jouer
@@ -112,13 +85,7 @@ public class ProbabilisticAI implements ArtificialPlayer {
                 System.out.println(e);
             }*/
 
-            System.out.println(" Problem and is timeout:" + (timeUp()) + "   grid is valid?:" + gameGrid.isValid());
         }
-
-        if (timeUp()) {
-            System.out.println("Time UP!");
-        }
-
 
         /*
         * Si aucun coup sur a été trouvé alors on essai au hasard
@@ -149,7 +116,7 @@ public class ProbabilisticAI implements ArtificialPlayer {
     /**
      * C'est le AI en soit. Tout commence par cette method
      */
-    void calculateMoves(Grid g) throws TimeOver {
+    void calculateMoves(Grid g) {
 
         Case[] grid = g.getCpyPlayerView();
 
@@ -236,22 +203,15 @@ public class ProbabilisticAI implements ArtificialPlayer {
         4) pour chacune des combinaison trouvé. Les drapeau sont placées et on récurse.
     * */
 
-    boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOver {
-
-        //Si on dépasse le thinkDelay
-        if (timeUp()) {
-            throw new TimeOver();
-        }
+    boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) {
 
         /*
         * Vérifie si jusqu`a maintenant toute les variables (la frontiere avec les indices) sont satisfaites
-
         */
 
         if (!allFlagsOkay(hintNodes, index)) {
             return false;
         }
-
 
         /*
         * Quand on est arrivé au bout de la frontiere et que tout marche!
@@ -396,45 +356,6 @@ public class ProbabilisticAI implements ArtificialPlayer {
             combinaison[index] = i;
             combinaisonFlag(index + 1, nbFlag, nbCase, combinaison, listeC);
         }
-    }
-
-    private void startTimer(int delai) {
-        END = false;
-        timer = System.currentTimeMillis();
-        remain = delai;
-    }
-
-
-    private String showTimeRemain() {
-        return ("Time: " + (remain - (System.currentTimeMillis() - timer)) + " ms");
-    }
-
-    /**
-     * @return Retourne le temps restant
-     */
-
-
-    long timeRemaining() {
-        long passed = (System.currentTimeMillis() - timer);
-        return remain - passed;
-    }
-
-    /**
-     * Indique si le temps est écoulé
-     *
-     * @return true si temps écoulé
-     */
-    boolean timeUp() {
-        if (END) {
-            return true;
-        }
-
-        if (timeRemaining() < LIMITE) {
-            END = true;
-            return true;
-        }
-
-        return false;
     }
 
     int getNbFlagToPlace(Case[] grid, int index) {
