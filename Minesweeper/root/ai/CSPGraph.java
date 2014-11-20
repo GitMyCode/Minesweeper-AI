@@ -55,7 +55,7 @@ public class CSPGraph implements ArtificialPlayer {
         try {
             calculateMoves(g);
         } catch (TimeOver ignored){
-
+            System.out.println("timeout");
         }
 
 
@@ -154,6 +154,12 @@ public class CSPGraph implements ArtificialPlayer {
     void calculateMoves(Grid g) throws TimeOver{
 
         CASEGRILLE[] grid = g.getCpyPlayerView();
+
+
+
+
+
+
 
 
         /*
@@ -288,7 +294,7 @@ public class CSPGraph implements ArtificialPlayer {
 
 
         //On va chercher cases non decouvertes voisin
-        List<Graph.FringeNode> neighborsFringe = variableToSatisfy.connectedFringe;
+        Set<Graph.FringeNode> neighborsFringe = variableToSatisfy.connectedFringe;
         List<Graph.FringeNode> undiscoveredFringe = new ArrayList<Graph.FringeNode>();
         for(Graph.FringeNode fn : neighborsFringe){
             if(fn.state == UNDISCOVERED){
@@ -351,7 +357,7 @@ public class CSPGraph implements ArtificialPlayer {
             Graph.HintNode hintNode = hintNodes.get(i);
             int value = hintNode.value;
 
-            List<Graph.FringeNode> neighborsFringe = hintNode.connectedFringe;
+            Set<Graph.FringeNode> neighborsFringe = hintNode.connectedFringe;
 
             int nbFlag=0;
             for(Graph.FringeNode fn : neighborsFringe){

@@ -14,28 +14,27 @@ import java.util.*;
  */
 public class Graph {
 
-    Set<Node> allNode;
-    Grid gameGrid;
     public int nbFrontiere =0;
-    public List<List<Node>> allFrontiere;
 
-
-
-    public HashMap<Integer,FringeNode> mapFringeNode;
+    public HashMap<Integer,HintNode> mapHintNode;
     public List<List<HintNode>> allHintNode;
     public List<List<FringeNode>> allFringeNodes;
+    public Set<Integer> deactivatedNode;
+    Grid gameGrid;
+    CASEGRILLE[] caseGrille;
 
     public Graph(Grid gameGrid){
         this.gameGrid = gameGrid;
-        CASEGRILLE[] c = gameGrid.getCpyPlayerView();
+        caseGrille = gameGrid.getCpyPlayerView();
 
-        allFrontiere = new ArrayList<List<Node>>();
-        mapFringeNode = new HashMap<Integer, FringeNode>();
+        deactivatedNode = new HashSet<Integer>();
+        mapHintNode = new HashMap<Integer, HintNode>();
         allHintNode = new ArrayList<List<HintNode>>();
         allFringeNodes = new ArrayList<List<FringeNode>>();
 
+        lookForInvalidFringeNode(caseGrille);
+        findFrontier(caseGrille);
 
-        allFrontiere = findFrontier(c);
         nbFrontiere = allHintNode.size();
         int stop=0;
 
@@ -43,126 +42,168 @@ public class Graph {
 
 
 
-    List<List<Node>> findFrontier(CASEGRILLE[] grid){
+    /*
+    * Va chercher les case qui sont entouré de case non-decouvert
+    * C'est juste pour eviter que les frontieres fassent des détours
+    * */
+    void lookForInvalidFringeNode(CASEGRILLE[] grid){
+        for(Integer i =0 ; i< grid.length; i++){
+            if(CASEGRILLE.isIndicatorCase(grid[i])){
+                if(getUndiscoveredneighbours(grid,i).size() == 8){
+                    deactivatedNode.add(i);
+                }
+            }
+        }
+    }
 
-
-
-
-        List<List<Node>> allFrontiers = new LinkedList<List<Node>>();
-        Set<HintNode> inFrontiereSoFar = new HashSet<HintNode>();
+    /*
+    * Va chercher les frontiers qui sont independantes
+    * */
+    void findFrontier(CASEGRILLE[] grid){
+        //Un set pour s'assurer qu'on ne prend pas deux fois le meme noeud;
+        Set<Node> inFrontiereSoFar = new HashSet<Node>();
         for (int i =0; i < grid.length; i++){
-            if (CASEGRILLE.isIndicatorCase(grid[i])){
 
-                HintNode hintNode = new HintNode(i,grid[i].indexValue);
+            if (!inFrontiereSoFar.contains(i) && isAFringeNode(grid,i)){
 
+                FringeNode fringeNode = new FringeNode(i);
 
-                if(!inFrontiereSoFar.contains(hintNode)){
+                //Va chercher les indices qui influence ce Noeud
+                fringeNode.hintNodes = getHintNeirbour(grid,fringeNode);
 
-
-
-                    hintNode.connectedFringe = getFringeNeirbour(grid,hintNode);
-                    hintNode.value = getNbFlagToPlace(grid, hintNode.indexInGrid);
-                    hintNode.updateSurroundingAwareness();
-                    if (isIndexSatisfied(grid, i)){
-                        for(Integer c: getUndiscoveredneighbours(grid,i)){
-                            //movesToPlay.add(new Move(c, SHOW));
-
-                        }
-
-                    } else if(getNbFlagToPlace(grid, i) == getUndiscoveredneighbours(grid,i).size()) {
-                        for (Integer v : getUndiscoveredneighbours(grid,i)) {
-                            //movesToPlay.add(new Move(v, FLAG));
-                        }
+                /*un Set pour s'assurer un frontiere de noeud unique
+                * Et une parce que c'est ce qu'on retourne. ( c'est plus facile d'iterer sur les liste puiqu'on a un index)
+                */
+                Set<Node> frontHash = new HashSet<Node>();
+                List<FringeNode> front = new ArrayList<FringeNode>();
+                front.add(fringeNode);
+                frontHash.add(fringeNode);
 
 
+                //On ce lance dans la recursion pour accumuler les nodes suivant
+                putInFrontier(i, front, frontHash, inFrontiereSoFar, grid);
 
-
-
-                        //Va chercher la prochaine frontieres
-                    } else if( !inFrontiereSoFar.contains(hintNode)){
-                        Set<HintNode> frontHash = new HashSet<HintNode>();
-                        List<HintNode> front = new ArrayList<HintNode>();
-                        front.add(hintNode);
-                        frontHash.add(hintNode);
-
-
-                        putInFrontier(i,front,frontHash,inFrontiereSoFar,grid);
-                        inFrontiereSoFar.addAll(frontHash);
-                        if (front.size() >= 2){
-                            test(front);
-                            allHintNode.add(front);
-                            //allFrontiers.add(front);
-                        }
-                    }
+                //Ajoute la frontier accumuler durant la recursion aux Nodes déja visité
+                inFrontiereSoFar.addAll(frontHash);
+                //Je contraint les frontiers a etre au moins plus que 2 sinon on ne peut pas faire grand chose
+                //avec ca. Mais c'est peut etre une mauvaise idée
+                if (front.size() >= 2){
+                    allFringeNodes.add(front); // Un nouvelle frontiere a été trouver. On l'ajoute
                 }
             }
         }
 
-        for(List<HintNode> l : allHintNode){
-            Set<FringeNode> fringe = new LinkedHashSet<FringeNode>();
-            for(HintNode hn : l){
-                fringe.addAll(hn.connectedFringe);
+        /*
+        * Dans certain cas on obtiens des frontieres qui sont lié a 1 seul
+         * indice et on ne peut rien faire avec ca donc il faut les supprimer.
+         * Cette liste garde les references des liste a effacer
+        * */
+        List<List<FringeNode>> fringesToRemove = new ArrayList<List<FringeNode>>();
+
+        /*
+        * Une fois qu'on a tout les frontieres des case-non decouvertes
+        * on veut aussi les indices qui cotoient ces frontieres dans des listes
+        * */
+        for(List<FringeNode> l : allFringeNodes){
+            Set<HintNode> hintNodes = new LinkedHashSet<HintNode>();
+            for(FringeNode fn : l){
+                //la liste des indices qui influence ce noeud
+                hintNodes.addAll(fn.hintNodes);
             }
-            allFringeNodes.add(new ArrayList<FringeNode>(fringe));
 
+            //Pour une frontiere acceptable il faut au moins 2 indices (sinon on peut pas vraiment faire de probabilité)
+            if(hintNodes.size() >1){
+                allHintNode.add(new ArrayList<HintNode>(hintNodes));
+            }else{
+                fringesToRemove.add(l);
+            }
         }
+        //Efface les frontieres qui n'on qu'un seul indice
+        allFringeNodes.removeAll(fringesToRemove);
 
 
 
-        return allFrontiers;
     }
 
-
-
-    public void test(List<? extends Node> listToAdd){
-        allFrontiere.add(new ArrayList<Node>( listToAdd));
-    }
-
-    void putInFrontier(int nextIndex, List<HintNode> hintNodeList, Set<HintNode> hintNodeSet, Set<HintNode> inBorderSoFar, CASEGRILLE[] grid){
+    /*
+    * Methode qui recurse sur les noeuds et accumuler les nouveau qu'il trouve
+    *
+    * */
+    void putInFrontier(int nextIndex, List<FringeNode> hintNodeList, Set<Node> hintNodeSet, Set<Node> inBorderSoFar, CASEGRILLE[] grid){
 
         /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
         Set<Direction> thisDirection = getPossibleDirection(grid, nextIndex, hintNodeSet);
-        if (thisDirection == null || thisDirection.isEmpty())
+        //Si aucun direction alors on backtrack
+        if (thisDirection == null || thisDirection.isEmpty()){
             return;
+        }
+
 
         for (Direction nextDir : thisDirection){
             int next = nextIndex+gameGrid.step(nextDir);
-            HintNode nextNode = new HintNode(next,grid[next].indexValue);
+            FringeNode nextNode = new FringeNode(next);
 
+            //Si ce n'est pas un noeud qu'on connait déja alors on l'ajoute!
+            if (!hintNodeSet.contains(nextNode) && !inBorderSoFar.contains(nextNode)){
 
-            if (!hintNodeSet.contains(nextNode) && !inBorderSoFar.contains(nextNode) && !isIndexSatisfied(grid, next)){
+                // va chercher les indices qui influences ce noeud
+                nextNode.hintNodes = getHintNeirbour(grid,nextNode);
 
-                nextNode.connectedFringe = getFringeNeirbour(grid,nextNode);
-                nextNode.value = getNbFlagToPlace(grid, nextNode.indexInGrid);
-                nextNode.updateSurroundingAwareness();
-                //nextNode.nbFlagToPlace = getNbFlagToPlace(grid,nextIndex);
-
-
-                hintNodeSet.add(nextNode);hintNodeList.add(nextNode);
-
-                putInFrontier(next,hintNodeList,hintNodeSet,inBorderSoFar,grid);
+                /*
+                * on place le noeud trouver dasns les listes
+                * */
+                hintNodeSet.add(nextNode);
+                hintNodeList.add(nextNode);
+                putInFrontier(next, hintNodeList, hintNodeSet, inBorderSoFar, grid);
             }
         }
     }
 
 
 
-    Set<Direction> getPossibleDirection(CASEGRILLE[] grid, int index, Set<HintNode> frontiere){
+
+    /*
+    * Va aller chercher les prochaines directions qui menent vers un noeud valide
+    * */
+    Set<Direction> getPossibleDirection(CASEGRILLE[] grid, int index, Set<Node> frontiere){
         Set<Direction> directions = new LinkedHashSet<Direction>();
 
         for (Direction D : direction8){
             int next = index+gameGrid.step(D);
-            HintNode nextNode = new HintNode(next);
 
-            if (gameGrid.isStepThisDirInGrid(D,index) && !frontiere.contains(nextNode) && CASEGRILLE.isIndicatorCase(grid[next])
-                    ){
-                directions.add(D);
+
+            if (gameGrid.isStepThisDirInGrid(D,index) &&
+                    !frontiere.contains(next) &&
+                    isAFringeNode(grid,next))
+            {
+                Collection<Integer> indiceNeirboursCurrentNode = getIndiceNeirbours(grid,index);
+                Collection<Integer> indiceNeirboursNextNode = getIndiceNeirbours(grid,next);
+
+                //Check si les deux noeud partage un indice (Et donc s'influence)
+                if(!Collections.disjoint(indiceNeirboursCurrentNode,indiceNeirboursNextNode)){
+                    directions.add(D);
+                }
+
             }
         }
         return directions;
 
     }
-
+    /*
+    * Retourne les cases voisines qui sont des index
+    * */
+    Set<Integer> getIndiceNeirbours(CASEGRILLE[] grid, int index){
+        Set<Integer> indices = new LinkedHashSet<Integer>();
+        for(Integer i : gameGrid.getSurroundingIndex(index)){
+            if(CASEGRILLE.isIndicatorCase(grid[i]) && !deactivatedNode.contains(i)){
+                indices.add(i);
+            }
+        }
+        return indices;
+    }
+    /*
+    * Retourne les cases voisines qui sont non-decouvertes
+    * */
     Set<Integer> getUndiscoveredneighbours(CASEGRILLE[] grid, int index){
         Set<Integer> undiscovered = new LinkedHashSet<Integer>();
         for (Integer i: gameGrid.getSurroundingIndex(index)){
@@ -173,7 +214,9 @@ public class Graph {
         return undiscovered;
     }
 
-
+    /*
+    * Retourne le nombre de flag qui reste a poser pour satisfaire l'indice
+    * */
     int getNbFlagToPlace(CASEGRILLE[] grid, int index){
         int nbFlagRemaining = grid[index].indexValue;
         for (Integer v : gameGrid.getSurroundingIndex(index)){
@@ -185,37 +228,62 @@ public class Graph {
     }
 
 
-   boolean isIndexSatisfied(CASEGRILLE[] grid, int index){
-       int indice = grid[index].indexValue;
-       int nbFlagPosed =0;
-       for (Integer v: gameGrid.getSurroundingIndex(index)){
+    boolean isIndexSatisfied(CASEGRILLE[] grid, int index){
+        int indice = grid[index].indexValue;
+        int nbFlagPosed =0;
+        for (Integer v: gameGrid.getSurroundingIndex(index)){
             if (grid[v] == FLAGED){
                 nbFlagPosed++;
             }
-       }
-       return indice == nbFlagPosed;
-   }
-    public List<FringeNode> getFringeNeirbour(CASEGRILLE[] g, HintNode hintNode){
+        }
+        return indice == nbFlagPosed;
+    }
 
-        List<FringeNode> fringeSet = new ArrayList<FringeNode>();
-        for(Integer indexFringe : getUndiscoveredneighbours(g,hintNode.indexInGrid)){
-            if(mapFringeNode.containsKey(indexFringe)){
-                FringeNode fn = mapFringeNode.get(indexFringe);
-                fn.hintNodes.add(hintNode);
-                fringeSet.add(fn);
+    public Set<HintNode> getHintNeirbour(CASEGRILLE[] g, FringeNode fringeNode){
 
-            }else {
-                FringeNode fn = new FringeNode(indexFringe);
-                fn.hintNodes.add(hintNode);
-                fringeSet.add(fn);
-                mapFringeNode.put(indexFringe,fn);
+        Set<HintNode> hintNodes = new LinkedHashSet<HintNode>();
+        for(Integer indexHint : gameGrid.getSurroundingIndex(fringeNode.indexInGrid)){
+
+            if(CASEGRILLE.isIndicatorCase(g[indexHint])){
+                HintNode hn =null;
+                if(mapHintNode.containsKey(indexHint)){
+                    hn = mapHintNode.get(indexHint);
+                }else {
+                    hn = new HintNode(indexHint);
+                    mapHintNode.put(indexHint,hn);
+                }
+                hintNodes.add(hn);
+                hn.connectedFringe.add(fringeNode);
             }
 
         }
-        return fringeSet;
+        return hintNodes;
 
     }
 
+
+    public boolean isAFringeNode(CASEGRILLE[] grid, int index){
+
+        if(grid[index] == UNDISCOVERED){
+            for(Integer surround : gameGrid.getSurroundingIndex(index)){
+                if(CASEGRILLE.isIndicatorCase(grid[surround])){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+
+    /*
+    * Class interne
+    * Node
+    *   |- HindNode
+    *   |- FringeNode
+    *
+    * */
 
     public class Node{
 
@@ -227,6 +295,20 @@ public class Graph {
 
         @Override
         public boolean equals(Object obj) {
+
+            /*
+            * Tres wierd et certainement pas comforme aux bonnes pratiques.
+            * Permet de comparer un Node avec un Integer
+            * */
+            if(obj.getClass() == Integer.class){
+                if(indexInGrid == (Integer) obj){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+
+
             Node other = (Node) obj;
 
             if(indexInGrid == other.indexInGrid){
@@ -243,19 +325,17 @@ public class Graph {
 
     public class HintNode extends Node{
 
-        public List<FringeNode> connectedFringe;
+        public Set<FringeNode> connectedFringe;
         public int value;
         public int nbFlagToPlace;
         public int nbUndiscoveredNeighbors;
 
 
+
         public HintNode(int index){
             super(index);
-        }
-        public HintNode(int index,int value){
-            super(index);
-            this.value = value;
-            connectedFringe = new ArrayList<FringeNode>();
+            this.value = getNbFlagToPlace(caseGrille,index);
+            connectedFringe = new LinkedHashSet<FringeNode>();
         }
 
         public void makeConnectedFringe(Set<Integer> undiscov){
@@ -297,17 +377,18 @@ public class Graph {
         }
     }
 
+
     public class FringeNode extends Node{
         public float probabilityMine = 0.5f;
         public int nbFlagHits =0;
-        public List<HintNode> hintNodes;
+        public Set<HintNode> hintNodes;
 
         public CASEGRILLE state = UNDISCOVERED;
 
 
         public FringeNode(int index){
             super(index);
-           hintNodes = new ArrayList<HintNode>();
+            hintNodes = new LinkedHashSet<HintNode>();
         }
 
         @Override
