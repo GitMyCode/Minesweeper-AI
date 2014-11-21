@@ -156,7 +156,7 @@ public class CSPGraph implements ArtificialPlayer {
         /*
         * On commence par regarder si il y a des coup certain qu'on peut faire
         * */
-        checkForSafeMoves(grid);
+        this.movesToPlay = g.checkForSafeMoves();
 
 
         //Si aucun coup certain trouvé alors on continue
@@ -194,30 +194,6 @@ public class CSPGraph implements ArtificialPlayer {
 
             nbMatchByFrontier.add(nbPossibilite);
         }
-
-    }
-
-    public void checkForSafeMoves(Case[] grid) {
-
-        for (int index = 0; index < grid.length; index++) {
-
-            if (Case.isIndicatorCase(grid[index])) {
-                if (isIndexSatisfied(grid, index)) {
-                    for (Integer c : getUndiscoveredneighbours(grid, index)) {
-                        movesToPlay.add(new Move(c, SHOW));
-                    }
-
-                } else if (getNbFlagToPlace(grid, index) == getUndiscoveredneighbours(grid, index).size()) {
-                    for (Integer v : getUndiscoveredneighbours(grid, index)) {
-                        movesToPlay.add(new Move(v, FLAG));
-                    }
-
-                }
-
-
-            }
-        }
-
 
     }
 
@@ -435,38 +411,6 @@ public class CSPGraph implements ArtificialPlayer {
         }
 
         return false;
-    }
-
-    int getNbFlagToPlace(Case[] grid, int index) {
-        int nbFlagRemaining = grid[index].indexValue;
-        for (Integer v : gameGrid.getSurroundingIndex(index)) {
-            if (grid[v] == FLAGED) {
-                nbFlagRemaining--;
-            }
-        }
-        return nbFlagRemaining;
-    }
-
-
-    boolean isIndexSatisfied(Case[] grid, int index) {
-        int indice = grid[index].indexValue;
-        int nbFlagPosed = 0;
-        for (Integer v : gameGrid.getSurroundingIndex(index)) {
-            if (grid[v] == FLAGED) {
-                nbFlagPosed++;
-            }
-        }
-        return indice == nbFlagPosed;
-    }
-
-    Set<Integer> getUndiscoveredneighbours(Case[] grid, int index) {
-        Set<Integer> undiscovered = new LinkedHashSet<Integer>();
-        for (Integer i : gameGrid.getSurroundingIndex(index)) {
-            if (grid[i] == UNDISCOVERED) {
-                undiscovered.add(i);
-            }
-        }
-        return undiscovered;
     }
 
 }
