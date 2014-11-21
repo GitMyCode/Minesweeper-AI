@@ -104,25 +104,9 @@ public class CSPGraph implements ArtificialPlayer {
 
         }
 
-        /*
-        * Juste un check pour debugger
-        * checkMove va renvoyer les Moves qui sont des erreurs (ex: un flag sur un case vide)
-        * */
-        Set<Move> errors = gameGrid.checkMove(movesToPlay);
-        if (!errors.isEmpty()) {
-            /*try{
-                gameGrid.saveToFile(gameGrid.getATimeStampedGridName());
-            }catch (Exception e){
-                System.out.println(e);
-            }*/
-
-            System.out.println(" Problem and is timeout:" + (timeUp()) + "   grid is valid?:" + gameGrid.isValid());
-        }
-
         if (timeUp()) {
             System.out.println("Time UP!");
         }
-
 
         /*
         * Si aucun coup sur a été trouvé alors on essai au hasard
