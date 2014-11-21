@@ -1,5 +1,9 @@
 package minesweeper;
 
+import minesweeper.Coup;
+import minesweeper.Case;
+import minesweeper.*;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.text.Format;
@@ -417,5 +421,65 @@ public class Grid {
             fw.write(stringGridPlayerView);
             fw.close();
     }
+
+    public int countUnplacedFlags(int index) {
+        int reponse = this.gridPlayerView[index].indexValue;
+        for (Integer v : this.getSurroundingIndex(index)) {
+            if (this.gridPlayerView[v] == FLAGED) {
+                reponse--;
+            }
+        }
+        return reponse;
+    }
+
+    public Set<Integer> getUndiscoveredneighbours(int index) {
+        Set<Integer> reponse = new LinkedHashSet<Integer>();
+        for (Integer i : this.getSurroundingIndex(index)) {
+            if (this.gridPlayerView[i] == UNDISCOVERED) {
+                reponse.add(i);
+            }
+        }
+        return reponse;
+    }
+
+    public Set<Move> checkForSafeMoves() {
+
+        HashSet<Move> reponse = new HashSet<Move>(); 
+
+        for (int index = 0; index < this.gridPlayerView.length; index++) {
+
+            if (Case.isIndicatorCase(this.gridPlayerView[index])) {
+                if (this.isIndexSatisfied(index)) {
+                    for (Integer c : this.getUndiscoveredneighbours(index)) {
+                        reponse.add(new Move(c, Coup.SHOW));
+                    }
+
+                } else if (this.countUnplacedFlags(index) == this.getUndiscoveredneighbours(index).size()) {
+                    for (Integer v : this.getUndiscoveredneighbours(index)) {
+                        reponse.add(new Move(v, Coup.FLAG));
+                    }
+
+                }
+
+
+            }
+        }
+
+        return reponse;
+
+
+    }
+
+    boolean isIndexSatisfied(int index) {
+        int indice = this.gridPlayerView[index].indexValue;
+        int nbFlagPosed = 0;
+        for (Integer v : this.getSurroundingIndex(index)) {
+            if (this.gridPlayerView[v] == FLAGED) {
+                nbFlagPosed++;
+            }
+        }
+        return indice == nbFlagPosed;
+    }
+
 
 }
