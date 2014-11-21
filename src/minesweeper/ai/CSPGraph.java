@@ -26,7 +26,6 @@ public class CSPGraph implements ArtificialPlayer {
 
 
     private Grid gameGrid;
-    private Set<Move> movesToPlay;
 
     //Set<Integer> undiscoveredFrontier;
     private List<Integer> nbMatchByFrontier;
@@ -41,10 +40,15 @@ public class CSPGraph implements ArtificialPlayer {
         gameGrid = grid;
         Case[] copyGrid = grid.getCpyPlayerView();
         startTimer(delay);
+        Set<Move> movesToPlay;
 
 
         nbPossibilite = 0;
-        movesToPlay = new HashSet<Move>();
+        movesToPlay = grid.checkForSafeMoves();
+        if(!movesToPlay.isEmpty()){
+            return movesToPlay;
+        }
+
         nbMatchByFrontier = new ArrayList<Integer>();
 
 
@@ -154,17 +158,6 @@ public class CSPGraph implements ArtificialPlayer {
         Case[] grid = g.getCpyPlayerView();
 
         /*
-        * On commence par regarder si il y a des coup certain qu'on peut faire
-        * */
-        this.movesToPlay = g.checkForSafeMoves();
-
-
-        //Si aucun coup certain trouvé alors on continue
-        if (!movesToPlay.isEmpty()) {
-            return;
-        }
-
-        /*
         * Va organiser les données dans un Graph
         * C'est plus ou moins un vrai graph. Il y a 2 Liste
         * allHintNode et allFringeNode
@@ -183,14 +176,7 @@ public class CSPGraph implements ArtificialPlayer {
 
             //Reset nbPossibilite pour cette frontiere
             nbPossibilite = 0;
-            if (movesToPlay.isEmpty()) {
-                recurseCSP(hintBorder, fringeNodes, 0); //   ON LANCE LE CSP SUR CETTE FRONTIERE!!
-
-
-                //Juste un check pour debugger
-            } else if (gameGrid.checkMove(movesToPlay).isEmpty()) {
-                System.out.println("ne devrait pas");
-            }
+            recurseCSP(hintBorder, fringeNodes, 0); //   ON LANCE LE CSP SUR CETTE FRONTIERE!!
 
             nbMatchByFrontier.add(nbPossibilite);
         }
