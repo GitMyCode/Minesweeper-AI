@@ -4,7 +4,7 @@ import java.util.Set;
 
 public abstract class Variable {
 
-    private Set<Contrainte> constraints;
+    private Set<Constraint> constraints;
 
     public abstract boolean assignementIsValid();
     public abstract boolean isAssigned();

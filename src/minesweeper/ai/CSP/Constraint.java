@@ -2,7 +2,7 @@ package minesweeper.ai.CSP;
 
 import java.util.Set;
 
-public abstract class Contrainte {
+public abstract class Constraint {
 
     private Set<Variable> variables;
 

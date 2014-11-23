@@ -12,6 +12,7 @@ public abstract class CSP {
     }
 
     private Set<Variable> backtrackingSearch(List<Variable> assigned, List<Variable> unassigned) {
+        if (unassigned.isEmpty()) return assigned;
         return new HashSet<Variable>();
     }
 
