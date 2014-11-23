@@ -23,7 +23,7 @@ import static minesweeper.Direction.*;
  *   Geneviève Lalonde
  *   Nilovna Bascunan-Vasquez
  */
-public class CSP implements ArtificialPlayer{
+public class CSPAI implements ArtificialPlayer{
     /*Timer*/
     private long timer;
     private long remain;
