@@ -14,33 +14,46 @@ package minesweeper;
  */
 public class Move {
 
+    private static final int HASH = 31;
     public final Coup coup;
     public final int index;
 
-    public Move(int index, Coup coup){
+    public Move(int index, Coup coup) {
         this.coup = coup;
         this.index = index;
     }
 
-
     @Override
-    public boolean equals (Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o) {
+
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Move move = (Move) o;
 
-        if (index != move.index) return false;
-        if (coup != move.coup) return false;
+        if (this.index != move.index) {
+            return false;
+        }
+
+        if (this.coup != move.coup) {
+            return false;
+        }
 
         return true;
     }
 
-
     @Override
-    public int hashCode () {
-        int result = coup != null ? coup.hashCode() : 0;
-        result = 31 * result + index;
-        return result;
+    public int hashCode() {
+        int result = 0;
+        if (this.coup != null) {
+            result = this.coup.hashCode();
+        }
+        return (HASH * result) + index;
     }
+
 }
