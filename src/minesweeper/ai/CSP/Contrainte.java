@@ -1,7 +1,11 @@
+package minesweeper.ai.CSP;
+
+import java.util.Set;
+
 public abstract class Contrainte {
 
     private Set<Variable> variables;
 
-    boolean isViolated();
+    public abstract boolean isViolated();
  
 }

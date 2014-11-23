@@ -1,8 +1,12 @@
+package minesweeper.ai.CSP;
+
+import java.util.Set;
+
 public abstract class Variable {
 
-    private Set<Contraintes> constraints;
+    private Set<Contrainte> constraints;
 
-    boolean assignementIsValid();
-    boolean isAssigned();
+    public abstract boolean assignementIsValid();
+    public abstract boolean isAssigned();
 
 }
