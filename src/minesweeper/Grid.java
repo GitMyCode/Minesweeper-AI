@@ -406,7 +406,7 @@ public class Grid {
         return reponse;
     }
 
-    public Set<Move> checkForSafeMoves() {
+    public Set<Move> getSafeMoves() {
 
         HashSet<Move> reponse = new HashSet<Move>();
 
@@ -417,21 +417,15 @@ public class Grid {
                     for (Integer c : this.getUndiscoveredneighbours(index)) {
                         reponse.add(new Move(c, Coup.SHOW));
                     }
-
                 } else if (this.countUnplacedFlags(index) == this.getUndiscoveredneighbours(index).size()) {
                     for (Integer v : this.getUndiscoveredneighbours(index)) {
                         reponse.add(new Move(v, Coup.FLAG));
                     }
-
                 }
-
-
             }
         }
 
         return reponse;
-
-
     }
 
     boolean isIndexSatisfied(int index) {
