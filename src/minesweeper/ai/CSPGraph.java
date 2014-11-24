@@ -72,15 +72,6 @@ public class CSPGraph implements ArtificialPlayer {
         }
     }
 
-    /*
-     Etapes:
-        1) check si les contraintes des variables ne sont pas violés ( exemple un indice de 2 est entourer de 3 flag)
-            Si la cette configuration ne marche pas on backtrack
-        2) check si on est au bout de la liste de variable. Si oui alors les flag placé sont compater et chaque case 
-            de la frontiere incrément leur compter de flag si elle sont flaggé. (Pour calculer les probs)
-        3) calcul de toutes les combinaison possible de placement de drapeau autour de la variable présente.
-        4) pour chacune des combinaison trouvé. Les drapeau sont placées et on récurse.
-    **/
     boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOver {
 
         if (isTimeUp()) { throw new TimeOver(); }
