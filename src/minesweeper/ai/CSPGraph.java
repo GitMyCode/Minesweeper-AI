@@ -23,6 +23,7 @@ public class CSPGraph implements ArtificialPlayer {
     private List<Integer> nbValidAssignationsPerFrontier;
     private Grid gameGrid;
     private Graph graph;
+    private Set<Move> movesToPlay;
 
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
@@ -30,12 +31,12 @@ public class CSPGraph implements ArtificialPlayer {
         nbValidAssignations = 0;
         Case[] gridCopy = grid.getCpyPlayerView();
         startTimer(delay);
-        Set<Move> movesToPlay = grid.checkForSafeMoves();
+        this.movesToPlay = grid.checkForSafeMoves();
 
-        if(!movesToPlay.isEmpty()) { return movesToPlay; }
+        if(!this.movesToPlay.isEmpty()) { return movesToPlay; }
         nbValidAssignationsPerFrontier = new ArrayList<Integer>();
         computeMoves(grid);
-        addMovesToPlay(grid, gridCopy, movesToPlay);
+        addMovesToPlay(grid, gridCopy);
 
         return movesToPlay;
     }
@@ -50,7 +51,6 @@ public class CSPGraph implements ArtificialPlayer {
 
     private void executeMoveComputation(Grid g) throws TimeOverException {
         graph = new Graph(g);
-        System.out.println("va pour le csp");
         CSPonAllFrontiers();
     }
 
@@ -145,35 +145,33 @@ public class CSPGraph implements ArtificialPlayer {
         }
     }
 
-    private void addMovesToPlay(Grid grid, Case[] gridCopy, Set<Move> movesToPlay) {
-        if (movesToPlay.isEmpty()) {
-            addSafeMovesAndFlags(movesToPlay);
-            if (movesToPlay.isEmpty()) {
-                addRandomMove(grid, gridCopy, movesToPlay);
+    private void addMovesToPlay(Grid grid, Case[] gridCopy) {
+        if (this.movesToPlay.isEmpty()) {
+            addSafeMovesAndFlags();
+            if (this.movesToPlay.isEmpty()) {
+                addRandomMove(grid, gridCopy);
             }
         }
     }
 
-    private void addSafeMovesAndFlags(Set<Move> movesToPlay) {
-        System.out.println("essai avec les resultats csp");
+    private void addSafeMovesAndFlags() {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
-            // Cases non-découvertes qui côtoient une case découverte
             List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int nbPossibilityHere = nbValidAssignationsPerFrontier.get(frontierIndex);
 
             for (Graph.FringeNode fn : fringeNodes) {
                 if (fn.nbFlagHits == 0) {
                     // 0% Mine
-                    movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
+                    this.movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
                 } else if (fn.nbFlagHits == nbPossibilityHere) {
                     // 100% Mine
-                    movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
+                    this.movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
                 }
             }
         }
     }
 
-    private void addRandomMove(Grid grid, Case[] gridCopy, Set<Move> movesToPlay) {
+    private void addRandomMove(Grid grid, Case[] gridCopy) {
         List<Integer> legalMoves = new ArrayList<Integer>();
         for (int i = 0; i < grid.length; i++) {
             if (gridCopy[i] == UNDISCOVERED) {
@@ -183,7 +181,7 @@ public class CSPGraph implements ArtificialPlayer {
 
         Random ran = new Random();
         int index = legalMoves.get(ran.nextInt(legalMoves.size()));
-        movesToPlay.add(new Move(index, Coup.SHOW));
+        this.movesToPlay.add(new Move(index, Coup.SHOW));
     }
 
     private void startTimer(int delai) {
