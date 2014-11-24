@@ -1,22 +1,21 @@
+/**
+ * Created by martin on 18/11/14.
+ */
 package minesweeper.ai;
 
 import minesweeper.*;
 import minesweeper.Case;
 import minesweeper.Coup;
 import minesweeper.ai.utilCSP.Graph;
-import minesweeper.ai.utilCSP.TimeOver;
+import minesweeper.exceptions.TimeOverException;
 
 import static minesweeper.Case.*;
 
 import java.util.*;
 
-/**
- * Created by martin on 18/11/14.
- */
 public class CSPGraph implements ArtificialPlayer {
 
     private final int LIMITE = 10;
-
     private long timer;
     private long remain;
     private boolean END = false;
@@ -36,7 +35,7 @@ public class CSPGraph implements ArtificialPlayer {
         if(!movesToPlay.isEmpty()) { return movesToPlay; }
         nbValidAssignationsPerFrontier = new ArrayList<Integer>();
         computeMoves(grid);
-        addMoves(grid, gridCopy, movesToPlay);
+        addMovesToPlay(grid, gridCopy, movesToPlay);
 
         return movesToPlay;
     }
@@ -44,18 +43,18 @@ public class CSPGraph implements ArtificialPlayer {
     public void computeMoves(Grid g) {
         try {
             executeMoveComputation(g);
-        } catch (TimeOver ignored) {
-            System.out.println("timeout");
+        } catch (TimeOverException e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    private void executeMoveComputation(Grid g) throws TimeOver {
+    private void executeMoveComputation(Grid g) throws TimeOverException {
         graph = new Graph(g);
         System.out.println("va pour le csp");
         CSPonAllFrontiers();
     }
 
-    private void CSPonAllFrontiers() throws TimeOver {
+    private void CSPonAllFrontiers() throws TimeOverException {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             List<Graph.HintNode> hintBorder = graph.allHintNode.get(i);
             List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(i);
@@ -65,8 +64,8 @@ public class CSPGraph implements ArtificialPlayer {
         }
     }
 
-    boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOver {
-        if (isTimeUp()) { throw new TimeOver(); }
+    boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOverException {
+        if (isTimeUp()) { throw new TimeOverException(); }
         if (!allFlagsOkay(hintNodes, index)) { return false; }
 
         if (solutionFound(index, hintNodes)) {
@@ -146,7 +145,7 @@ public class CSPGraph implements ArtificialPlayer {
         }
     }
 
-    private void addMoves(Grid grid, Case[] gridCopy, Set<Move> movesToPlay) {
+    private void addMovesToPlay(Grid grid, Case[] gridCopy, Set<Move> movesToPlay) {
         if (movesToPlay.isEmpty()) {
             addSafeMovesAndFlags(movesToPlay);
             if (movesToPlay.isEmpty()) {
