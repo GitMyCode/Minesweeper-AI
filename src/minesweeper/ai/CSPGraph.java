@@ -19,19 +19,20 @@ public class CSPGraph implements ArtificialPlayer {
     private long timer;
     private long remain;
     private boolean END = false;
-    private int nbValidAssignations = 0;
-    private List<Integer> nbValidAssignationsPerFrontier;
-    private Grid gameGrid;
-    private Graph graph;
-    private Set<Move> movesToPlay;
+
+    protected int nbValidAssignations = 0;
+    protected List<Integer> nbValidAssignationsPerFrontier;
+    protected Grid gameGrid;
+    protected Graph graph;
+    protected Set<Move> movesToPlay;
 
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
-        gameGrid = grid;
-        nbValidAssignations = 0;
+        this.gameGrid = grid;
+        this.nbValidAssignations = 0;
         Case[] gridCopy = grid.getCpyPlayerView();
         startTimer(delay);
-        this.movesToPlay = grid.checkForSafeMoves();
+        this.movesToPlay = grid.getSafeMoves();
 
         if(!this.movesToPlay.isEmpty()) { return movesToPlay; }
         nbValidAssignationsPerFrontier = new ArrayList<Integer>();
@@ -41,7 +42,7 @@ public class CSPGraph implements ArtificialPlayer {
         return movesToPlay;
     }
 
-    public void computeMoves(Grid g) {
+    private void computeMoves(Grid g) {
         try {
             executeMoveComputation(g);
         } catch (TimeOverException e) {
@@ -64,7 +65,7 @@ public class CSPGraph implements ArtificialPlayer {
         }
     }
 
-    boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOverException {
+    private boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOverException {
         if (isTimeUp()) { throw new TimeOverException(); }
         if (!allFlagsOkay(hintNodes, index)) { return false; }
 
@@ -97,7 +98,7 @@ public class CSPGraph implements ArtificialPlayer {
         return false;
     }
 
-    public boolean isTimeUp() {
+    private boolean isTimeUp() {
         END = (timeRemaining() < LIMITE) ? true: END;
         return END;
     }
@@ -145,7 +146,7 @@ public class CSPGraph implements ArtificialPlayer {
         }
     }
 
-    private void addMovesToPlay(Grid grid, Case[] gridCopy) {
+    protected void addMovesToPlay(Grid grid, Case[] gridCopy) {
         if (this.movesToPlay.isEmpty()) {
             addSafeMovesAndFlags();
             if (this.movesToPlay.isEmpty()) {
@@ -154,7 +155,7 @@ public class CSPGraph implements ArtificialPlayer {
         }
     }
 
-    private void addSafeMovesAndFlags() {
+    protected void addSafeMovesAndFlags() {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
             List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int nbPossibilityHere = nbValidAssignationsPerFrontier.get(frontierIndex);
@@ -171,7 +172,7 @@ public class CSPGraph implements ArtificialPlayer {
         }
     }
 
-    private void addRandomMove(Grid grid, Case[] gridCopy) {
+    protected void addRandomMove(Grid grid, Case[] gridCopy) {
         List<Integer> legalMoves = new ArrayList<Integer>();
         for (int i = 0; i < grid.length; i++) {
             if (gridCopy[i] == UNDISCOVERED) {
