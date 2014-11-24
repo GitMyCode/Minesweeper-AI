@@ -54,35 +54,23 @@ public class CSPGraph implements ArtificialPlayer {
         }
     }
 
-    // C'est le AI en soit, tout commence par cette méthode
     private void executeMoveComputation(Grid g) throws TimeOver {
 
         Case[] grid = g.getCpyPlayerView();
-
-        /*
-        * Va organiser les données dans un Graph
-        * C'est plus ou moins un vrai graph. Il y a 2 Liste
-        * allHintNode et allFringeNode
-        * Ces deux listes contiennent toute les frontieres indépendante
-        * allHintNode: Les frontieres qui sont des indice
-        * allFringeNode: les frontieres qui sont des case non découvertes
-        **/
         graph = new Graph(g);
         System.out.println("va pour le csp");
-        int i = 0;
-        //Cette boucle ca lancer le CSP sur une frontiere a la fois.
-        for (List<Graph.HintNode> hintBorder : graph.allHintNode) {
+        CSPonAllFrontiers();
+    }
+
+    private void CSPonAllFrontiers() throws TimeOver {
+        for (int i = 0; i < graph.allHintNode.size(); i++) {
+            List<Graph.HintNode> hintBorder = graph.allHintNode.get(i);
             List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(i);
-            i++;
-
-            // Reset nbPossibilite pour cette frontiere
             nbPossibilite = 0;
-            recurseCSP(hintBorder, fringeNodes, 0); // Lancer CSP sur cette frontière
-
+            recurseCSP(hintBorder, fringeNodes, 0);
             nbMatchByFrontier.add(nbPossibilite);
         }
     }
-
 
     /*
     * C'est du CSP classique
@@ -197,14 +185,12 @@ public class CSPGraph implements ArtificialPlayer {
 
             int nbFlag = 0;
             for (Graph.FringeNode fn : neighborsFringe) {
-                if (fn.state == FLAGED) {
-                    nbFlag++;
-                }
+                if (fn.state == FLAGED) { nbFlag++; }
             }
+
             if (nbFlag != value) {
                 return false;
             }
-
         }
         return true;
     }
