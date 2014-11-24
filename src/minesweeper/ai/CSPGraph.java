@@ -15,31 +15,26 @@ import java.util.*;
  */
 public class CSPGraph implements ArtificialPlayer {
 
+    private final int LIMITE = 10;
+
     private long timer;
     private long remain;
     private boolean END = false;
-    private final int LIMITE = 10;
+    private int nbValidAssignations = 0;
+    private List<Integer> nbValidAssignationsPerFrontier;
     private Grid gameGrid;
-
-    //Set<Integer> undiscoveredFrontier;
-    private List<Integer> nbMatchByFrontier;
-    private Integer nbPossibilite = 0;
-    Graph graph;
+    private Graph graph;
 
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
-
         gameGrid = grid;
+        nbValidAssignations = 0;
         Case[] gridCopy = grid.getCpyPlayerView();
         startTimer(delay);
-        Set<Move> movesToPlay;
-        nbPossibilite = 0;
-        movesToPlay = grid.checkForSafeMoves();
+        Set<Move> movesToPlay = grid.checkForSafeMoves();
 
         if(!movesToPlay.isEmpty()) { return movesToPlay; }
-
-        // Contient le nombre de possibilités pour cette frontière
-        nbMatchByFrontier = new ArrayList<Integer>();
+        nbValidAssignationsPerFrontier = new ArrayList<Integer>();
         computeMoves(grid);
         addMoves(grid, gridCopy, movesToPlay);
 
@@ -55,8 +50,6 @@ public class CSPGraph implements ArtificialPlayer {
     }
 
     private void executeMoveComputation(Grid g) throws TimeOver {
-
-        Case[] grid = g.getCpyPlayerView();
         graph = new Graph(g);
         System.out.println("va pour le csp");
         CSPonAllFrontiers();
@@ -66,21 +59,19 @@ public class CSPGraph implements ArtificialPlayer {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             List<Graph.HintNode> hintBorder = graph.allHintNode.get(i);
             List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(i);
-            nbPossibilite = 0;
+            nbValidAssignations = 0;
             recurseCSP(hintBorder, fringeNodes, 0);
-            nbMatchByFrontier.add(nbPossibilite);
+            nbValidAssignationsPerFrontier.add(nbValidAssignations);
         }
     }
 
     boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOver {
-
         if (isTimeUp()) { throw new TimeOver(); }
         if (!allFlagsOkay(hintNodes, index)) { return false; }
 
-        // Solution trouvée
-        if (index >= hintNodes.size()) {
+        if (solutionFound(index, hintNodes)) {
             computeFlagHits(fringeNodes);
-            nbPossibilite++;
+            nbValidAssignations++;
             return true;
         }
 
@@ -107,6 +98,11 @@ public class CSPGraph implements ArtificialPlayer {
         return false;
     }
 
+    public boolean isTimeUp() {
+        END = (timeRemaining() < LIMITE) ? true: END;
+        return END;
+    }
+
     private boolean allFlagsOkay(List<Graph.HintNode> hintNodes, int nbDone) {
         for (int i = 0; i < nbDone; i++) {
             Graph.HintNode hintNode = hintNodes.get(i);
@@ -124,6 +120,10 @@ public class CSPGraph implements ArtificialPlayer {
             }
         }
         return true;
+    }
+
+    private boolean solutionFound(int index, List<Graph.HintNode> hintNodes) {
+        return (index >= hintNodes.size());
     }
 
     private void computeFlagHits(List<Graph.FringeNode> fringeNodes) {
@@ -160,7 +160,7 @@ public class CSPGraph implements ArtificialPlayer {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
             // Cases non-découvertes qui côtoient une case découverte
             List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
-            int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
+            int nbPossibilityHere = nbValidAssignationsPerFrontier.get(frontierIndex);
 
             for (Graph.FringeNode fn : fringeNodes) {
                 if (fn.nbFlagHits == 0) {
@@ -198,11 +198,6 @@ public class CSPGraph implements ArtificialPlayer {
     public long timeRemaining() {
         long elaspsed = (System.currentTimeMillis() - timer);
         return remain - elaspsed;
-    }
-
-    public boolean isTimeUp() {
-        END = (timeRemaining() < LIMITE) ? true: END;
-        return END;
     }
 
     @Override
