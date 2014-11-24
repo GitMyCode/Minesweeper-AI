@@ -104,40 +104,19 @@ public class CSPGraph implements ArtificialPlayer {
         List<Graph.FringeNode> undiscoveredFringe = variableToSatisfy.getUndiscoveredFringe();
         ArrayList<int[]> allFlagCombinations = variableToSatisfy.getAllFlagCombinations();
 
-        for (int[] oneCombination : allFlagCombinations) {
-
-            //Garder en  memoire le nb de flag a placer ici parce que variableToSatisfy va changer au moment de recurser
+        for (int[] combination : allFlagCombinations) {
+            // Nécessaire pour la récursion
             int nbFlagToPlaceHere = variableToSatisfy.nbFlagToPlace;
 
-            /*
-            * On place les flags sur cases
-            * */
-            for (int i = 0; i < nbFlagToPlaceHere; i++) {
-                Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
-                fringeToFlag.state = FLAGED;
-            }
-            //CSP pour la prochaine variable!
+            addFlagsToUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
             recurseCSP(hintNodes, fringeNodes, index + 1);
-
-            /*
-            * On retire les flags préalablement posé
-            * */
-            for (int i = 0; i < nbFlagToPlaceHere; i++) {
-                Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
-                fringeToFlag.state = UNDISCOVERED;
-            }
+            removeFlagsFromUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
         }
 
         return false;
     }
 
-    private void computeFlagHits(List<Graph.FringeNode> fringeNodes) {
-        for (Graph.FringeNode fn : fringeNodes) {
-            if (fn.state == FLAGED) { fn.nbFlagHits++; }
-        }
-    }
-
-    boolean allFlagsOkay(List<Graph.HintNode> hintNodes, int nbDone) {
+    private boolean allFlagsOkay(List<Graph.HintNode> hintNodes, int nbDone) {
         for (int i = 0; i < nbDone; i++) {
             Graph.HintNode hintNode = hintNodes.get(i);
             int value = hintNode.value;
@@ -156,6 +135,25 @@ public class CSPGraph implements ArtificialPlayer {
         return true;
     }
 
+    private void computeFlagHits(List<Graph.FringeNode> fringeNodes) {
+        for (Graph.FringeNode fn : fringeNodes) {
+            if (fn.state == FLAGED) { fn.nbFlagHits++; }
+        }
+    }
+
+    private void addFlagsToUndiscoveredFringe(List<Graph.FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+        for (int i = 0; i < nbFlagToPlaceHere; i++) {
+            Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
+            fringeToFlag.state = FLAGED;
+        }
+    }
+
+    private void removeFlagsFromUndiscoveredFringe(List<Graph.FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+        for (int i = 0; i < nbFlagToPlaceHere; i++) {
+            Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
+            fringeToFlag.state = UNDISCOVERED;
+        }
+    }
 
     private void addMoves(Grid grid, Case[] gridCopy, Set<Move> movesToPlay) {
         if (movesToPlay.isEmpty()) {

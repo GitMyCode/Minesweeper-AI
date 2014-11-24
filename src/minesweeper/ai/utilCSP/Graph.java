@@ -376,17 +376,10 @@ public class Graph {
             for(Integer v : undiscov){
                 this.connectedFringe.add(new FringeNode(v));
             }
-
         }
 
-        public boolean isOverAssigned() {
-            return this.nbFlagToPlace < 0;
-        }
-
-        public boolean isSatisfied() {
-            return this.nbFlagToPlace == 0;
-        }
-
+        public boolean isOverAssigned() { return this.nbFlagToPlace < 0; }
+        public boolean isSatisfied() { return this.nbFlagToPlace == 0; }
 
         /*
         * TODO je ne suis pas sur que ce soit safe
