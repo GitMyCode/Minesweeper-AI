@@ -338,6 +338,16 @@ public class Graph {
             connectedFringe = new LinkedHashSet<FringeNode>();
         }
 
+        public List<FringeNode> getUndiscoveredFringe() {
+            List<Graph.FringeNode> undiscoveredFringe = new ArrayList<Graph.FringeNode>();
+            for (Graph.FringeNode fn : connectedFringe) {
+                if (fn.state == UNDISCOVERED) {
+                    undiscoveredFringe.add(fn);
+                }
+            }
+            return undiscoveredFringe;
+        }
+
         public void makeConnectedFringe(Set<Integer> undiscov){
             for(Integer v : undiscov){
                 this.connectedFringe.add(new FringeNode(v));

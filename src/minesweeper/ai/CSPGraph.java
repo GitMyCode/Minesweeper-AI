@@ -88,53 +88,26 @@ public class CSPGraph implements ArtificialPlayer {
     **/
     boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOver {
 
-        //Si on dépasse le thinkDelay
-        if (isTimeUp()) {
-            throw new TimeOver();
-        }
-
-        // Vérifie si jusqu`a maintenant toute les variables (la frontiere avec les indices) sont satisfaites
+        if (isTimeUp()) { throw new TimeOver(); }
         if (!allFlagsOkay(hintNodes, index)) { return false; }
 
-        // Quand on est arrivé au bout de la frontiere et que tout marche, une disposition(solution CSP) est trouvé!
+        // Solution trouvée
         if (index >= hintNodes.size()) {
-            /*
-            * on passe sur tout les nodes et on check si il y un flag.
-            * Si oui alors on incrément le compteur de flags
-            *   C'est ce qui sera utiliser pour les probabilité. Si le compteur est a 5 et le nbPossiblité a 10 alors ce node a 50% d'avoir un flag
-            * */
-            for (Graph.FringeNode fn : fringeNodes) {
-                if (fn.state == FLAGED) {
-                    fn.nbFlagHits++;
-                }
-            }
-            //Puisqu'on a trouvé une disposition valide on incrément le nombre de possibilité pour cette frontiere
+            computeFlagHits(fringeNodes);
             nbPossibilite++;
             return true;
         }
 
-        // On passe a la prochaine variable a satisfaire
         Graph.HintNode variableToSatisfy = hintNodes.get(index);
-        // Update la variable puisqu'on a peut etre flag certainte de ses cases autour.
         variableToSatisfy.updateSurroundingAwareness();
 
-        // Un check pour voir si la variable a trop de flag autour d'elle on backtrack
-        if (variableToSatisfy.nbFlagToPlace < 0) {
-            return false;
-        }
-        // Si la variable est déja satisfaite alors on passe a la suivante!
+        if (variableToSatisfy.nbFlagToPlace < 0) { return false; }
         if (variableToSatisfy.nbFlagToPlace == 0) {
+            // Si la variable est déja satisfaite alors on passe a la suivante!
             return recurseCSP(hintNodes, fringeNodes, index + 1);
         }
 
-        // On va chercher cases non decouvertes voisin
-        Set<Graph.FringeNode> neighborsFringe = variableToSatisfy.connectedFringe;
-        List<Graph.FringeNode> undiscoveredFringe = new ArrayList<Graph.FringeNode>();
-        for (Graph.FringeNode fn : neighborsFringe) {
-            if (fn.state == UNDISCOVERED) {
-                undiscoveredFringe.add(fn);
-            }
-        }
+        List<Graph.FringeNode> undiscoveredFringe = variableToSatisfy.getUndiscoveredFringe();
 
         /*
         * Mon but est d'avoir tout les combinaisons du nombre de flags qui me reste a placer pour cette variables sur
@@ -174,6 +147,12 @@ public class CSPGraph implements ArtificialPlayer {
         }
 
         return false;
+    }
+
+    private void computeFlagHits(List<Graph.FringeNode> fringeNodes) {
+        for (Graph.FringeNode fn : fringeNodes) {
+            if (fn.state == FLAGED) { fn.nbFlagHits++; }
+        }
     }
 
     boolean allFlagsOkay(List<Graph.HintNode> hintNodes, int nbDone) {
