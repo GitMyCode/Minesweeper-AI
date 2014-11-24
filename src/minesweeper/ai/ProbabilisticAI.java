@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-public class ProbabilisticAI extends CSPGraph{
+public class ProbabilisticAI extends CSPGraph {
 
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
@@ -32,7 +32,9 @@ public class ProbabilisticAI extends CSPGraph{
 
             for (Graph.FringeNode fn : fringeNodes) {
                 fn.computeMineProbability(totalValidAssignations);
-                if (fn.isObviousMine()) this.movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
+                if (fn.isObviousMine()) {
+                    this.movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
+                }
                 allProbabilities.offer(fn);
             }
         }
