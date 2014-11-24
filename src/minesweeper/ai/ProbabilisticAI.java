@@ -1,20 +1,17 @@
 package minesweeper.ai;
 
-import minesweeper.ArtificialPlayer;
 import minesweeper.Grid;
 import minesweeper.Move;
 
 import java.util.Set;
 
-public class ProbabilisticAI implements ArtificialPlayer {
+public class ProbabilisticAI extends CSPGraph{
 
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
-        return null;
+        return super.getNextMoves(grid, delay);
     }
 
     @Override
-    public String getName() {
-        return "Probabilistic AI";
-    }
+    public String getName() { return "Probabilistic AI"; }
 }
