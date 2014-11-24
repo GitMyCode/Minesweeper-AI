@@ -128,7 +128,7 @@ public class CSPGraph implements ArtificialPlayer {
 
     private void computeFlagHits(List<Graph.FringeNode> fringeNodes) {
         for (Graph.FringeNode fn : fringeNodes) {
-            if (fn.state == FLAGED) { fn.nbFlagHits++; }
+            if (fn.state == FLAGED) { fn.nbFlagsHit++; }
         }
     }
 
@@ -161,10 +161,10 @@ public class CSPGraph implements ArtificialPlayer {
             int nbPossibilityHere = nbValidAssignationsPerFrontier.get(frontierIndex);
 
             for (Graph.FringeNode fn : fringeNodes) {
-                if (fn.nbFlagHits == 0) {
+                if (fn.nbFlagsHit == 0) {
                     // 0% Mine
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
-                } else if (fn.nbFlagHits == nbPossibilityHere) {
+                } else if (fn.nbFlagsHit == nbPossibilityHere) {
                     // 100% Mine
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
                 }

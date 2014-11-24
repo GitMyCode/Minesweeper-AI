@@ -413,19 +413,22 @@ public class Graph {
         }
     }
 
-
-    public class FringeNode extends Node{
+    public class FringeNode extends Node implements Comparable {
         public float probabilityMine = 0.5f;
-        public int nbFlagHits =0;
+        public int nbFlagsHit = 0;
         public Set<HintNode> hintNodes;
-
         public Case state = UNDISCOVERED;
-
 
         public FringeNode(int index){
             super(index);
             hintNodes = new LinkedHashSet<HintNode>();
         }
+
+        public void computeMineProbability(int totalAssignations) {
+            this.probabilityMine = (float)this.nbFlagsHit / totalAssignations;
+        }
+
+        public boolean isObviousMine() { return this.probabilityMine == 1; }
 
         @Override
         public boolean equals(Object obj) {
@@ -436,8 +439,17 @@ public class Graph {
         public int hashCode() {
             return super.hashCode();
         }
+
+        @Override
+        public int compareTo(Object o) {
+            FringeNode other = (FringeNode) o;
+            if (this.probabilityMine < other.probabilityMine) return -1;
+            else if (this.probabilityMine > other.probabilityMine) return 1;
+            return 0;
+        }
+
+        public String toString() {
+            return "Probability of Mine : " + (this.probabilityMine*100) + "%";
+        }
     }
-
-
-
 }
