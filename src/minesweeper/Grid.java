@@ -1,11 +1,22 @@
 package minesweeper;
 
+import minesweeper.Coup;
+import minesweeper.Case;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Set;
+import java.util.Scanner;
+import java.util.Random;
+import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.EnumSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Arrays;
 
 public class Grid {
 
@@ -58,7 +69,7 @@ public class Grid {
         this.nbMinesRemaining = nbMines;
         this.gridPlayerView = new Case[nbCols * nbLignes];
 
-        Arrays.fill(gridPlayerView, UNDISCOVERED);
+        Arrays.fill(gridPlayerView, Case.UNDISCOVERED);
 
         underneathValues = createRandomGrid(nbLignes, nbCols, nbMines);
 
@@ -66,7 +77,7 @@ public class Grid {
 
     private Case[] createRandomGrid(int nbLignes, int nbColonnes, int nbMines) {
         Case[] grid = new Case[nbColonnes * nbLignes];
-        Arrays.fill(grid, EMPTY);
+        Arrays.fill(grid, Case.EMPTY);
         placeMinesRandomly(grid, nbMines);
         generateValues(grid);
         return grid;
@@ -78,10 +89,10 @@ public class Grid {
 
         for (int i = 0; i < nbMines; i++) {
             int nextMine = rand.nextInt(grid.length);
-            if (grid[nextMine] == MINE) {
+            if (grid[nextMine] == Case.MINE) {
                 i--;
             } else {
-                grid[nextMine] = MINE;
+                grid[nextMine] = Case.MINE;
             }
         }
     }
@@ -91,10 +102,10 @@ public class Grid {
         for (int i = 0; i < grid.length; i++) {
             int value = 0;
 
-            if (grid[i] != MINE) {
+            if (grid[i] != Case.MINE) {
                 for (Direction d : Direction.values()) {
                     int index = i + step(d);
-                    if (isStepThisDirInGrid(d, i) && grid[index] == MINE) {
+                    if (this.isInGrid(index) && grid[index] == Case.MINE) {
                         value++;
                     }
                 }
@@ -103,26 +114,9 @@ public class Grid {
         }
     }
 
-    /*
-    * TODO
-    * Pour debuggage seulement Ne doit pas etre utiliser comme strategie dans
-    * Les AI
-    * */
-    public Set<Move> checkMove(Set<Move> moves) {
-        Set<Move> badMoves = new LinkedHashSet<Move>();
-        for (Move m : moves) {
-            if (underneathValues[m.index] != Case.MINE && m.coup == Coup.FLAG) {
-                badMoves.add(m);
-            } else if (underneathValues[m.index] == Case.MINE && m.coup == Coup.SHOW) {
-                badMoves.add(m);
-            }
-        }
-        return badMoves;
-    }
-
     public boolean isValid() {
         for (int i = 0; i < this.length; i++) {
-            if (this.underneathValues[i] != MINE && this.gridPlayerView[i] == FLAGED) {
+            if (this.underneathValues[i] != Case.MINE && this.gridPlayerView[i] == Case.FLAGED) {
                 return false;
             }
         }
@@ -136,31 +130,31 @@ public class Grid {
         List<Integer> list = new ArrayList<Integer>();
 
 
-        if (isStepThisDirInGrid(Direction.RIGHT, index)) {
+        if (isInGrid(index + step(Direction.RIGHT))) {
             list.add(index + step(Direction.RIGHT));
         }
-        if (isStepThisDirInGrid(Direction.DOWN, index)) {
+        if (isInGrid(index + step(Direction.DOWN))) {
             list.add(index + step(Direction.DOWN));
         }
 
-        if (isStepThisDirInGrid(Direction.TOP, index)) {
+        if (isInGrid(index + step(Direction.TOP))) {
             list.add(index + step(Direction.TOP));
         }
 
-        if (isStepThisDirInGrid(Direction.LEFT, index)) {
+        if (isInGrid(index + step(Direction.LEFT))) {
             list.add(index + step(Direction.LEFT));
         }
 
-        if (isStepThisDirInGrid(Direction.TOPLEFT, index)) {
+        if (isInGrid(index + step(Direction.TOPLEFT))) {
             list.add(index + step(Direction.TOPLEFT));
         }
-        if (isStepThisDirInGrid(Direction.TOPRIGHT, index)) {
+        if (isInGrid(index + step(Direction.TOPRIGHT))) {
             list.add(index + step(Direction.TOPRIGHT));
         }
-        if (isStepThisDirInGrid(Direction.DOWNLEFT, index)) {
+        if (isInGrid(index + step(Direction.DOWNLEFT))) {
             list.add(index + step(Direction.DOWNLEFT));
         }
-        if (isStepThisDirInGrid(Direction.DOWNRIGHT, index)) {
+        if (isInGrid(index + step(Direction.DOWNRIGHT))) {
             list.add(index + step(Direction.DOWNRIGHT));
         }
 
@@ -192,9 +186,9 @@ public class Grid {
         Set<Integer> set = new HashSet<Integer>();
 
         for (Direction d: Direction.direction8) {
-            if (isStepThisDirInGrid(d, index)) {
+            if (isInGrid(index + step(d))) {
                 int voisin = index + step(d);
-                if (grid[voisin] == UNDISCOVERED) {
+                if (grid[voisin] == Case.UNDISCOVERED) {
                     set.add(voisin);
                 }
             }
@@ -212,11 +206,11 @@ public class Grid {
     public void showAllCases() {
 
         for (int i = 0; i < length; i++) {
-            if (gridPlayerView[i] == FLAGED && underneathValues[i] == MINE) {
-                gridPlayerView[i] = DEFUSED;
-            } else if (gridPlayerView[i] == FLAGED && underneathValues[i] != MINE) {
-                gridPlayerView[i] = ERROR_FLAG;
-            } else if (gridPlayerView[i] != BLOW) {
+            if (gridPlayerView[i] == Case.FLAGED && underneathValues[i] == Case.MINE) {
+                gridPlayerView[i] = Case.DEFUSED;
+            } else if (gridPlayerView[i] == Case.FLAGED && underneathValues[i] != Case.MINE) {
+                gridPlayerView[i] = Case.ERROR_FLAG;
+            } else if (gridPlayerView[i] != Case.BLOW) {
                 gridPlayerView[i] = underneathValues[i];
             }
         }
@@ -248,7 +242,7 @@ public class Grid {
         this.nbMinesRemaining = nbMines;
 
         for (int i = 0; i < length; i++) {
-            this.gridPlayerView[i] = UNDISCOVERED;
+            this.gridPlayerView[i] = Case.UNDISCOVERED;
         }
 
         underneathValues = createRandomGrid(nbLignes, nbCols, nbMines);
@@ -269,7 +263,7 @@ public class Grid {
         } else {
 
             for (Case c: gridPlayerView) {
-                if (c == UNDISCOVERED) {
+                if (c == Case.UNDISCOVERED) {
                     reponse = false;
                     break;
                 }
@@ -283,10 +277,10 @@ public class Grid {
 
     private void playFlag(int index) {
         Case theCase = gridPlayerView[index];
-        if (theCase == UNDISCOVERED) {
+        if (theCase == Case.UNDISCOVERED) {
             nbFlagsRemaining--;
-            gridPlayerView[index] = FLAGED;
-            if (underneathValues[index] == MINE) {
+            gridPlayerView[index] = Case.FLAGED;
+            if (underneathValues[index] == Case.MINE) {
                 nbMinesRemaining--;
             }
         }
@@ -294,28 +288,28 @@ public class Grid {
 
     private void playUNFlag(int index) {
 
-        if (gridPlayerView[index] == FLAGED) {
+        if (gridPlayerView[index] == Case.FLAGED) {
             nbFlagsRemaining++;
-            gridPlayerView[index] = UNDISCOVERED;
+            gridPlayerView[index] = Case.UNDISCOVERED;
         }
 
     }
 
     private void playUndiscoveredCase(int index) {
 
-        if (gridPlayerView[index] == UNDISCOVERED) {
+        if (gridPlayerView[index] == Case.UNDISCOVERED) {
 
             gridPlayerView[index] = underneathValues[index];
-            if (underneathValues[index] == MINE) {
-                gridPlayerView[index] = BLOW;
+            if (underneathValues[index] == Case.MINE) {
+                gridPlayerView[index] = Case.BLOW;
                 this.gameLost = true;
             }
 
 
-            if (underneathValues[index] == EMPTY) {
+            if (underneathValues[index] == Case.EMPTY) {
                 for (Direction d : Direction.values()) {
                     int indexVoisin = index + step(d);
-                    if (isStepThisDirInGrid(d, index) && gridPlayerView[indexVoisin].equals(UNDISCOVERED)) {
+                    if (isInGrid(index + step(d)) && gridPlayerView[indexVoisin].equals(Case.UNDISCOVERED)) {
                         playUndiscoveredCase(indexVoisin);
                     }
                 }
@@ -324,50 +318,12 @@ public class Grid {
         }
     }
 
-    public boolean isStepThisDirInGrid(Direction d, int index) {
-
-        for (Direction dir : d.getCompDir()) {
-            switch (dir) {
-                case DOWN:
-                    if (index < 0 || index >= length) {
-                        return false;
-                    }
-                    if (!((index + nbCols) < length)) {
-                        return false;
-                    }
-                    break;
-                case TOP:
-                    if (index < 0 || index >= length) {
-                        return false;
-                    }
-                    if (!((index + stepUtility(Direction.TOP)) >= 0)) {
-                        return false;
-                    }
-                    break;
-                case LEFT:
-                    if (index < 0 || index >= length) {
-                        return false;
-                    }
-                    if (!(((index % nbCols + 1) >= 2))) {
-                        return false;
-                    }
-                    break;
-                case RIGHT:
-                    if (index < 0 || index >= length) {
-                        return false;
-                    }
-                    if (!((nbCols - (index % nbCols)) >= 2)) {
-                        return false;
-                    }
-                    break;
-                default:
-                    break;
-            }
+    public boolean isInGrid(int index) {
+        if (index < 0 || index >= length) {
+            return false;
         }
         return true;
     }
-
-
 
     /*
     * WARNING: YOU must check if the next position is in the grid before this methode
@@ -383,8 +339,6 @@ public class Grid {
         }
         return step;
     }
-
-
 
     private int stepUtility(Direction dir) {
         switch (dir) {
@@ -435,7 +389,7 @@ public class Grid {
     public int countUnplacedFlags(int index) {
         int reponse = this.gridPlayerView[index].indexValue;
         for (Integer v : this.getSurroundingIndex(index)) {
-            if (this.gridPlayerView[v] == FLAGED) {
+            if (this.gridPlayerView[v] == Case.FLAGED) {
                 reponse--;
             }
         }
@@ -445,7 +399,7 @@ public class Grid {
     public Set<Integer> getUndiscoveredneighbours(int index) {
         Set<Integer> reponse = new LinkedHashSet<Integer>();
         for (Integer i : this.getSurroundingIndex(index)) {
-            if (this.gridPlayerView[i] == UNDISCOVERED) {
+            if (this.gridPlayerView[i] == Case.UNDISCOVERED) {
                 reponse.add(i);
             }
         }
@@ -484,12 +438,11 @@ public class Grid {
         int indice = this.gridPlayerView[index].indexValue;
         int nbFlagPosed = 0;
         for (Integer v : this.getSurroundingIndex(index)) {
-            if (this.gridPlayerView[v] == FLAGED) {
+            if (this.gridPlayerView[v] == Case.FLAGED) {
                 nbFlagPosed++;
             }
         }
         return indice == nbFlagPosed;
     }
-
 
 }
