@@ -330,8 +330,6 @@ public class Graph {
         public int nbFlagToPlace;
         public int nbUndiscoveredNeighbors;
 
-
-
         public HintNode(int index){
             super(index);
             this.value = getNbFlagToPlace(caseGrille,index);
@@ -348,12 +346,47 @@ public class Graph {
             return undiscoveredFringe;
         }
 
+        public ArrayList<int[]> getAllFlagCombinations() {
+            int[] combination = new int[this.nbFlagToPlace];
+            ArrayList<int[]> listCombination = new ArrayList<int[]>();
+            generateFlagCombinations(0, this.nbFlagToPlace, this.getUndiscoveredFringe().size(), combination, listCombination);
+
+            return listCombination;
+        }
+
+        public void generateFlagCombinations(int index, int nbFlag, int nbCase, int[] combinaison, ArrayList<int[]> listeC) {
+            if (nbFlag == 0) {
+                return;
+            }
+            if (index >= nbFlag) {
+
+                int[] newCombinaison = combinaison.clone();
+                listeC.add(newCombinaison);
+                return;
+            }
+            int start = 0;
+            if (index > 0) start = combinaison[index - 1] + 1;
+            for (int i = start; i < nbCase; i++) {
+                combinaison[index] = i;
+                generateFlagCombinations(index + 1, nbFlag, nbCase, combinaison, listeC);
+            }
+        }
+
         public void makeConnectedFringe(Set<Integer> undiscov){
             for(Integer v : undiscov){
                 this.connectedFringe.add(new FringeNode(v));
             }
 
         }
+
+        public boolean isOverAssigned() {
+            return this.nbFlagToPlace < 0;
+        }
+
+        public boolean isSatisfied() {
+            return this.nbFlagToPlace == 0;
+        }
+
 
         /*
         * TODO je ne suis pas sur que ce soit safe

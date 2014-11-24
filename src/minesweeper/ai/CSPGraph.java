@@ -73,11 +73,6 @@ public class CSPGraph implements ArtificialPlayer {
     }
 
     /*
-    * C'est du CSP classique
-    * Les cases avec des indices (hintNodes) sont l'équivalent des "variables" en CSP
-    * On satisfait les variable une a une en priorisant celle qui sont côte a côte (selon l'heuristique 
-    * du choix de la variable la plus contraignante)
-    
      Etapes:
         1) check si les contraintes des variables ne sont pas violés ( exemple un indice de 2 est entourer de 3 flag)
             Si la cette configuration ne marche pas on backtrack
@@ -101,28 +96,15 @@ public class CSPGraph implements ArtificialPlayer {
         Graph.HintNode variableToSatisfy = hintNodes.get(index);
         variableToSatisfy.updateSurroundingAwareness();
 
-        if (variableToSatisfy.nbFlagToPlace < 0) { return false; }
-        if (variableToSatisfy.nbFlagToPlace == 0) {
-            // Si la variable est déja satisfaite alors on passe a la suivante!
+        if (variableToSatisfy.isOverAssigned()) { return false; }
+        if (variableToSatisfy.isSatisfied()) {
             return recurseCSP(hintNodes, fringeNodes, index + 1);
         }
 
         List<Graph.FringeNode> undiscoveredFringe = variableToSatisfy.getUndiscoveredFringe();
+        ArrayList<int[]> allFlagCombinations = variableToSatisfy.getAllFlagCombinations();
 
-        /*
-        * Mon but est d'avoir tout les combinaisons du nombre de flags qui me reste a placer pour cette variables sur
-        * les cases disponibles autour d'elle
-        *
-        *Ce que vont faire ces 2 ou 3 prochaine ligne c'est : http://fr.wikipedia.org/wiki/Combinaison_(math%C3%A9matiques)
-        * */
-        int[] combination = new int[variableToSatisfy.nbFlagToPlace];
-        ArrayList<int[]> listcombination = new ArrayList<int[]>();
-        combinaisonFlag(0, variableToSatisfy.nbFlagToPlace, undiscoveredFringe.size(), combination, listcombination);
-
-        /*
-        * Itere sur les combinaisons trouvé
-        * */
-        for (int[] oneCombination : listcombination) {
+        for (int[] oneCombination : allFlagCombinations) {
 
             //Garder en  memoire le nb de flag a placer ici parce que variableToSatisfy va changer au moment de recurser
             int nbFlagToPlaceHere = variableToSatisfy.nbFlagToPlace;
@@ -174,34 +156,6 @@ public class CSPGraph implements ArtificialPlayer {
         return true;
     }
 
-    /*
-    * C'est simlement l'implementation de C(n,p) exemple : http://calculis.net/combinaison
-    * nbFlag  = p
-    * nbCase = n
-    * EXEMPLE:
-    * Si  : nbFlag = 2 et nbCase= 3  -> C(2,3)
-    * voici ce qui sera retourné dans listC
-    *  [0, 1],
-    *  [0, 2],
-    *  [1, 2]
-    * */
-    public void combinaisonFlag(int index, int nbFlag, int nbCase, int[] combinaison, ArrayList<int[]> listeC) {
-        if (nbFlag == 0) {
-            return;
-        }
-        if (index >= nbFlag) {
-
-            int[] newCombinaison = combinaison.clone();
-            listeC.add(newCombinaison);
-            return;
-        }
-        int start = 0;
-        if (index > 0) start = combinaison[index - 1] + 1;
-        for (int i = start; i < nbCase; i++) {
-            combinaison[index] = i;
-            combinaisonFlag(index + 1, nbFlag, nbCase, combinaison, listeC);
-        }
-    }
 
     private void addMoves(Grid grid, Case[] gridCopy, Set<Move> movesToPlay) {
         if (movesToPlay.isEmpty()) {
