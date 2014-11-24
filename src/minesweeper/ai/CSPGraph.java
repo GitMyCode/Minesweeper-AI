@@ -30,56 +30,18 @@ public class CSPGraph implements ArtificialPlayer {
     public Set<Move> getNextMoves(Grid grid, int delay) {
 
         gameGrid = grid;
-        Case[] copyGrid = grid.getCpyPlayerView();
+        Case[] gridCopy = grid.getCpyPlayerView();
         startTimer(delay);
         Set<Move> movesToPlay;
-
         nbPossibilite = 0;
         movesToPlay = grid.checkForSafeMoves();
-        if(!movesToPlay.isEmpty()){
-            return movesToPlay;
-        }
 
-        // Contient le nombre de possibilité pour cette frontière
+        if(!movesToPlay.isEmpty()) { return movesToPlay; }
+
+        // Contient le nombre de possibilités pour cette frontière
         nbMatchByFrontier = new ArrayList<Integer>();
         computeMoves(grid);
-
-        // Choix du coup à jouer
-        if (movesToPlay.isEmpty()) {
-
-            System.out.println("essai avec les resultats csp");
-            for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
-                // Cases non-découvertes qui côtoient une case découverte
-                List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
-                int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
-
-                for (Graph.FringeNode fn : fringeNodes) {
-                    if (fn.nbFlagHits == 0) {
-                        // 0% Mine
-                        movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
-                    } else if (fn.nbFlagHits == nbPossibilityHere) {
-                        // 100% Mine
-                        movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
-                    }
-                }
-            }
-        }
-
-        if (isTimeUp()) { System.out.println("Time UP!"); }
-
-        // Si aucun coup sur a été trouvé alors on essai au hasard
-        if (movesToPlay.isEmpty()) {
-            List<Integer> legalMoves = new ArrayList<Integer>();
-            for (int i = 0; i < grid.length; i++) {
-                if (copyGrid[i] == UNDISCOVERED) {
-                    legalMoves.add(i);
-                }
-            }
-
-            Random ran = new Random();
-            int index = legalMoves.get(ran.nextInt(legalMoves.size()));
-            movesToPlay.add(new Move(index, Coup.SHOW));
-        }
+        addMoves(grid, gridCopy, movesToPlay);
 
         return movesToPlay;
     }
@@ -120,6 +82,7 @@ public class CSPGraph implements ArtificialPlayer {
             nbMatchByFrontier.add(nbPossibilite);
         }
     }
+
 
     /*
     * C'est du CSP classique
@@ -273,6 +236,47 @@ public class CSPGraph implements ArtificialPlayer {
             combinaison[index] = i;
             combinaisonFlag(index + 1, nbFlag, nbCase, combinaison, listeC);
         }
+    }
+
+    private void addMoves(Grid grid, Case[] gridCopy, Set<Move> movesToPlay) {
+        if (movesToPlay.isEmpty()) {
+            addSafeMovesAndFlags(movesToPlay);
+            if (movesToPlay.isEmpty()) {
+                addRandomMove(grid, gridCopy, movesToPlay);
+            }
+        }
+    }
+
+    private void addSafeMovesAndFlags(Set<Move> movesToPlay) {
+        System.out.println("essai avec les resultats csp");
+        for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
+            // Cases non-découvertes qui côtoient une case découverte
+            List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
+            int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
+
+            for (Graph.FringeNode fn : fringeNodes) {
+                if (fn.nbFlagHits == 0) {
+                    // 0% Mine
+                    movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
+                } else if (fn.nbFlagHits == nbPossibilityHere) {
+                    // 100% Mine
+                    movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
+                }
+            }
+        }
+    }
+
+    private void addRandomMove(Grid grid, Case[] gridCopy, Set<Move> movesToPlay) {
+        List<Integer> legalMoves = new ArrayList<Integer>();
+        for (int i = 0; i < grid.length; i++) {
+            if (gridCopy[i] == UNDISCOVERED) {
+                legalMoves.add(i);
+            }
+        }
+
+        Random ran = new Random();
+        int index = legalMoves.get(ran.nextInt(legalMoves.size()));
+        movesToPlay.add(new Move(index, Coup.SHOW));
     }
 
     private void startTimer(int delai) {
