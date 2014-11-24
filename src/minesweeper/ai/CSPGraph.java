@@ -15,7 +15,6 @@ import java.util.*;
  */
 public class CSPGraph implements ArtificialPlayer {
 
-    /*Timer*/
     private long timer;
     private long remain;
     private boolean END = false;
@@ -41,46 +40,25 @@ public class CSPGraph implements ArtificialPlayer {
             return movesToPlay;
         }
 
+        // Contient le nombre de possibilité pour cette frontière
         nbMatchByFrontier = new ArrayList<Integer>();
+        computeMoves(grid);
 
-        /*
-        * On lance le AI
-        * nb: Ne faites pas attention au Try Catch c'est juste pour quitter la fonction si on timeout
-        * */
-        try {
-            calculateMoves(grid);
-        } catch (TimeOver ignored) {
-            System.out.println("timeout");
-        }
-
-        /*
-        * Une fois qu'on a fini d'analyser on va maintenant choisir les coup a jouer
-        *
-        * params:
-        *   nbMatchByFrontier :
-        *       C'est dans cette liste que j'ai gardé le nombre de possibilité pour cette frontière
-        *       Par exemple, un frontière qui permet 10 combinaisons différentes de positions de flags aura 10 possibilités
-        *   fringeNodes :
-        *       C'est les cases non-découvertes qui côtoient une case découverte (un indice)
-        **/
+        // Choix du coup à jouer
         if (movesToPlay.isEmpty()) {
 
             System.out.println("essai avec les resultats csp");
             for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
+                // Cases non-découvertes qui côtoient une case découverte
                 List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
-
                 int nbPossibilityHere = nbMatchByFrontier.get(frontierIndex);
+
                 for (Graph.FringeNode fn : fringeNodes) {
-
-                    //Donc 0% des chances
                     if (fn.nbFlagHits == 0) {
+                        // 0% Mine
                         movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
-
-                    /*
-                    * Si ce noeud a recu un flag sur toute les dispositions valid de flags sur la frontiere
-                    * Alors c'est qu'il y a 100% des chance d'avoir un flag
-                    * */
                     } else if (fn.nbFlagHits == nbPossibilityHere) {
+                        // 100% Mine
                         movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
                     }
                 }
@@ -106,8 +84,16 @@ public class CSPGraph implements ArtificialPlayer {
         return movesToPlay;
     }
 
+    public void computeMoves(Grid g) {
+        try {
+            executeMoveComputation(g);
+        } catch (TimeOver ignored) {
+            System.out.println("timeout");
+        }
+    }
+
     // C'est le AI en soit, tout commence par cette méthode
-    void calculateMoves(Grid g) throws TimeOver {
+    private void executeMoveComputation(Grid g) throws TimeOver {
 
         Case[] grid = g.getCpyPlayerView();
 
@@ -158,7 +144,6 @@ public class CSPGraph implements ArtificialPlayer {
 
         // Vérifie si jusqu`a maintenant toute les variables (la frontiere avec les indices) sont satisfaites
         if (!allFlagsOkay(hintNodes, index)) { return false; }
-
 
         // Quand on est arrivé au bout de la frontiere et que tout marche, une disposition(solution CSP) est trouvé!
         if (index >= hintNodes.size()) {
@@ -296,7 +281,7 @@ public class CSPGraph implements ArtificialPlayer {
         remain = delai;
     }
 
-    private String showTimeRemain() { return ("Time: " + timeRemaining() + " ms"); }
+    private String showTimeRemaing() { return ("Time: " + timeRemaining() + " ms"); }
 
     public long timeRemaining() {
         long elaspsed = (System.currentTimeMillis() - timer);
@@ -309,9 +294,5 @@ public class CSPGraph implements ArtificialPlayer {
     }
 
     @Override
-    public String getName() {
-        return "CSP-Martin";
-    }
-
-
+    public String getName() { return "CSP-Martin"; }
 }
