@@ -382,7 +382,7 @@ public class Graph {
         public Set<HintNode> hintNodes;
         public Case state = UNDISCOVERED;
 
-        public FringeNode(int index){
+        public FringeNode(int index) {
             super(index);
             hintNodes = new LinkedHashSet<HintNode>();
         }
@@ -392,6 +392,7 @@ public class Graph {
         }
 
         public boolean isObviousMine() { return this.probabilityMine == 1; }
+        public boolean isSafe() { return this.probabilityMine == 0; }
 
         @Override
         public boolean equals(Object obj) {

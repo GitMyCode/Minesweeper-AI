@@ -34,6 +34,8 @@ public class ProbabilisticAI extends CSPGraph {
                 fn.computeMineProbability(totalValidAssignations);
                 if (fn.isObviousMine()) {
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
+                } else if (fn.isSafe()) {
+                    this.movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
                 }
                 allProbabilities.offer(fn);
             }
