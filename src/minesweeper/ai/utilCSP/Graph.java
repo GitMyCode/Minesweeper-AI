@@ -172,7 +172,7 @@ public class Graph {
             int next = index+gameGrid.step(D);
 
 
-            if (gameGrid.isInGrid(index + gameGrid.step(D)) &&
+            if (gameGrid.isStepThisDirInGrid(D, index) &&
                     !frontiere.contains(next) &&
                     isAFringeNode(grid,next))
             {
