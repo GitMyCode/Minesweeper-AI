@@ -219,7 +219,6 @@ public class Grid {
             return;
         } else if (this.firstMove && coup == Coup.SHOW) {
             underneathValues = createRandomGrid(nbLignes, nbCols, nbMines, index);
-            System.out.println("il va là");
             this.firstMove = false;
         } 
 
