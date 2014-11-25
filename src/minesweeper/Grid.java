@@ -105,7 +105,7 @@ public class Grid {
             if (grid[i] != Case.MINE) {
                 for (Direction d : Direction.values()) {
                     int index = i + step(d);
-                    if (this.isInGrid(index) && grid[index] == Case.MINE) {
+                    if (isStepThisDirInGrid(d, index) && grid[index] == Case.MINE) {
                         value++;
                     }
                 }
@@ -123,38 +123,35 @@ public class Grid {
         return true;
     }
 
-    /*
-    * DES if parce que je veux m<assurer que la list retourner suivre cet ordre
-    * */
     public List<Integer> getSurroundingIndex(int index) {
         List<Integer> list = new ArrayList<Integer>();
 
 
-        if (isInGrid(index + step(Direction.RIGHT))) {
+        if (isStepThisDirInGrid(Direction.RIGHT, index)) {
             list.add(index + step(Direction.RIGHT));
         }
-        if (isInGrid(index + step(Direction.DOWN))) {
+        if (isStepThisDirInGrid(Direction.DOWN, index)) {
             list.add(index + step(Direction.DOWN));
         }
 
-        if (isInGrid(index + step(Direction.TOP))) {
+        if (isStepThisDirInGrid(Direction.TOP, index)) {
             list.add(index + step(Direction.TOP));
         }
 
-        if (isInGrid(index + step(Direction.LEFT))) {
+        if (isStepThisDirInGrid(Direction.LEFT, index)) {
             list.add(index + step(Direction.LEFT));
         }
 
-        if (isInGrid(index + step(Direction.TOPLEFT))) {
+        if (isStepThisDirInGrid(Direction.TOPLEFT, index)) {
             list.add(index + step(Direction.TOPLEFT));
         }
-        if (isInGrid(index + step(Direction.TOPRIGHT))) {
+        if (isStepThisDirInGrid(Direction.TOPRIGHT, index)) {
             list.add(index + step(Direction.TOPRIGHT));
         }
-        if (isInGrid(index + step(Direction.DOWNLEFT))) {
+        if (isStepThisDirInGrid(Direction.DOWNLEFT, index)) {
             list.add(index + step(Direction.DOWNLEFT));
         }
-        if (isInGrid(index + step(Direction.DOWNRIGHT))) {
+        if (isStepThisDirInGrid(Direction.DOWNRIGHT, index)) {
             list.add(index + step(Direction.DOWNRIGHT));
         }
 
@@ -186,7 +183,7 @@ public class Grid {
         Set<Integer> set = new HashSet<Integer>();
 
         for (Direction d: Direction.direction8) {
-            if (isInGrid(index + step(d))) {
+            if (isStepThisDirInGrid(d, index)) {
                 int voisin = index + step(d);
                 if (grid[voisin] == Case.UNDISCOVERED) {
                     set.add(voisin);
@@ -309,7 +306,7 @@ public class Grid {
             if (underneathValues[index] == Case.EMPTY) {
                 for (Direction d : Direction.values()) {
                     int indexVoisin = index + step(d);
-                    if (isInGrid(index + step(d)) && gridPlayerView[indexVoisin].equals(Case.UNDISCOVERED)) {
+                    if (isStepThisDirInGrid(d, index) && gridPlayerView[indexVoisin].equals(Case.UNDISCOVERED)) {
                         playUndiscoveredCase(indexVoisin);
                     }
                 }
@@ -318,12 +315,50 @@ public class Grid {
         }
     }
 
-    public boolean isInGrid(int index) {
-        if (index < 0 || index >= length) {
-            return false;
+    
+    public boolean isStepThisDirInGrid(Direction d, int index) {
+
+        for (Direction dir : d.getCompDir()) {
+            switch (dir) {
+                case DOWN:
+                    if (index < 0 || index >= length) {
+                        return false;
+                    }
+                    if (!((index + nbCols) < length)) {
+                        return false;
+                    }
+                    break;
+                case TOP:
+                    if (index < 0 || index >= length) {
+                        return false;
+                    }
+                    if (!((index + stepUtility(Direction.TOP)) >= 0)) {
+                        return false;
+                    }
+                    break;
+                case LEFT:
+                    if (index < 0 || index >= length) {
+                        return false;
+                    }
+                    if (!(((index % nbCols + 1) >= 2))) {
+                        return false;
+                    }
+                    break;
+                case RIGHT:
+                    if (index < 0 || index >= length) {
+                        return false;
+                    }
+                    if (!((nbCols - (index % nbCols)) >= 2)) {
+                        return false;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         return true;
     }
+
 
     /*
     * WARNING: YOU must check if the next position is in the grid before this methode
