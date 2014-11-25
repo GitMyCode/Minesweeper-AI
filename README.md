@@ -26,7 +26,7 @@ $ java minesweeper.ui.WindowMinesweeper
 Le style de programmation devrait être uniforme à travers les fichiers sources du projet.
 L'outil checkstyle peut être utilisé pour vérifier que le style du code est uniforme:
 ``` bash
-$ checkstyle -c checkstyle.xml src/minesweeper/WindowMinesweeper.java
+$ checkstyle -c checkstyle.xml src/minesweeper/ui/WindowMinesweeper.java
 ```
 
 ## Installation et compilation du code (pour correction ou contribution)    
