@@ -23,7 +23,7 @@ public class ProbabilisticAI extends CSPGraph {
         if (this.movesToPlay.isEmpty()) { addRandomMove(grid, gridCopy); }
     }
 
-    private void addMovesWithProbabilities() {
+    protected void addMovesWithProbabilities() {
         PriorityQueue<Graph.FringeNode> allProbabilities = new PriorityQueue<Graph.FringeNode>();
 
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
@@ -46,7 +46,7 @@ public class ProbabilisticAI extends CSPGraph {
         }
     }
 
-    private void selectSafestMove(PriorityQueue<Graph.FringeNode> allProbabilities) {
+    protected void selectSafestMove(PriorityQueue<Graph.FringeNode> allProbabilities) {
         Graph.FringeNode safestMove = allProbabilities.poll();
         this.movesToPlay.add(new Move(safestMove.indexInGrid, Coup.SHOW));
         printProbabilities(allProbabilities);
