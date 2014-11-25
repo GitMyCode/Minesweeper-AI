@@ -105,7 +105,7 @@ public class Grid {
             if (grid[i] != Case.MINE) {
                 for (Direction d : Direction.values()) {
                     int index = i + step(d);
-                    if (isStepThisDirInGrid(d, index) && grid[index] == Case.MINE) {
+                    if (isStepThisDirInGrid(d, i) && grid[index] == Case.MINE) {
                         value++;
                     }
                 }
