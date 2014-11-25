@@ -182,7 +182,7 @@ public class Grid {
     public Set<Integer> getUndiscoveredNeigbour(Case[] grid, int index) {
         Set<Integer> set = new HashSet<Integer>();
 
-        for (Direction d: Direction.direction8) {
+        for (Direction d: Direction.HUIT_DIRECTIONS) {
             if (isStepThisDirInGrid(d, index)) {
                 int voisin = index + step(d);
                 if (grid[voisin] == Case.UNDISCOVERED) {

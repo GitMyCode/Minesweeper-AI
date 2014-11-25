@@ -16,6 +16,7 @@ import java.util.Map;
  *   Nilovna Bascunan-Vasquez
  */
 public enum Case {
+
     EMPTY(0),
     ONE(1),
     TWO(2),
@@ -39,32 +40,21 @@ public enum Case {
     }
 
     private static final Map<Integer, Case> INT_TO_TYPE_MAP = new HashMap<Integer, Case>();
+
     static {
         for (Case type : Case.values()) {
             INT_TO_TYPE_MAP.put(type.indexValue, type);
         }
     }
+
     public static boolean isIndicatorCase(Case c) {
         return (c.indexValue >= 1 && c.indexValue <= MAX_MINES);
     }
+
     public static Case caseFromInt(int i) {
         return INT_TO_TYPE_MAP.get(i);
     }
 
-
     public final int indexValue;
-    // --Commented out by Inspection (2014-11-13 12:17):final String  pathfile= "../minesweeper.img/j";
 
-// --Commented out by Inspection START (2014-11-13 12:17):
-//    public static BufferedImage scale(BufferedImage sbi, int imageType, int dWidth, int dHeight, double fWidth, double fHeight) {
-//        BufferedImage dbi = null;
-//        if (sbi != null) {
-//            dbi = new BufferedImage(dWidth, dHeight, imageType);
-//            Graphics2D g = dbi.createGraphics();
-//            AffineTransform at = AffineTransform.getScaleInstance(fWidth, fHeight);
-//            g.drawRenderedImage(sbi, at);
-//        }
-//        return dbi;
-//    }
-// --Commented out by Inspection STOP (2014-11-13 12:17)
 }
