@@ -2,13 +2,13 @@ package minesweeper;
 
 import java.util.Set;
 import minesweeper.ai.CSPGraph;
-import minesweeper.ai.RandomAi;
+import minesweeper.ai.RandomArtificialPlayer;
 
 public final class Benchmarks {
 
     public final static int NB_PARTIES = 100;
     public final static int TAILLE_GRILLE = 50;
-    public final static ArtificialPlayer[] JOUEURS = {new RandomAi(), new CSPGraph()};
+    public final static ArtificialPlayer[] JOUEURS = {new RandomArtificialPlayer(), new CSPGraph()};
 
     private Benchmarks() {
 
