@@ -39,7 +39,6 @@ public class RandomArtificialPlayer implements ArtificialPlayer {
             }
         }
 
-
         int index = legalMoves.get(ran.nextInt(legalMoves.size()));
 
         Set<Coup> coupSet = grid.getLegalCaseCoup(index);
