@@ -32,23 +32,23 @@ public enum Case {
     DEFUSED(13),
     BLOW(14);
 
+    public static final int MAX_MINES = 8;
 
-
-    Case(int i){
+    Case(int i) {
         indexValue = i;
     }
 
-    private static final Map<Integer, Case> intToTypeMap = new HashMap<Integer, Case>();
+    private static final Map<Integer, Case> INT_TO_TYPE_MAP = new HashMap<Integer, Case>();
     static {
         for (Case type : Case.values()) {
-            intToTypeMap.put(type.indexValue, type);
+            INT_TO_TYPE_MAP.put(type.indexValue, type);
         }
     }
-    public static boolean isIndicatorCase(Case c){
-        return (c.indexValue >= 1 && c.indexValue <=8);
+    public static boolean isIndicatorCase(Case c) {
+        return (c.indexValue >= 1 && c.indexValue <= MAX_MINES);
     }
-    public static Case caseFromInt(int i ){
-        return intToTypeMap.get(i);
+    public static Case caseFromInt(int i) {
+        return INT_TO_TYPE_MAP.get(i);
     }
 
 
