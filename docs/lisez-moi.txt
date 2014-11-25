@@ -9,19 +9,18 @@ Louis-Bertrand Varin, VARL23089000
 Geneviève Lalonde, LALG08568204
 Nilovna Bascunan-Vasquez, BASN22518900
 
-
 Compilation (version console)
 -----------------------------
 
 $ cd Minesweeper/
-$ javac root/WindowMinesweeper.java
-$ javac root/ai/*.java
+$ javac minesweeper/ui/WindowMinesweeper.java
+$ javac minesweeper/ai/*.java
 
 
 Exécution du jeu
 ----------------
 
-$ java root.WindowMinesweeper
+$ java minesweeper.ui.WindowMinesweeper
 
 Références
 ----------
