@@ -20,6 +20,8 @@ import java.util.Arrays;
 
 public class Grid {
 
+    private boolean firstMove;
+
     public int nbCols;
     public int nbLignes;
     public int length;
@@ -34,6 +36,7 @@ public class Grid {
     public Grid(File f) {
         try {
             Scanner sc = new Scanner(f);
+            this.firstMove = true;
             this.nbLignes = sc.nextInt();
             this.nbCols = sc.nextInt();
             this.nbMines = sc.nextInt();
@@ -61,6 +64,7 @@ public class Grid {
     }
 
     public Grid(int nbLignes, int nbCols, int nbMines) {
+        this.firstMove = true;
         this.nbCols = nbCols;
         this.nbLignes = nbLignes;
         this.length = nbCols * nbLignes;
@@ -71,33 +75,28 @@ public class Grid {
 
         Arrays.fill(gridPlayerView, Case.UNDISCOVERED);
 
-        underneathValues = createRandomGrid(nbLignes, nbCols, nbMines);
-
     }
 
-    private Case[] createRandomGrid(int nbLignes, int nbColonnes, int nbMines) {
+    private Case[] createRandomGrid(int nbLignes, int nbColonnes, int nbMines, int firstClick) {
         Case[] grid = new Case[nbColonnes * nbLignes];
         Arrays.fill(grid, Case.EMPTY);
-        placeMinesRandomly(grid, nbMines);
-        generateValues(grid);
-        return grid;
-    }
-
-    private void placeMinesRandomly(Case[] grid, int nbMines) {
 
         Random rand = new Random();
 
         for (int i = 0; i < nbMines; i++) {
             int nextMine = rand.nextInt(grid.length);
-            if (grid[nextMine] == Case.MINE) {
+            if (grid[nextMine] == Case.MINE || nextMine == firstClick) {
                 i--;
             } else {
                 grid[nextMine] = Case.MINE;
             }
         }
+
+        generateMinesHint(grid);
+        return grid;
     }
 
-    private void generateValues(Case[] grid) {
+    private void generateMinesHint(Case[] grid) {
 
         for (int i = 0; i < grid.length; i++) {
             int value = 0;
@@ -215,6 +214,15 @@ public class Grid {
     }
 
     public void play(int index, Coup coup) {
+
+        if (this.firstMove && coup != Coup.SHOW) {
+            return;
+        } else if (this.firstMove && coup == Coup.SHOW) {
+            underneathValues = createRandomGrid(nbLignes, nbCols, nbMines, index);
+            System.out.println("il va là");
+            this.firstMove = false;
+        } 
+
         switch (coup) {
             case FLAG:
                 playFlag(index);
@@ -229,10 +237,12 @@ public class Grid {
                 break;
 
         }
+
     }
 
     public void resetGrid() {
 
+        this.firstMove = true;
         this.gameLost = false;
         this.gameWon = false;
         this.nbFlagsRemaining = nbMines;
@@ -241,8 +251,6 @@ public class Grid {
         for (int i = 0; i < length; i++) {
             this.gridPlayerView[i] = Case.UNDISCOVERED;
         }
-
-        underneathValues = createRandomGrid(nbLignes, nbCols, nbMines);
 
     }
 
