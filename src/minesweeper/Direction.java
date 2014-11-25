@@ -15,6 +15,7 @@ import java.util.*;
  *   Nilovna Bascunan-Vasquez
  */
 public enum Direction {
+
     RIGHT {
         @Override
         public Direction opposedDirection() {
@@ -22,7 +23,7 @@ public enum Direction {
         }
 
         @Override
-        public Set<Direction> getCompDir () {
+        public Set<Direction> getCompDir() {
             return EnumSet.of(RIGHT);
         }
     },
@@ -34,7 +35,7 @@ public enum Direction {
         }
 
         @Override
-        public Set<Direction> getCompDir () {
+        public Set<Direction> getCompDir() {
             return EnumSet.of(LEFT);
         }
     },
@@ -46,7 +47,7 @@ public enum Direction {
         }
 
         @Override
-        public Set<Direction> getCompDir () {
+        public Set<Direction> getCompDir() {
             return EnumSet.of(DOWN);
         }
     },
@@ -58,7 +59,7 @@ public enum Direction {
         }
 
         @Override
-        public Set<Direction> getCompDir () {
+        public Set<Direction> getCompDir() {
             return EnumSet.of(TOP);
         }
     },
@@ -70,8 +71,8 @@ public enum Direction {
         }
 
         @Override
-        public Set<Direction> getCompDir () {
-            return EnumSet.of(DOWN,LEFT);
+        public Set<Direction> getCompDir() {
+            return EnumSet.of(DOWN, LEFT);
         }
     },
 
@@ -82,8 +83,8 @@ public enum Direction {
         }
 
         @Override
-        public Set<Direction> getCompDir () {
-            return EnumSet.of(TOP,LEFT);
+        public Set<Direction> getCompDir() {
+            return EnumSet.of(TOP, LEFT);
         }
     },
 
@@ -94,8 +95,8 @@ public enum Direction {
         }
 
         @Override
-        public Set<Direction> getCompDir () {
-            return EnumSet.of(DOWN,RIGHT);
+        public Set<Direction> getCompDir() {
+            return EnumSet.of(DOWN, RIGHT);
         }
     },
 
@@ -106,28 +107,28 @@ public enum Direction {
         }
 
         @Override
-        public Set<Direction> getCompDir () {
-            return EnumSet.of(TOP,RIGHT);
+        public Set<Direction> getCompDir() {
+            return EnumSet.of(TOP, RIGHT);
         }
     };
 
-    private static final Set<Direction> direction4 = new LinkedHashSet<Direction>();
-    public static final Set<Direction> direction8 = new LinkedHashSet<Direction>();
+    private static final Set<Direction> QUATRE_DIRECTIONS = new LinkedHashSet<Direction>();
+    public static final Set<Direction> HUIT_DIRECTIONS = new LinkedHashSet<Direction>();
 
     static {
         /* Les 4 directions DOWN, RIGHT, DOWNRIGHT, TOPRIGHT d'un point */
-        direction4.add(DOWN);
-        direction4.add(RIGHT);
-        direction4.add(DOWNRIGHT);
-        direction4.add(TOPRIGHT);
+        QUATRE_DIRECTIONS.add(DOWN);
+        QUATRE_DIRECTIONS.add(RIGHT);
+        QUATRE_DIRECTIONS.add(DOWNRIGHT);
+        QUATRE_DIRECTIONS.add(TOPRIGHT);
 
         /* Toutes les directions d'un point */
-        direction8.addAll(EnumSet.allOf(Direction.class));
+        HUIT_DIRECTIONS.addAll(EnumSet.allOf(Direction.class));
     }
 
     Direction() { }
-    abstract public Set<Direction> getCompDir();
-    abstract public Direction opposedDirection(); // direction opposee
+    public abstract Set<Direction> getCompDir();
+    public abstract Direction opposedDirection(); // direction opposee
 
     public enum Axe {
         VERTICAL(TOP, DOWN, 0),
@@ -139,30 +140,30 @@ public enum Direction {
         public final Direction dirRight;
         public final int i;
 
-        Axe(Direction dir, Direction dir2, int i){
+        Axe(Direction dir, Direction dir2, int i) {
             this.dirLeft = dir;
             this.dirRight = dir2;
             this.i = i; //index
         }
 
-        public static final Map<Direction, Axe> lookup = new EnumMap<Direction, Axe>(Direction.class);
+        public static final Map<Direction, Axe> LOOKUP = new EnumMap<Direction, Axe>(Direction.class);
 
         static {
-            for(Direction dir : Direction.values()) {
-                if(VERTICAL.dirLeft == dir || VERTICAL.dirRight == dir) {
-                    lookup.put(dir, VERTICAL);
-                } else if(HORIZONTAL.dirLeft == dir || HORIZONTAL.dirRight == dir) {
-                    lookup.put(dir, HORIZONTAL);
-                } else if(DIAGR.dirLeft == dir || DIAGR.dirRight == dir) {
-                    lookup.put(dir, DIAGR);
-                } else if(DIAGL.dirLeft == dir || DIAGL.dirRight == dir) {
-                    lookup.put(dir, DIAGL);
+            for (Direction dir : Direction.values()) {
+                if (VERTICAL.dirLeft == dir || VERTICAL.dirRight == dir) {
+                    LOOKUP.put(dir, VERTICAL);
+                } else if (HORIZONTAL.dirLeft == dir || HORIZONTAL.dirRight == dir) {
+                    LOOKUP.put(dir, HORIZONTAL);
+                } else if (DIAGR.dirLeft == dir || DIAGR.dirRight == dir) {
+                    LOOKUP.put(dir, DIAGR);
+                } else if (DIAGL.dirLeft == dir || DIAGL.dirRight == dir) {
+                    LOOKUP.put(dir, DIAGL);
                 }
             }
         }
 
         public static Axe getAxe(Direction d) {
-            return lookup.get(d);
+            return LOOKUP.get(d);
         }
 
     }

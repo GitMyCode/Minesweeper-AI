@@ -168,7 +168,7 @@ public class Graph {
     Set<Direction> getPossibleDirection(Case[] grid, int index, Set<Node> frontiere){
         Set<Direction> directions = new LinkedHashSet<Direction>();
 
-        for (Direction D : direction8){
+        for (Direction D : HUIT_DIRECTIONS){
             int next = index+gameGrid.step(D);
 
 
