@@ -120,7 +120,7 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
 
         panelCreation = new JPanel(new GridBagLayout());
         panelCreation.setBackground(Color.orange);
-        Dimension panel_creation_dim = new Dimension(390,280);
+        Dimension panel_creation_dim = new Dimension(700,300);
         panelCreation.setPreferredSize(panel_creation_dim);
         panelCreation.setMinimumSize(panel_creation_dim);
         panelCreation.setMaximumSize(panel_creation_dim);
