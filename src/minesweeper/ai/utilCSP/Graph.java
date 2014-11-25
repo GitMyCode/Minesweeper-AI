@@ -49,7 +49,7 @@ public class Graph {
     void lookForInvalidFringeNode(Case[] grid){
         for(Integer i =0 ; i< grid.length; i++){
             if(Case.isIndicatorCase(grid[i])){
-                if(getUndiscoveredneighbours(grid,i).size() == 8){
+                if(gameGrid.getUndiscoveredneighbours(i).size() == 8){
                     deactivatedNode.add(i);
                 }
             }
@@ -201,43 +201,6 @@ public class Graph {
         }
         return indices;
     }
-    /*
-    * Retourne les cases voisines qui sont non-decouvertes
-    * */
-    Set<Integer> getUndiscoveredneighbours(Case[] grid, int index){
-        Set<Integer> undiscovered = new LinkedHashSet<Integer>();
-        for (Integer i: gameGrid.getSurroundingIndex(index)){
-            if (grid[i] == UNDISCOVERED){
-                undiscovered.add(i);
-            }
-        }
-        return undiscovered;
-    }
-
-    /*
-    * Retourne le nombre de flag qui reste a poser pour satisfaire l'indice
-    * */
-    int getNbFlagToPlace(Case[] grid, int index){
-        int nbFlagRemaining = grid[index].indexValue;
-        for (Integer v : gameGrid.getSurroundingIndex(index)){
-            if (grid[v] == FLAGED){
-                nbFlagRemaining--;
-            }
-        }
-        return nbFlagRemaining;
-    }
-
-
-    boolean isIndexSatisfied(Case[] grid, int index){
-        int indice = grid[index].indexValue;
-        int nbFlagPosed =0;
-        for (Integer v: gameGrid.getSurroundingIndex(index)){
-            if (grid[v] == FLAGED){
-                nbFlagPosed++;
-            }
-        }
-        return indice == nbFlagPosed;
-    }
 
     public Set<HintNode> getHintNeirbour(Case[] g, FringeNode fringeNode){
 
@@ -249,7 +212,7 @@ public class Graph {
                 if(mapHintNode.containsKey(indexHint)){
                     hn = mapHintNode.get(indexHint);
                 }else {
-                    hn = new HintNode(indexHint);
+                    hn = new HintNode(indexHint, this.gameGrid.countUnplacedFlags(indexHint));
                     mapHintNode.put(indexHint,hn);
                 }
                 hintNodes.add(hn);
@@ -330,9 +293,9 @@ public class Graph {
         public int nbFlagToPlace;
         public int nbUndiscoveredNeighbors;
 
-        public HintNode(int index){
+        public HintNode(int index, int value){
             super(index);
-            this.value = getNbFlagToPlace(caseGrille,index);
+            this.value = value;
             connectedFringe = new LinkedHashSet<FringeNode>();
         }
 
