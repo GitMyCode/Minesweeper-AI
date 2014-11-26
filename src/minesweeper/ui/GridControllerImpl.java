@@ -5,6 +5,7 @@ import minesweeper.Grid;
 import minesweeper.Move;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 /**
@@ -39,7 +40,7 @@ public class GridControllerImpl implements GridController {
 
 
         flagRemain.setText(String.valueOf(gridBoard.nbFlagsRemaining));
-        gridView.repaint();
+        updateView();
 
     }
 
@@ -55,14 +56,30 @@ public class GridControllerImpl implements GridController {
             gridBoard.play(m.index, m.coup);
         }
         flagRemain.setText(String.valueOf(gridBoard.getNbFlagsRemaining()));
-        gridView.repaint();
+        updateView();
     }
 
     @Override
     public synchronized void movePlay (Move move) {
         gridBoard.play(move.index, move.coup);
         flagRemain.setText(String.valueOf(gridBoard.getNbFlagsRemaining()));
-        gridView.repaint();
+        updateView();
+    }
+
+    public synchronized void updateView(){
+           try {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    @Override
+                    public void run () {
+                            gridView.repaint();
+                    }
+                });
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (InvocationTargetException e) {
+                // should not happen
+                e.printStackTrace();
+            }
     }
 
     public void setGridModel(Grid g){
