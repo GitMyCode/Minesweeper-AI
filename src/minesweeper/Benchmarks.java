@@ -11,7 +11,10 @@ import minesweeper.ai.RandomArtificialPlayer;
 public final class Benchmarks {
 
     public final static int NB_PARTIES = 10;
-    public final static int TAILLE_GRILLE = 50;
+    public final static int GRID_ROWS = 50;
+    public final static int GRID_COLUMNS = 50;
+    public final static int NB_MINES = 10;
+
     public final static ArtificialPlayer[] JOUEURS = {
             new RandomArtificialPlayer(),
             new CSPGraph(),
@@ -36,7 +39,7 @@ public final class Benchmarks {
 
             for(int i=0; i<NB_PARTIES; ++i) {
                 startTime = System.currentTimeMillis();
-                Grid grille = new Grid(TAILLE_GRILLE, TAILLE_GRILLE, 250);
+                Grid grille = new Grid(GRID_ROWS, GRID_COLUMNS, NB_MINES);
 
                 while(!grille.gameIsFinished()) {
                     Set<Move> moves = ai.getNextMoves(grille, Integer.MAX_VALUE);
