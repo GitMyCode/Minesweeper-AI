@@ -1,0 +1,140 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[top=1.25in, bottom=1.25in, left=0.9in, right=0.9in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage{array}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage[final]{pdfpages}
+\usepackage{biblatex}
+
+\pagestyle{fancy}
+\lhead{Rapport TP3}
+\rhead{Minesweeper}
+
+% pour éviter d'avoir à faire des \noindent partout!
+
+\title{%
+\Large{Université du Québec à Montréal}\\
+\vspace{2.5cm}
+\Huge{Minesweeper}\\
+\vspace{3cm}
+\Large{Travail présenté à \\M. Eric Beaudry} \\
+\vspace{2cm}
+\Large{Dans le cadre du cours \\INF4230-10 – Intelligence Artificielle} \\
+\vspace{1cm}
+\author{Martin Bouchard, BOUM15078700\\Frédéric Vachon, VACF30098405\\Louis-Bertrand Varin,
+VARL23089000\\Geneviève Lalonde, LALG08568204\\Nilovna Bascunan-Vasquez, BASN22518900}
+\date{\vspace{0.5cm} 15 décembre 2014}
+\vfill
+}
+
+\begin{document}
+\maketitle
+
+\thispagestyle{empty}
+\clearpage
+
+\openup .5em
+
+\section{Introduction}
+Dans le cadre du troisième TP en Intelligence Artificielle, nous proposons de créer un joueur
+artificiel pour le jeu démineur (Minesweeper). Afin d’augmenter la complexité du projet, nous avons
+décidé d’implémenter différents algorithmes pour résoudre la grille de Démineur. L’utilisateur sera
+en mesure de choisir l’algorithme qu’il désire observer. Les algorithmes utilisés par le joueur
+artificiel seront: CSP (Constraint Satisfaction Problem) avec et sans l’heuristique MCV (Most
+Constrained Value) pour le choix de la prochaine case, un algorithme de raisonnement probabiliste
+avec graphe, le même raisonnement probabiliste avec une heuristique tenant compte du nombre de
+drapeaux restants et un simple joueur artificiel qui emploie la technique primitive de sélection
+aléatoire.
+
+\section{Problématique et pertinence des techniques employées}
+Le jeu démineur appartient à la catégorie des problèmes NP-complets puisqu’il n’est pas toujours
+possible de trouver une solution en temps polynomial. Il n’y a pas de méthode connue qui garantit
+une meilleure solution que la simple recherche par force brute. S’il y avait un algorithme efficace
+connu, il pourrait résoudre tous les problèmes NP-complets de ce type et serait grandement apprécié
+par la communauté de mathématiciens (et par notre équipe qui pourrait être millionnaire grâce à ce
+concours). Ainsi, lorsque notre joueur artificiel tentera de résoudre une grille, aucun des
+algorithmes implémentés ne garantira qu’il ne tombera pas sur une mine. Il s’agit d’un problème
+combinatoire souvent intraitable (un problème de prise de décision), comme le démontre le morceau de
+grille ci-dessous:
+
+Les cases bleues représentent des cases non découvertes, celles avec un chiffre indiquent le nombre
+de mines auxquelles elles touchent (soit par la case immédiatement au-dessus, en-dessous, à droite,
+à gauche ou par une des diagonales). Il faut donc trouver quelles sont les cases parmi les bleues
+qui contiennent des mines. Ici, il y a 20 cases mystères et 12 cases qui touchent chacune à 2 mines.
+En résolvant cette grille, nous savons qu’elle contient 8 mines. Dans une approche naïve, où le
+joueur artificiel tenterait toutes les combinaisons possibles à la recherche de la meilleure (celle
+brisant le moins de contraintes) pour une grille non découverte de 6 x 6 comme celle ci-haut (donc
+36 cases), le nombre de combinaisons possibles de 8 mines serait de l’ordre de:
+36!/(8!(36-8)!) = 30 260 340, ce qui correspond au nombre de combinaisons d’une grille plus petite
+que le minimum permis dans la version Windows du jeu.
+
+La résolution d’une grille de démineur peut être décomposée à la simple question de savoir quelles
+cases sont certaines (d’être minées ou non), et lesquelles sont incertaines. Un bon joueur
+artificiel de démineur ne jouera jamais une case incertaine si des cases certaines n’ont pas été
+jouées (nommées cases triviales dans nos analyses). 
+Il s’agit d’un jeu statique à agent unique partiellement observable, dans un environnement discret
+(puisqu’une grille bien délimitée est utilisée). Il s’agit aussi d’un jeu déterministe dans la
+mesure où l’action effectuée par le joueur détermine entièrement l’état suivant de la grille, mais
+il peut être vu comme non déterministe puisque le joueur ne connaît pas le résultat de l’action
+qu’il pose, dû au manque d’observabilité de la grille.
+Ce jeu est séquentiel, puisque chaque coup permet de découvrir une partie de la grille et restreint
+potentiellement le domaine des variables du prochain coup. Il peut aussi être perçu comme non
+séquentiel, puisque la séquence dans laquelle les cases sont cliquées n’a pas d’importance.
+
+Il y a plusieurs algorithmes permettant de résoudre une grille de démineur. Nous avons implémenté
+ceux mentionnés plus haut pour les raisons suivantes:
+CSP : Les cases du jeu démineur peuvent être représentées comme des variables pouvant adopter
+plusieurs valeurs (minée, sans mine, vide, non-découverte) et sont gérées par des contraintes (e.g
+deux cases touchant à une case ayant le chiffre 1 ne peuvent pas être toutes les deux minées) et
+ainsi bien se prêter à la résolution par CSP.
+Heuristique MCV (Most Constrained Value) pour le choix de la prochaine case: notre joueur assumera
+que chaque case non-découverte est minée et l’étiquetera d’un drapeau. Par la suite, il vérifiera si
+les contraintes sont satisfaites. Lorsqu’il trouvera qu’une contrainte est insatisfaite (car il y
+aurait plusieurs drapeaux consécutifs qui totaliseraient plus de mines possibles que les chiffres
+correspondants), il utilisera l’heuristique MCV pour retirer des drapeaux:
+ la première case est assumée minée (on y pose un drapeau)
+ la deuxième case est assumée minée (on y pose aussi un drapeau).
+ Contrainte violée: le premier chiffre 1 (celui à gauche) touche à deux mines. Il faut donc enlever
+ la valeur “mine” à la première variable (la case à gauche).
+ le drapeau de la première case est donc retiré, car il s’agit de la case avec le plus petit domaine
+ de valeurs (MCV).
+ Raisonnement probabiliste avec graphe: Une autre façon de percevoir une grille de démineur est
+ d’imaginer la probabilité qu’il y ait une mine dans chaque case inconnue, en se basant sur les
+ chiffres qui sont visibles. 
+ Par exemple, dans la configuration :
+ , il y a 100\% de chance qu’une mine se trouve dans la case cachée.
+ Tandis que dans la configuration :
+ , chaque case cachée a une chance sur deux d’avoir la mine. Bien qu’un avide joueur de démineur
+ saurait que la mine se situe dans la case du bas, car sinon elle violerait une contrainte, le
+ raisonnement probabiliste ne tient pas compte des contraintes.
+
+\section{Résultats}
+Afin de nous permettre d’évaluer la performance des techniques précédemment mentionnées, nous avons
+soumis nos grilles de démineur àsoumis cent fois, une série d’évaluations sur les différents
+algorithmes. Ces critères sont: le nombre de défaites et victoires, Chaque critère a été évalué 100
+fois 
+
+Afin de nous permettre d’évaluer la performance des techniques précédemment mentionnées, nous avons
+déterminé une série de tests pertinents nous permettant d’extraire des statistiques concernant nos
+algorithmes. Ces tests sont:
+-bla bla
+Chacun d’entre eux ont été répétés sur 5 tailles de grilles différentes. et chaque taille de grille
+est évaluée 100 fois
+
+\section{Répartition des tâches}
+Martin: Interface et implémentation de l’algorithme CSP, avec et sans MCV, ainsi que d’un joueur
+artificiel aléatoire pour tester l’interface, heuristique du nombre de drapeaux restants. 
+Frédéric et Louis: Raisonnement probabiliste avec graphe, heuristiques pour des cases aux mêmes
+probabilités.
+Nilovna et Geneviève: Documentation (lisez-moi, rapport), présentation, revampage de l’interface,
+mises à l’essai, statistiques, nettoyage du code et remise.
+
+
+\section{Conclusion}
+
+\end{document}
+
