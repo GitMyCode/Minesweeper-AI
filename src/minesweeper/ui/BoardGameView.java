@@ -423,8 +423,6 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         xAxis.setMaximumSize(dim_x);
         xAxis.setLayout(new GridLayout(row, 1));
 
-
-
         containterField = new JPanel(new GridBagLayout());
         Dimension dim_container = new Dimension(width+40,height+30);
         containterField.setMaximumSize(dim_container);
