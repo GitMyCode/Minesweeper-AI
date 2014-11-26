@@ -7,5 +7,5 @@ public interface Benchmarkable {
     public double getProbabilitySuccessRate();
     public double getTrivialMoveRate();
     public double getCSPMoveRate();
-    public double getProbabilisticMoveRate();
+    public double getUncertainMoveRate();
 }

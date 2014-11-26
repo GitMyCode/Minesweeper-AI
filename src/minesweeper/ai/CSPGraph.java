@@ -13,7 +13,7 @@ import static minesweeper.Case.*;
 
 import java.util.*;
 
-public class CSPGraph implements ArtificialPlayer {
+public class CSPGraph implements ArtificialPlayer, Benchmarkable {
 
     private final int LIMITE = 10;
     private long timer;
@@ -26,6 +26,11 @@ public class CSPGraph implements ArtificialPlayer {
     protected Graph graph;
     protected Set<Move> movesToPlay;
 
+    protected int nbTrivialMoves;
+    protected int nbCSPMoves;
+    protected int nbUncertainMoves;
+    protected int nbTotalMoves;
+
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
         this.gameGrid = grid;
@@ -34,7 +39,11 @@ public class CSPGraph implements ArtificialPlayer {
         startTimer(delay);
         this.movesToPlay = grid.getSafeMoves();
 
-        if(!this.movesToPlay.isEmpty()) { return movesToPlay; }
+        if (!this.movesToPlay.isEmpty()) {
+            nbTrivialMoves++;
+            nbTotalMoves++;
+            return movesToPlay;
+        }
         nbValidAssignationsPerFrontier = new ArrayList<Integer>();
         computeMoves(grid);
         addMovesToPlay(grid, gridCopy);
@@ -151,7 +160,11 @@ public class CSPGraph implements ArtificialPlayer {
             addSafeMovesAndFlags();
             if (this.movesToPlay.isEmpty()) {
                 addRandomMove(grid, gridCopy);
+
+            } else {
+                nbCSPMoves++;
             }
+            nbTotalMoves++;
         }
     }
 
@@ -200,4 +213,29 @@ public class CSPGraph implements ArtificialPlayer {
 
     @Override
     public String getName() { return "CSP-Martin"; }
+
+    @Override
+    public boolean isProbabilistic() {
+        return false;
+    }
+
+    @Override
+    public double getProbabilitySuccessRate() {
+        return 0;
+    }
+
+    @Override
+    public double getTrivialMoveRate() {
+        return (double) nbTrivialMoves / nbTotalMoves;
+    }
+
+    @Override
+    public double getCSPMoveRate() {
+        return (double) nbCSPMoves / nbTotalMoves;
+    }
+
+    @Override
+    public double getUncertainMoveRate() {
+        return (double) nbUncertainMoves / nbTotalMoves;
+    }
 }
