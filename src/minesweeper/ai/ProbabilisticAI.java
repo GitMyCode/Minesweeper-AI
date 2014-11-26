@@ -34,22 +34,27 @@ public class ProbabilisticAI extends CSPGraph {
                 fn.computeMineProbability(totalValidAssignations);
                 if (fn.isObviousMine()) {
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
+                    addCSPMoveToStats();
                 } else if (fn.isSafe()) {
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
+                    addCSPMoveToStats();
                 }
                 allProbabilities.offer(fn);
+
             }
         }
 
         if (movesToPlay.isEmpty() && !allProbabilities.isEmpty()) {
-            selectSafestMove(allProbabilities);
+            Move safestMove = getSafestMove(allProbabilities);
+            this.movesToPlay.add(safestMove);
         }
     }
 
-    protected void selectSafestMove(PriorityQueue<Graph.FringeNode> allProbabilities) {
+    protected Move getSafestMove(PriorityQueue<Graph.FringeNode> allProbabilities) {
         Graph.FringeNode safestMove = allProbabilities.poll();
-        this.movesToPlay.add(new Move(safestMove.indexInGrid, Coup.SHOW));
         printProbabilities(allProbabilities);
+        addUncertainMoveToStats();
+        return new Move(safestMove.indexInGrid, Coup.SHOW);
     }
 
     private void printProbabilities(PriorityQueue<Graph.FringeNode> allProbabilities) {
