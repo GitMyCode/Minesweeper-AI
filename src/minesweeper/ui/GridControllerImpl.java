@@ -39,7 +39,7 @@ public class GridControllerImpl implements GridController {
 
 
         flagRemain.setText(String.valueOf(gridBoard.nbFlagsRemaining));
-        gridView.repaint();
+        notifyViewUpdate();
 
     }
 
@@ -55,14 +55,18 @@ public class GridControllerImpl implements GridController {
             gridBoard.play(m.index, m.coup);
         }
         flagRemain.setText(String.valueOf(gridBoard.getNbFlagsRemaining()));
-        gridView.repaint();
+        notifyViewUpdate();
     }
 
     @Override
     public synchronized void movePlay (Move move) {
         gridBoard.play(move.index, move.coup);
         flagRemain.setText(String.valueOf(gridBoard.getNbFlagsRemaining()));
-        gridView.repaint();
+        notifyViewUpdate();
+    }
+
+    public void notifyViewUpdate(){
+        gridView.renderBoardView();
     }
 
     public void setGridModel(Grid g){

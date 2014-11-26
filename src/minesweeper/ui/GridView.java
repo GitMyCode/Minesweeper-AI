@@ -9,9 +9,9 @@ import static minesweeper.Case.*;
 import minesweeper.Move;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -32,7 +32,7 @@ import java.util.Enumeration;
  *   Geneviève Lalonde
  *   Nilovna Bascunan-Vasquez
  */
-public class GridView extends JPanel {
+public class GridView extends Canvas {
     private int nbligne=0;
     private int nbcol =0;
     private int caseSize =GLOBAL.CELL_SIZE;
@@ -43,6 +43,8 @@ public class GridView extends JPanel {
     private Grid grid;
     private GridController controller;
 
+
+    private BufferedImage image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
 
 
 
@@ -56,7 +58,7 @@ public class GridView extends JPanel {
         grid = new Grid(nbligne,nbcol,20);
 
 
-        setLayout(new GridLayout(nbligne,nbcol));
+        //setLayout(new GridLayout(nbligne,nbcol));
         Dimension dim_grid = new Dimension(width ,height);
         setPreferredSize(dim_grid);
         setMaximumSize(dim_grid);
@@ -65,11 +67,9 @@ public class GridView extends JPanel {
 
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         initCasesImages();
-
     }
     public void setGrid(Grid g) {
         grid = g;
-        repaint();
     }
     public void setController(GridController gc){
         controller = gc;
@@ -102,7 +102,7 @@ public class GridView extends JPanel {
                     break;
 
                 java.net.URL imageUrl =  cellImg.toURI().toURL();
-                cases[i] =  new ImageIcon(imageUrl).getImage();
+                cases[i] =  ImageIO.read(imageUrl);
                 BufferedImage im = ImageIO.read(cellImg);
                 BufferedImage b2 = getScaledInstance(im,caseSize,caseSize,true);
                 /*RescaleOp rescaleOp = new RescaleOp(0.88f, 20f, null);
@@ -110,7 +110,7 @@ public class GridView extends JPanel {
                 BufferedImage bi = new BufferedImage(cases[i].getWidth(null),cases[i].getHeight(null), BufferedImage.TYPE_INT_ARGB);
                 Graphics g = bi.createGraphics();
                 g.drawImage(cases[i],0,0, caseSize,caseSize,null);
-                cases[i]=  new ImageIcon(b2).getImage();
+                cases[i]=  b2;
                 i++;
             }
 
@@ -121,8 +121,66 @@ public class GridView extends JPanel {
 
 
 
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
+    public void renderBoardView(){
+        BufferStrategy bs = this.getBufferStrategy();
+        if(bs == null){
+            createBufferStrategy(2);
+            return;
+        }
+        Graphics g = bs.getDrawGraphics();
+
+        drawALlCell(g);
+
+        g.dispose();
+        bs.show();
+    }
+
+
+
+    public void drawALlCell(Graphics g){
+
+        int casePlusSpace = caseSize ;
+        for(int i=0; i< (nbcol*nbligne); i++){
+            int x = (i/nbcol)  * casePlusSpace;
+            int y = (i%nbcol)  * casePlusSpace;
+
+            g.drawImage(cases[grid.gridPlayerView[i].indexValue],y,x,this);
+        }
+
+    }
+
+  /*  @Override
+    public void paint (Graphics g) {
+        super.paint(g);
+        int casePlusSpace = caseSize ;
+        for(int i=0; i< (nbcol*nbligne); i++){
+            int x = (i/nbcol)  * casePlusSpace;
+            int y = (i%nbcol)  * casePlusSpace;
+
+            g.drawImage(cases[grid.gridPlayerView[i].indexValue],y,x,this);
+        }
+
+        g.dispose();
+    }*/
+/*
+    @Override
+    public void paintComponents (Graphics g) {
+        System.out.println("dsf");
+        //
+        int casePlusSpace = caseSize ;
+        for(int i=0; i< (nbcol*nbligne); i++){
+            int x = (i/nbcol)  * casePlusSpace;
+            int y = (i%nbcol)  * casePlusSpace;
+
+            g.drawImage(cases[grid.gridPlayerView[i].indexValue],y,x,this);
+        }
+
+        g.dispose();
+    }*/
+/*
+
+    protected void paint(Graphics g){
+       // super.paintComponent(g);
 
         int casePlusSpace = caseSize ;
         for(int i=0; i< (nbcol*nbligne); i++){
@@ -134,6 +192,7 @@ public class GridView extends JPanel {
 
         g.dispose();
     }
+*/
 
 
     @Override

@@ -49,9 +49,41 @@ class GameRunner implements Runnable {
     @Override
     public void run () {
         System.out.println("start gamerunner");
+
+        long lastTime = System.nanoTime();
+        final double clockSpeed = 160.0;
+        double ns = 1000000000/clockSpeed;
+        double delta = 0;
+        int updates =0;
+        int frames = 0;
+        long timer = System.currentTimeMillis();
+
+
         do{
+            long now = System.nanoTime();
+            delta += (now - lastTime)/ns;
+            lastTime = now;
+            if(delta >= 1){
+                tick();
+                updates++;
+                delta--;
+            }
+            frames++;
+            controller.notifyViewUpdate();
+
             Set<Move> aiMoves = ai.getNextMoves(grid, thinkLimit);
             controller.movesSetPlay(aiMoves);
+
+            //render();
+            if(System.currentTimeMillis() -timer > 1000){
+                timer+=1000;
+                System.out.println(updates + " Ticks,  fps " + frames);
+                updates=0;
+                frames =0;
+
+            }
+
+
             System.gc();
             try{
                 if(delayTime != 0 && !Thread.currentThread().isInterrupted()){
@@ -87,6 +119,15 @@ class GameRunner implements Runnable {
         }
 
         outputObserver.callback();
+    }
+
+    private void render(){
+        controller.notifyViewUpdate();
+    }
+
+    private void tick(){
+
+
     }
 
     private synchronized void SendMsg(String msg){

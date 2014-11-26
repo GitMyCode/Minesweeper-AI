@@ -29,7 +29,7 @@ class GLOBAL {
 
     public static final int NB_TYPE_IMAGE = 15;
 
-    public static void addItem(JPanel p, JComponent c, int x, int y, int width, int height, int align) {
+    public static void addItem(JPanel p, Component c, int x, int y, int width, int height, int align) {
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridx = x;
         gc.gridy = y;

@@ -52,7 +52,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
     private JButton saveGridToFile;
 
     private GridView gv;
-    private GridController gridController;
+    public GridController gridController;
     private final Grid grid;
     private final ArtificialPlayer ai;
 
@@ -243,7 +243,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         }
         if(runner != null)runner.terminate();
         runner = null;
-        gv.repaint();
+        gridController.notifyViewUpdate();
         flagRemaining.setText(String.valueOf(nbMines));
         step.setEnabled(true);
         message("Reinitialiser");
@@ -460,7 +460,6 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         gv.setGrid(grid);
         gridController = new GridControllerImpl(grid,gv,flagRemaining);
         gv.setController(gridController);
-        gv.repaint();
     }
 
 
