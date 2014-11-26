@@ -121,7 +121,7 @@ public class GridView extends Canvas {
 
 
 
-    public void renderBoardView(){
+    public synchronized void renderBoardView(){
         BufferStrategy bs = this.getBufferStrategy();
         if(bs == null){
             createBufferStrategy(2);
