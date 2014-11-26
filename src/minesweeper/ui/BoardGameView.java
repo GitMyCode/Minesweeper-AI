@@ -180,6 +180,7 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             closingCleanUp();
             }
         });
+        gv.setIgnoreRepaint(true);
         linkMVC();
     }
 

@@ -44,8 +44,8 @@ public class GridView extends Canvas {
     private GridController controller;
 
 
-    private BufferedImage image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
-
+    private BufferedImage drawingBoard ;
+    private Dimension dimension;
 
 
     public GridView(int nbligne,int nbcol,int width, int height,int caseSize,String designFolder){
@@ -59,12 +59,12 @@ public class GridView extends Canvas {
 
 
         //setLayout(new GridLayout(nbligne,nbcol));
-        Dimension dim_grid = new Dimension(width ,height);
-        setPreferredSize(dim_grid);
-        setMaximumSize(dim_grid);
-        setMinimumSize(dim_grid);
+        dimension = new Dimension(width ,height);
+        setPreferredSize(dimension);
+        setMaximumSize(dimension);
+        setMinimumSize(dimension);
 
-
+        drawingBoard = new BufferedImage(dimension.width,dimension.height,BufferedImage.TYPE_INT_RGB);
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         initCasesImages();
     }
@@ -127,24 +127,26 @@ public class GridView extends Canvas {
             createBufferStrategy(2);
             return;
         }
-        Graphics g = bs.getDrawGraphics();
+        Graphics2D g = (Graphics2D) bs.getDrawGraphics();
 
-        drawALlCell(g);
+        Graphics2D gCell = drawingBoard.createGraphics();
+        drawALlCell(gCell);
+        gCell.dispose();
 
-        g.dispose();
+        g.drawImage(drawingBoard, 0, 0, dimension.width, dimension.height, this);
         bs.show();
     }
 
 
 
-    public void drawALlCell(Graphics g){
+    public synchronized void drawALlCell(Graphics2D g){
 
         int casePlusSpace = caseSize ;
         for(int i=0; i< (nbcol*nbligne); i++){
             int x = (i/nbcol)  * casePlusSpace;
             int y = (i%nbcol)  * casePlusSpace;
 
-            g.drawImage(cases[grid.gridPlayerView[i].indexValue],y,x,this);
+            g.drawImage(cases[grid.gridPlayerView[i].indexValue],y,x,null);
         }
 
     }

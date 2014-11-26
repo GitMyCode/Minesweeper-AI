@@ -189,7 +189,9 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
             public void run() {
 
                 System.gc();
-                new WindowMinesweeper().setVisible(true);
+                Frame f =new WindowMinesweeper();
+                f.setVisible(true);
+                f.setIgnoreRepaint(true);
                 System.gc();
             }
         });
