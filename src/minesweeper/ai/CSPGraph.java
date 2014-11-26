@@ -40,8 +40,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         this.movesToPlay = grid.getSafeMoves();
 
         if (!this.movesToPlay.isEmpty()) {
-            nbTrivialMoves++;
-            nbTotalMoves++;
+            addTrivialMoveToStats();
             return movesToPlay;
         }
         nbValidAssignationsPerFrontier = new ArrayList<Integer>();
@@ -160,11 +159,10 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
             addSafeMovesAndFlags();
             if (this.movesToPlay.isEmpty()) {
                 addRandomMove(grid, gridCopy);
-
+                addUncertainMoveToStats();
             } else {
-                nbCSPMoves++;
+                addCSPMoveToStats();
             }
-            nbTotalMoves++;
         }
     }
 
@@ -209,6 +207,20 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
     public long timeRemaining() {
         long elaspsed = (System.currentTimeMillis() - timer);
         return remain - elaspsed;
+    }
+
+    protected void addTrivialMoveToStats() {
+        nbTrivialMoves++;
+        nbTotalMoves++;
+    }
+
+    protected void addCSPMoveToStats() {
+        nbCSPMoves++;
+        nbTotalMoves++;
+    }
+    protected void addUncertainMoveToStats() {
+        nbUncertainMoves++;
+        nbTotalMoves++;
     }
 
     @Override

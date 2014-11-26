@@ -11,10 +11,10 @@ import java.util.Random;
 public class ProbabilisticAIwithRandomSelection extends ProbabilisticAI {
 
     @Override
-    protected void selectSafestMove(PriorityQueue<Graph.FringeNode> allProbabilities) {
+    protected Move getSafestMove(PriorityQueue<Graph.FringeNode> allProbabilities) {
         ArrayList<Graph.FringeNode> safestMoves = getSafestMoves(allProbabilities);
-        Move nextMove = getRandomMove(safestMoves);
-        this.movesToPlay.add(nextMove);
+        addUncertainMoveToStats();
+        return getRandomMove(safestMoves);
     }
 
     private ArrayList<Graph.FringeNode> getSafestMoves(PriorityQueue<Graph.FringeNode> allProbabilities) {
