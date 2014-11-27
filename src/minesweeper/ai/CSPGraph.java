@@ -47,6 +47,12 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         computeMoves(grid);
         addMovesToPlay(grid, gridCopy);
 
+        Set<Move> errors = grid.checkMove(movesToPlay);
+        if(!errors.isEmpty()){
+            int i=0;
+
+        }
+
         return movesToPlay;
     }
 

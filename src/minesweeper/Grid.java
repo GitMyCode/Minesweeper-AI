@@ -77,6 +77,27 @@ public class Grid {
 
     }
 
+
+    /*
+   * TODO
+   * Pour debuggage seulement Ne doit pas etre utiliser comme strategie dans
+   * Les AI
+   * */
+    public Set<Move> checkMove(Set<Move> moves) {
+        Set<Move> badMoves = new LinkedHashSet<Move>();
+        if(!firstMove){
+            for (Move m : moves) {
+                if (underneathValues[m.index] != Case.MINE && m.coup == Coup.FLAG) {
+                    badMoves.add(m);
+                } else if (underneathValues[m.index] == Case.MINE && m.coup == Coup.SHOW) {
+                    badMoves.add(m);
+                }
+            }
+        }
+
+        return badMoves;
+    }
+
     private Case[] createRandomGrid(int nbLignes, int nbColonnes, int nbMines, int firstClick) {
         Case[] grid = new Case[nbColonnes * nbLignes];
         Arrays.fill(grid, Case.EMPTY);

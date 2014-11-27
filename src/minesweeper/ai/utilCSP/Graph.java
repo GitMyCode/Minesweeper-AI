@@ -75,11 +75,11 @@ public class Graph {
                 * Et une parce que c'est ce qu'on retourne. ( c'est plus facile d'iterer sur les liste puiqu'on a un index)
                 */
                 List<FringeNode> front = new ArrayList<FringeNode>();
-                front.add(fringeNode);
-
+                /*front.add(fringeNode);
+                inFrontiereSoFar.add(fringeNode);*/
 
                 //On ce lance dans la recursion pour accumuler les nodes suivant
-                putInFrontier(i, front, inFrontiereSoFar, grid);
+                putInFrontier(fringeNode, front, inFrontiereSoFar, grid);
 
                 //Ajoute la frontier accumuler durant la recursion aux Nodes déja visité
                 //Je contraint les frontiers a etre au moins plus que 2 sinon on ne peut pas faire grand chose
@@ -126,18 +126,53 @@ public class Graph {
     * Methode qui recurse sur les noeuds et accumuler les nouveau qu'il trouve
     *
     * */
-    void putInFrontier(int nextIndex, List<FringeNode> hintNodeList, Set<Node> inBorderSoFar, Case[] grid){
+    void putInFrontier(FringeNode startNode, List<FringeNode> hintNodeList, Set<Node> inBorderSoFar, Case[] grid){
+
+        Queue queue = new LinkedList();
+        queue.add(startNode);
+
+        inBorderSoFar.add(startNode);
+        hintNodeList.add(startNode);
+
+        while(!queue.isEmpty()){
+            FringeNode currentNode = (FringeNode) queue.remove();
+            FringeNode nextNode =null;
+             /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
+
+            Set<Direction> thisDirection = getPossibleDirection(grid, currentNode.indexInGrid, inBorderSoFar);
+            //Si aucun direction alors on backtrack
+
+            if (!(thisDirection == null || thisDirection.isEmpty())){
+                for(Direction nextDirection : thisDirection){
+                    int next = currentNode.indexInGrid + gameGrid.step(nextDirection);
+                    nextNode = new FringeNode(next);
+
+                    if(!inBorderSoFar.contains(nextNode)){
+                        nextNode.hintNodes = getHintNeirbour(grid,nextNode);
+                        inBorderSoFar.add(nextNode);
+                        hintNodeList.add(nextNode);
+                        queue.add(nextNode);
+                    }
+
+                }
+            }
+
+        }
+
+
+
 
         /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
-        Set<Direction> thisDirection = getPossibleDirection(grid, nextIndex, inBorderSoFar);
+        /*Set<Direction> thisDirection = getPossibleDirection(grid, startNode.indexInGrid, inBorderSoFar);
         //Si aucun direction alors on backtrack
         if (thisDirection == null || thisDirection.isEmpty()){
             return;
         }
 
 
+
         for (Direction nextDir : thisDirection){
-            int next = nextIndex+gameGrid.step(nextDir);
+            int next = startNode.indexInGrid+gameGrid.step(nextDir);
             FringeNode nextNode = new FringeNode(next);
 
             //Si ce n'est pas un noeud qu'on connait déja alors on l'ajoute!
@@ -146,13 +181,14 @@ public class Graph {
                 // va chercher les indices qui influences ce noeud
                 nextNode.hintNodes = getHintNeirbour(grid,nextNode);
 
-                /*
+                *//*
                 * on place le noeud trouver dasns les listes
-                * */
+                * *//*
+                inBorderSoFar.add(nextNode);
                 hintNodeList.add(nextNode);
-                putInFrontier(next, hintNodeList, inBorderSoFar, grid);
+                putInFrontier(nextNode, hintNodeList, inBorderSoFar, grid);
             }
-        }
+        }*/
     }
 
 
