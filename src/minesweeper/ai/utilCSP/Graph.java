@@ -74,17 +74,14 @@ public class Graph {
                 /*un Set pour s'assurer un frontiere de noeud unique
                 * Et une parce que c'est ce qu'on retourne. ( c'est plus facile d'iterer sur les liste puiqu'on a un index)
                 */
-                Set<Node> frontHash = new HashSet<Node>();
                 List<FringeNode> front = new ArrayList<FringeNode>();
                 front.add(fringeNode);
-                frontHash.add(fringeNode);
 
 
                 //On ce lance dans la recursion pour accumuler les nodes suivant
-                putInFrontier(i, front, frontHash, inFrontiereSoFar, grid);
+                putInFrontier(i, front, inFrontiereSoFar, grid);
 
                 //Ajoute la frontier accumuler durant la recursion aux Nodes déja visité
-                inFrontiereSoFar.addAll(frontHash);
                 //Je contraint les frontiers a etre au moins plus que 2 sinon on ne peut pas faire grand chose
                 //avec ca. Mais c'est peut etre une mauvaise idée
                 if (front.size() >= 2){
@@ -129,10 +126,10 @@ public class Graph {
     * Methode qui recurse sur les noeuds et accumuler les nouveau qu'il trouve
     *
     * */
-    void putInFrontier(int nextIndex, List<FringeNode> hintNodeList, Set<Node> hintNodeSet, Set<Node> inBorderSoFar, Case[] grid){
+    void putInFrontier(int nextIndex, List<FringeNode> hintNodeList, Set<Node> inBorderSoFar, Case[] grid){
 
         /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
-        Set<Direction> thisDirection = getPossibleDirection(grid, nextIndex, hintNodeSet);
+        Set<Direction> thisDirection = getPossibleDirection(grid, nextIndex, inBorderSoFar);
         //Si aucun direction alors on backtrack
         if (thisDirection == null || thisDirection.isEmpty()){
             return;
@@ -144,7 +141,7 @@ public class Graph {
             FringeNode nextNode = new FringeNode(next);
 
             //Si ce n'est pas un noeud qu'on connait déja alors on l'ajoute!
-            if (!hintNodeSet.contains(nextNode) && !inBorderSoFar.contains(nextNode)){
+            if (!inBorderSoFar.contains(nextNode)){
 
                 // va chercher les indices qui influences ce noeud
                 nextNode.hintNodes = getHintNeirbour(grid,nextNode);
@@ -152,9 +149,8 @@ public class Graph {
                 /*
                 * on place le noeud trouver dasns les listes
                 * */
-                hintNodeSet.add(nextNode);
                 hintNodeList.add(nextNode);
-                putInFrontier(next, hintNodeList, hintNodeSet, inBorderSoFar, grid);
+                putInFrontier(next, hintNodeList, inBorderSoFar, grid);
             }
         }
     }
