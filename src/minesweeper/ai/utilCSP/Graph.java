@@ -17,6 +17,7 @@ public class Graph {
     public int nbFrontiere =0;
 
     public HashMap<Integer,HintNode> mapHintNode;
+    public HashMap<Integer,FringeNode> mapFringeNode;
     public List<List<HintNode>> allHintNode;
     public List<List<FringeNode>> allFringeNodes;
     public Set<Integer> deactivatedNode;
@@ -29,6 +30,8 @@ public class Graph {
 
         deactivatedNode = new HashSet<Integer>();
         mapHintNode = new HashMap<Integer, HintNode>();
+        mapFringeNode = new HashMap<Integer, FringeNode>();
+
         allHintNode = new ArrayList<List<HintNode>>();
         allFringeNodes = new ArrayList<List<FringeNode>>();
 
@@ -131,7 +134,8 @@ public class Graph {
         Queue queue = new LinkedList();
         queue.add(startNode);
 
-        inBorderSoFar.add(startNode);
+        //inBorderSoFar.add(startNode);
+        mapFringeNode.put(startNode.indexInGrid,startNode);
         hintNodeList.add(startNode);
 
         while(!queue.isEmpty()){
@@ -145,13 +149,24 @@ public class Graph {
             if (!(thisDirection == null || thisDirection.isEmpty())){
                 for(Direction nextDirection : thisDirection){
                     int next = currentNode.indexInGrid + gameGrid.step(nextDirection);
-                    nextNode = new FringeNode(next);
 
-                    if(!inBorderSoFar.contains(nextNode)){
+
+
+
+                    if(!mapFringeNode.containsKey(next)){
+                        nextNode = new FringeNode(next);
                         nextNode.hintNodes = getHintNeirbour(grid,nextNode);
-                        inBorderSoFar.add(nextNode);
+
+                        mapFringeNode.put(nextNode.indexInGrid,nextNode);
+                        //inBorderSoFar.add(nextNode);
                         hintNodeList.add(nextNode);
                         queue.add(nextNode);
+
+                        nextNode.fringeNeighbor.add(currentNode);
+                        currentNode.fringeNeighbor.add(nextNode);
+
+                    }else{
+                        currentNode.fringeNeighbor.add(mapFringeNode.get(next));
                     }
 
                 }
@@ -159,8 +174,30 @@ public class Graph {
 
         }
 
+       /* LinkedHashSet<Node> test = new LinkedHashSet<Node>();
 
+        FringeNode TrueStart = hintNodeList.get(hintNodeList.size()-1);
 
+        Set<Node> set = new HashSet<Node>();
+        Stack<FringeNode> stack = new Stack<FringeNode>();
+        stack.add(TrueStart);
+        set.add(TrueStart);
+        test.add(TrueStart);
+
+        while (!stack.isEmpty()){
+            FringeNode current = stack.pop();
+            if(current.fringeNeighbor.isEmpty() ){
+                int dsfsdf=0;
+            }else{
+                for(FringeNode f : current.fringeNeighbor){
+                    if(!set.contains(f)){
+                        stack.add(f);
+                        test.add(f);
+                        set.add(f);
+                    }
+                }
+            }
+        }*/
 
         /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
         /*Set<Direction> thisDirection = getPossibleDirection(grid, startNode.indexInGrid, inBorderSoFar);
@@ -205,7 +242,7 @@ public class Graph {
 
 
             if (gameGrid.isStepThisDirInGrid(D, index) &&
-                    !frontiere.contains(next) &&
+                    //!frontiere.contains(next) &&
                     isAFringeNode(grid,next))
             {
                 Collection<Integer> indiceNeirboursCurrentNode = getIndiceNeirbours(grid,index);
@@ -412,11 +449,14 @@ public class Graph {
         public float probabilityMine = 0.5f;
         public int nbFlagsHit = 0;
         public Set<HintNode> hintNodes;
+        public Set<FringeNode> fringeNeighbor;
         public Case state = UNDISCOVERED;
+
 
         public FringeNode(int index) {
             super(index);
             hintNodes = new LinkedHashSet<HintNode>();
+            fringeNeighbor = new LinkedHashSet<FringeNode>();
         }
 
         public void computeMineProbability(int totalAssignations) {
