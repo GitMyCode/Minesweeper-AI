@@ -37,8 +37,6 @@ public class GridControllerImpl implements GridController {
         int index = ligne* gridBoard.nbCols + colonne;
 
         gridBoard.play(index, Coup.SHOW);
-
-
         flagRemain.setText(String.valueOf(gridBoard.nbFlagsRemaining));
         updateView();
 
@@ -67,18 +65,24 @@ public class GridControllerImpl implements GridController {
     }
 
     public synchronized void updateView(){
-           try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run () {
-                            gridView.repaint();
-                    }
-                });
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            } catch (InvocationTargetException e) {
-                // should not happen
-                e.printStackTrace();
+
+            Runnable codeToRun = new Runnable() {
+                @Override
+                public void run () {
+                    gridView.repaint();
+                }
+            };
+
+            if(SwingUtilities.isEventDispatchThread()){
+                codeToRun.run();
+            }else {
+                try {
+                    SwingUtilities.invokeAndWait(codeToRun);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
     }
 
