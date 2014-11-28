@@ -64,13 +64,19 @@ public class Graph {
     * */
     void findFrontier(Case[] grid){
         //Un set pour s'assurer qu'on ne prend pas deux fois le meme noeud;
-        Set<Node> inFrontiereSoFar = new HashSet<Node>();
+        Set<Integer> inFrontiereSoFar = new HashSet<Integer>();
         for (int i =0; i < grid.length; i++){
 
             if (!inFrontiereSoFar.contains(i) && isAFringeNode(grid,i)){
 
+
                 FringeNode fringeNode = new FringeNode(i);
 
+                if(!inFrontiereSoFar.contains(i) && inFrontiereSoFar.contains(fringeNode)){
+                    int dfsdf=0;
+                    inFrontiereSoFar.contains(i);
+                    inFrontiereSoFar.contains(fringeNode);
+                }
                 //Va chercher les indices qui influence ce Noeud
                 fringeNode.hintNodes = getHintNeirbour(grid,fringeNode);
 
@@ -129,15 +135,16 @@ public class Graph {
     * Methode qui recurse sur les noeuds et accumuler les nouveau qu'il trouve
     *
     * */
-    void putInFrontier(FringeNode startNode, List<FringeNode> hintNodeList, Set<Node> inBorderSoFar, Case[] grid){
+    void putInFrontier(FringeNode startNode, List<FringeNode> fringe, Set<Integer> inBorderSoFar, Case[] grid){
 
         Queue queue = new LinkedList();
         queue.add(startNode);
 
         //inBorderSoFar.add(startNode);
-        mapFringeNode.put(startNode.indexInGrid,startNode);
-        hintNodeList.add(startNode);
+        mapFringeNode.put(startNode.indexInGrid, startNode);
+       // hintNodeList.add(startNode);
 
+        FringeNode lastNode = startNode;
         while(!queue.isEmpty()){
             FringeNode currentNode = (FringeNode) queue.remove();
             FringeNode nextNode =null;
@@ -159,14 +166,27 @@ public class Graph {
 
                         mapFringeNode.put(nextNode.indexInGrid,nextNode);
                         //inBorderSoFar.add(nextNode);
-                        hintNodeList.add(nextNode);
+                //        hintNodeList.add(nextNode);
                         queue.add(nextNode);
 
-                        nextNode.fringeNeighbor.add(currentNode);
-                        currentNode.fringeNeighbor.add(nextNode);
+                        if(nextDirection.getCompDir().size()>1){
+                            nextNode.fringeNeighbor.addLast(currentNode);
+                            currentNode.fringeNeighbor.addLast(nextNode);
+                        }else{
+                            nextNode.fringeNeighbor.addFirst(currentNode);
+                            currentNode.fringeNeighbor.addFirst(nextNode);
+                        }
 
+                        lastNode = nextNode;
                     }else{
-                        currentNode.fringeNeighbor.add(mapFringeNode.get(next));
+                        if(!currentNode.fringeNeighbor.contains(mapFringeNode.get(next))){
+                            if(nextDirection.getCompDir().size()>1){
+                                currentNode.fringeNeighbor.addLast(mapFringeNode.get(next));
+                            }else {
+                                currentNode.fringeNeighbor.addFirst(mapFringeNode.get(next));
+                            }
+                        }
+
                     }
 
                 }
@@ -174,30 +194,43 @@ public class Graph {
 
         }
 
-       /* LinkedHashSet<Node> test = new LinkedHashSet<Node>();
 
-        FringeNode TrueStart = hintNodeList.get(hintNodeList.size()-1);
+        FringeNode TrueStart = lastNode;
 
         Set<Node> set = new HashSet<Node>();
         Stack<FringeNode> stack = new Stack<FringeNode>();
         stack.add(TrueStart);
-        set.add(TrueStart);
-        test.add(TrueStart);
+        inBorderSoFar.add(TrueStart.indexInGrid);
+        fringe.add(TrueStart);
 
         while (!stack.isEmpty()){
             FringeNode current = stack.pop();
             if(current.fringeNeighbor.isEmpty() ){
                 int dsfsdf=0;
             }else{
-                for(FringeNode f : current.fringeNeighbor){
-                    if(!set.contains(f)){
+               /* LinkedList<FringeNode> list = new LinkedList<FringeNode>(current.fringeNeighbor);
+                Iterator<FringeNode> itr = list.descendingIterator();
+                while (itr.hasNext()){
+                    FringeNode f = itr.next();
+                    if(!inBorderSoFar.contains(f.indexInGrid)){
                         stack.add(f);
-                        test.add(f);
-                        set.add(f);
+                        fringe.add(f);
+                        inBorderSoFar.add(f.indexInGrid);
+                        break;
+                    }
+                }*/
+                for(FringeNode f : current.fringeNeighbor){
+                    if(!inBorderSoFar.contains(f.indexInGrid)){
+                        stack.add(f);
+                        fringe.add(f);
+                        inBorderSoFar.add(f.indexInGrid);
+                        break;
                     }
                 }
+
+
             }
-        }*/
+        }
 
         /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
         /*Set<Direction> thisDirection = getPossibleDirection(grid, startNode.indexInGrid, inBorderSoFar);
@@ -234,7 +267,7 @@ public class Graph {
     /*
     * Va aller chercher les prochaines directions qui menent vers un noeud valide
     * */
-    Set<Direction> getPossibleDirection(Case[] grid, int index, Set<Node> frontiere){
+    Set<Direction> getPossibleDirection(Case[] grid, int index, Set<Integer> frontiere){
         Set<Direction> directions = new LinkedHashSet<Direction>();
 
         for (Direction D : HUIT_DIRECTIONS){
@@ -271,9 +304,9 @@ public class Graph {
         return indices;
     }
 
-    public Set<HintNode> getHintNeirbour(Case[] g, FringeNode fringeNode){
+    public LinkedHashSet<HintNode> getHintNeirbour(Case[] g, FringeNode fringeNode){
 
-        Set<HintNode> hintNodes = new LinkedHashSet<HintNode>();
+        LinkedHashSet<HintNode> hintNodes = new LinkedHashSet<HintNode>();
         for(Integer indexHint : gameGrid.getSurroundingIndex(fringeNode.indexInGrid)){
 
             if(Case.isIndicatorCase(g[indexHint])){
@@ -448,15 +481,15 @@ public class Graph {
     public class FringeNode extends Node implements Comparable {
         public float probabilityMine = 0.5f;
         public int nbFlagsHit = 0;
-        public Set<HintNode> hintNodes;
-        public Set<FringeNode> fringeNeighbor;
+        public LinkedHashSet<HintNode> hintNodes;
+        public LinkedList<FringeNode> fringeNeighbor;
         public Case state = UNDISCOVERED;
 
 
         public FringeNode(int index) {
             super(index);
             hintNodes = new LinkedHashSet<HintNode>();
-            fringeNeighbor = new LinkedHashSet<FringeNode>();
+            fringeNeighbor = new LinkedList<FringeNode>();
         }
 
         public void computeMineProbability(int totalAssignations) {

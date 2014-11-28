@@ -47,11 +47,6 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         computeMoves(grid);
         addMovesToPlay(grid, gridCopy);
 
-        Set<Move> errors = grid.checkMove(movesToPlay);
-        if(!errors.isEmpty()){
-            int i=0;
-
-        }
 
         return movesToPlay;
     }
@@ -167,6 +162,12 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
                 addRandomMove(grid, gridCopy);
                 addUncertainMoveToStats();
             } else {
+                Set<Move> errors = grid.checkMove(movesToPlay);
+                if(!errors.isEmpty()){
+                    System.out.println("ERREUR");
+                }
+
+
                 addCSPMoveToStats();
             }
         }
