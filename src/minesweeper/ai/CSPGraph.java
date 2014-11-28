@@ -60,8 +60,12 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
     }
 
     private void executeMoveComputation(Grid g) throws TimeOverException {
+        long time = System.currentTimeMillis();
         graph = new Graph(g);
+        System.out.println("Temps graph: "+(System.currentTimeMillis()- time)+" ms");
+        time = System.currentTimeMillis();
         CSPonAllFrontiers();
+        System.out.println("Temps CSP: "+(System.currentTimeMillis()- time)+" ms");
     }
 
     private void CSPonAllFrontiers() throws TimeOverException {
