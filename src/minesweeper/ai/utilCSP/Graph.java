@@ -166,7 +166,7 @@ public class Graph {
 
                         mapFringeNode.put(nextNode.indexInGrid,nextNode);
                         //inBorderSoFar.add(nextNode);
-                //        hintNodeList.add(nextNode);
+                        //        hintNodeList.add(nextNode);
                         queue.add(nextNode);
 
                         if(nextDirection.getCompDir().size()>1){
@@ -179,13 +179,14 @@ public class Graph {
 
                         lastNode = nextNode;
                     }else{
-                        if(!currentNode.fringeNeighbor.contains(mapFringeNode.get(next))){
+                        if(currentNode.fringeNeighbor.contains(mapFringeNode.get(next))){
                             if(nextDirection.getCompDir().size()>1){
                                 currentNode.fringeNeighbor.addLast(mapFringeNode.get(next));
                             }else {
                                 currentNode.fringeNeighbor.addFirst(mapFringeNode.get(next));
                             }
                         }
+
 
                     }
 
@@ -197,68 +198,30 @@ public class Graph {
 
         FringeNode TrueStart = lastNode;
 
-        Set<Node> set = new HashSet<Node>();
         Stack<FringeNode> stack = new Stack<FringeNode>();
         stack.add(TrueStart);
         inBorderSoFar.add(TrueStart.indexInGrid);
         fringe.add(TrueStart);
 
         while (!stack.isEmpty()){
-            FringeNode current = stack.pop();
-            if(current.fringeNeighbor.isEmpty() ){
-                int dsfsdf=0;
-            }else{
-               /* LinkedList<FringeNode> list = new LinkedList<FringeNode>(current.fringeNeighbor);
-                Iterator<FringeNode> itr = list.descendingIterator();
-                while (itr.hasNext()){
-                    FringeNode f = itr.next();
-                    if(!inBorderSoFar.contains(f.indexInGrid)){
-                        stack.add(f);
-                        fringe.add(f);
-                        inBorderSoFar.add(f.indexInGrid);
-                        break;
-                    }
-                }*/
+            FringeNode current = stack.peek();
+            FringeNode nextNode = null;
+            if(!current.fringeNeighbor.isEmpty() ){
                 for(FringeNode f : current.fringeNeighbor){
                     if(!inBorderSoFar.contains(f.indexInGrid)){
-                        stack.add(f);
-                        fringe.add(f);
-                        inBorderSoFar.add(f.indexInGrid);
+                        nextNode = f;
+                        stack.add(nextNode);
+                        fringe.add(nextNode);
+                        inBorderSoFar.add(nextNode.indexInGrid);
                         break;
                     }
                 }
-
-
+            }
+            if(nextNode == null){
+                stack.pop();
             }
         }
 
-        /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
-        /*Set<Direction> thisDirection = getPossibleDirection(grid, startNode.indexInGrid, inBorderSoFar);
-        //Si aucun direction alors on backtrack
-        if (thisDirection == null || thisDirection.isEmpty()){
-            return;
-        }
-
-
-
-        for (Direction nextDir : thisDirection){
-            int next = startNode.indexInGrid+gameGrid.step(nextDir);
-            FringeNode nextNode = new FringeNode(next);
-
-            //Si ce n'est pas un noeud qu'on connait déja alors on l'ajoute!
-            if (!inBorderSoFar.contains(nextNode)){
-
-                // va chercher les indices qui influences ce noeud
-                nextNode.hintNodes = getHintNeirbour(grid,nextNode);
-
-                *//*
-                * on place le noeud trouver dasns les listes
-                * *//*
-                inBorderSoFar.add(nextNode);
-                hintNodeList.add(nextNode);
-                putInFrontier(nextNode, hintNodeList, inBorderSoFar, grid);
-            }
-        }*/
     }
 
 
