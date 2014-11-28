@@ -73,7 +73,6 @@ public class Graph {
                 FringeNode fringeNode = new FringeNode(i);
 
                 if(!inFrontiereSoFar.contains(i) && inFrontiereSoFar.contains(fringeNode)){
-                    int dfsdf=0;
                     inFrontiereSoFar.contains(i);
                     inFrontiereSoFar.contains(fringeNode);
                 }
@@ -140,9 +139,7 @@ public class Graph {
         Queue queue = new LinkedList();
         queue.add(startNode);
 
-        //inBorderSoFar.add(startNode);
         mapFringeNode.put(startNode.indexInGrid, startNode);
-       // hintNodeList.add(startNode);
 
         FringeNode lastNode = startNode;
         while(!queue.isEmpty()){
@@ -165,8 +162,6 @@ public class Graph {
                         nextNode.hintNodes = getHintNeirbour(grid,nextNode);
 
                         mapFringeNode.put(nextNode.indexInGrid,nextNode);
-                        //inBorderSoFar.add(nextNode);
-                        //        hintNodeList.add(nextNode);
                         queue.add(nextNode);
 
                         if(nextDirection.getCompDir().size()>1){
