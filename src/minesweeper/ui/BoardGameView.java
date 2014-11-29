@@ -181,6 +181,9 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             }
         });
         linkMVC();
+
+
+
     }
 
     @Override
