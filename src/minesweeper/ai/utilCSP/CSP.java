@@ -1,11 +1,16 @@
 package minesweeper.ai.utilCSP;
 
 import minesweeper.Coup;
+import minesweeper.Grid;
 import minesweeper.Move;
 import minesweeper.ai.dataRepresentation.FringeNode;
 import minesweeper.ai.dataRepresentation.Graph;
 import minesweeper.ai.dataRepresentation.HintNode;
+import minesweeper.ai.strategyCSP.FowardCheckCSP;
+import minesweeper.ai.strategyCSP.SimpleCSP;
+import minesweeper.ai.strategyCSP.StrategyCSP;
 
+import java.io.File;
 import java.util.*;
 
 import static minesweeper.Case.*;
@@ -229,6 +234,49 @@ public class CSP {
                 }
             }
         }
+    }
+
+
+    public static void main (String[] args) {
+        StrategyCSP simpleCSP = new SimpleCSP();
+        StrategyCSP fowardcheckCSP = new FowardCheckCSP();
+
+        File directory = new File("src\\minesweeper\\ai\\utilCSP\\benchmarkGridCSP");
+
+        File[] allTestFile = directory.listFiles();
+
+        System.out.println("Simple CSP");
+        simpleCSP.addLineToExecutionLog("Simple CSP");
+        for (File testFile : allTestFile) {
+            Grid testGrid = new Grid(testFile);
+            Graph testGraph = new Graph(testGrid);
+            simpleCSP.addLineToExecutionLog("--------- " + testFile.getName() + " ---------");
+            simpleCSP.executeCSPonGraph(testGraph);
+
+        }
+
+        System.out.println("Foward check CSP");
+        fowardcheckCSP.addLineToExecutionLog("Foward check CSP");
+        for (File testFile : allTestFile) {
+            Grid testGrid = new Grid(testFile);
+            Graph testGraph = new Graph(testGrid);
+            fowardcheckCSP.addLineToExecutionLog("--------- " + testFile.getName() + " ---------");
+            fowardcheckCSP.executeCSPonGraph(testGraph);
+
+        }
+
+        String[] simpleLog = simpleCSP.getExecutionLog().split("\n");
+        String[] fowardCheckLog = fowardcheckCSP.getExecutionLog().split("\n");
+        for (int i = 0; i < simpleLog.length; i++) {
+            int spaceSize = 40 - simpleLog[i].length();
+            char[] spaceArray = new char[spaceSize];
+            Arrays.fill(spaceArray, ' ');
+            String space = new String(spaceArray);
+
+            System.out.println(simpleLog[i] + space + fowardCheckLog[i]);
+        }
+        /*System.out.println(simpleCSP.getExecutionLog());
+        System.out.println(fowardcheckCSP.getExecutionLog());*/
     }
 
 

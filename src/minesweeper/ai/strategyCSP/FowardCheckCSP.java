@@ -23,6 +23,7 @@ public class FowardCheckCSP implements StrategyCSP {
     protected int nbValidAssignations = 0;
     protected Grid gameGrid;
     protected Graph graph;
+    protected String cumulatedTimeStats = "";
 
 
     @Override
@@ -45,15 +46,15 @@ public class FowardCheckCSP implements StrategyCSP {
             nbValidAssignations = 0;
             recurseCSP(hintBorder, fringeNodes, 0);
             graph.nbValidAssignationsPerFrontier.add(nbValidAssignations);
-            System.out.println("Temps frontiere " + i + ": " + (System.currentTimeMillis() - time) + " ms");
+
+            addLineToExecutionLog("frontiere (" + i + ") :" + (System.currentTimeMillis() - time) + " ms");
         }
     }
 
     private boolean recurseCSP (List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
-        if (!allFlagsOkay(hintNodes, index)) {
+        /*if (!allFlagsOkay(hintNodes, index)) {
             return false;
-        }
-
+        }*/
         if (solutionFound(index, hintNodes)) {
             computeFlagHits(fringeNodes);
             nbValidAssignations++;
@@ -108,7 +109,6 @@ public class FowardCheckCSP implements StrategyCSP {
 
     private boolean neighbourhoodOkey (HintNode hintNode) {
         for (HintNode hn : hintNode.connectedHint) {
-            hn.updateSurroundingAwareness();
             if (hn.isUnsatisfiable()) {
                 return false;
             }
@@ -178,4 +178,13 @@ public class FowardCheckCSP implements StrategyCSP {
     }
 
 
+    @Override
+    public void addLineToExecutionLog (String line) {
+        cumulatedTimeStats += line + "\n";
+    }
+
+    @Override
+    public String getExecutionLog () {
+        return cumulatedTimeStats;
+    }
 }

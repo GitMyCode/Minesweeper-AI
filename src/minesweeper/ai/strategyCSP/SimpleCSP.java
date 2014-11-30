@@ -26,6 +26,7 @@ public class SimpleCSP implements StrategyCSP {
     protected Grid gameGrid;
     protected Graph graph;
     protected Set<Move> movesToPlay;
+    protected String cumulatedTimeStats = "";
 
 
     @Override
@@ -48,7 +49,7 @@ public class SimpleCSP implements StrategyCSP {
             nbValidAssignations = 0;
             recurseCSP(hintBorder, fringeNodes, 0);
             graph.nbValidAssignationsPerFrontier.add(nbValidAssignations);
-            System.out.println("Temps frontiere " + i + ": " + (System.currentTimeMillis() - time) + " ms");
+            addLineToExecutionLog("frontiere (" + i + ") :" + (System.currentTimeMillis() - time) + " ms");
         }
     }
 
@@ -136,5 +137,14 @@ public class SimpleCSP implements StrategyCSP {
         }
     }
 
+    @Override
+    public void addLineToExecutionLog (String line) {
+        cumulatedTimeStats += line + "\n";
+    }
+
+    @Override
+    public String getExecutionLog () {
+        return cumulatedTimeStats;
+    }
 
 }
