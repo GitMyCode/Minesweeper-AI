@@ -34,7 +34,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
     protected int nbTotalMoves;
 
     @Override
-    public Set<Move> getNextMoves(Grid grid, int delay) {
+    public Set<Move> getNextMoves (Grid grid, int delay) {
         this.gameGrid = grid;
         this.nbValidAssignations = 0;
         Case[] gridCopy = grid.getCpyPlayerView();
@@ -53,7 +53,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         return movesToPlay;
     }
 
-    private void computeMoves(Grid g) {
+    private void computeMoves (Grid g) {
         try {
             executeMoveComputation(g);
         } catch (TimeOverException e) {
@@ -61,20 +61,20 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         }
     }
 
-    private void executeMoveComputation(Grid g) throws TimeOverException {
+    private void executeMoveComputation (Grid g) throws TimeOverException {
         long time = System.currentTimeMillis();
         graph = new Graph(g);
-        System.out.println("Temps graph: "+(System.currentTimeMillis()- time)+" ms");
+        System.out.println("Temps graph: " + (System.currentTimeMillis() - time) + " ms");
         time = System.currentTimeMillis();
         CSPonAllFrontiers();
         System.out.println("Temps CSP: " + (System.currentTimeMillis() - time) + " ms");
-        long total = System.currentTimeMillis()-time;
-        if(total >= 100){
-            int stop=0;
+        long total = System.currentTimeMillis() - time;
+        if (total >= 100) {
+            int stop = 0;
         }
     }
 
-    private void CSPonAllFrontiers() throws TimeOverException {
+    private void CSPonAllFrontiers () throws TimeOverException {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             long time = System.currentTimeMillis();
             List<HintNode> hintBorder = graph.allHintNode.get(i);
@@ -86,9 +86,13 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         }
     }
 
-    private boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) throws TimeOverException {
-        if (isTimeUp()) { throw new TimeOverException(); }
-        if (!allFlagsOkay(hintNodes, index)) { return false; }
+    private boolean recurseCSP (List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) throws TimeOverException {
+        if (isTimeUp()) {
+            throw new TimeOverException();
+        }
+        if (!allFlagsOkay(hintNodes, index)) {
+            return false;
+        }
 
         if (solutionFound(index, hintNodes)) {
             computeFlagHits(fringeNodes);
@@ -99,7 +103,9 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         HintNode variableToSatisfy = hintNodes.get(index);
         variableToSatisfy.updateSurroundingAwareness();
 
-        if (variableToSatisfy.isUnsatisfiable()) { return false; }
+        if (variableToSatisfy.isUnsatisfiable()) {
+            return false;
+        }
         if (variableToSatisfy.isSatisfied()) {
             List<FringeNode> fringe = variableToSatisfy.getUndiscoveredFringe();
             deactivateFringe(fringe);
@@ -120,7 +126,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
             int nbFlagToPlaceHere = variableToSatisfy.nbFlagToPlace;
             addFlagsToUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
             variableToSatisfy.updateSurroundingAwareness();
-            if(neighbourhoodOkey(variableToSatisfy)){
+            if (neighbourhoodOkey(variableToSatisfy)) {
                 recurseCSP(hintNodes, fringeNodes, index + 1);
             }
             removeFlagsFromUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
@@ -130,14 +136,14 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         return false;
     }
 
-    private boolean isTimeUp() {
-        END = (timeRemaining() < LIMITE) ? true: END;
+    private boolean isTimeUp () {
+        END = (timeRemaining() < LIMITE) ? true : END;
         return END;
     }
 
-    private boolean allFlagsOkay(List<HintNode> hintNodes, int nbDone) {
-        for(int i=0; i<nbDone ; i++){
-            if(!hintNodes.get(i).isSatisfied()){
+    private boolean allFlagsOkay (List<HintNode> hintNodes, int nbDone) {
+        for (int i = 0; i < nbDone; i++) {
+            if (!hintNodes.get(i).isSatisfied()) {
                 return false;
             }
         }
@@ -158,36 +164,39 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         }*/
         return true;
     }
-    private boolean neighbourhoodOkey(HintNode hintNode){
-        for(HintNode hn : hintNode.connectedHint){
+
+    private boolean neighbourhoodOkey (HintNode hintNode) {
+        for (HintNode hn : hintNode.connectedHint) {
             hn.updateSurroundingAwareness();
-            if(hn.isUnsatisfiable()){
+            if (hn.isUnsatisfiable()) {
                 return false;
             }
         }
         return true;
     }
 
-    static public boolean solutionFound(List<HintNode> hintNodes){
-        for(HintNode hn : hintNodes){
-            if(!hn.isSatisfied()){
+    static public boolean solutionFound (List<HintNode> hintNodes) {
+        for (HintNode hn : hintNodes) {
+            if (!hn.isSatisfied()) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean solutionFound(int index, List<HintNode> hintNodes) {
+    private boolean solutionFound (int index, List<HintNode> hintNodes) {
         return (index >= hintNodes.size());
     }
 
-    private void computeFlagHits(List<FringeNode> fringeNodes) {
+    private void computeFlagHits (List<FringeNode> fringeNodes) {
         for (FringeNode fn : fringeNodes) {
-            if (fn.state == FLAGED) { fn.nbFlagsHit++; }
+            if (fn.state == FLAGED) {
+                fn.nbFlagsHit++;
+            }
         }
     }
 
-    private void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    private void addFlagsToUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
             FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
             fringeToFlag.state = FLAGED;
@@ -196,36 +205,39 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
 
     }
 
-    private void removeFlagsFromUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    private void removeFlagsFromUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
             FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
             fringeToFlag.state = UNDISCOVERED;
         }
         activateFringe(undiscoveredFringe);
     }
+
     /*
         * This method is use when the hint is satisfied and any more flag
         * put on his fringe would invalid him (Foward checking)
         * */
-    private void deactivateFringe(List<FringeNode> fringe){
-        for(FringeNode fn : fringe){
-            if(fn.state != FLAGED){
+    private void deactivateFringe (List<FringeNode> fringe) {
+        for (FringeNode fn : fringe) {
+            if (fn.state != FLAGED) {
                 fn.isDeactivated = true;
             }
         }
     }
+
     /*
     * Use for reactivating a fringe previously deactivated (When the CSP backtrack we need to free theses fringes)
     * */
-    private void activateFringe(List<FringeNode> fringe){
-        for(FringeNode fn : fringe){
-            if(fn.isDeactivated){
+    private void activateFringe (List<FringeNode> fringe) {
+        for (FringeNode fn : fringe) {
+            if (fn.isDeactivated) {
                 fn.isDeactivated = false;
             }
         }
     }
 
-    protected void addMovesToPlay(Grid grid, Case[] gridCopy) {
+
+    protected void addMovesToPlay (Grid grid, Case[] gridCopy) {
         if (this.movesToPlay.isEmpty()) {
             addSafeMovesAndFlags();
             if (this.movesToPlay.isEmpty()) {
@@ -233,7 +245,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
                 addUncertainMoveToStats();
             } else {
                 Set<Move> errors = grid.checkMove(movesToPlay);
-                if(!errors.isEmpty()){
+                if (!errors.isEmpty()) {
                     System.out.println("ERREUR");
                 }
 
@@ -243,7 +255,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         }
     }
 
-    protected void addSafeMovesAndFlags() {
+    protected void addSafeMovesAndFlags () {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int nbPossibilityHere = nbValidAssignationsPerFrontier.get(frontierIndex);
@@ -260,7 +272,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         }
     }
 
-    protected void addRandomMove(Grid grid, Case[] gridCopy) {
+    protected void addRandomMove (Grid grid, Case[] gridCopy) {
         List<Integer> legalMoves = new ArrayList<Integer>();
         for (int i = 0; i < grid.length; i++) {
             if (gridCopy[i] == UNDISCOVERED) {
@@ -273,58 +285,63 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         this.movesToPlay.add(new Move(index, Coup.SHOW));
     }
 
-    private void startTimer(int delai) {
+    private void startTimer (int delai) {
         END = false;
         timer = System.currentTimeMillis();
         remain = delai;
     }
 
-    private String showTimeRemaing() { return ("Time: " + timeRemaining() + " ms"); }
+    private String showTimeRemaing () {
+        return ("Time: " + timeRemaining() + " ms");
+    }
 
-    public long timeRemaining() {
+    public long timeRemaining () {
         long elaspsed = (System.currentTimeMillis() - timer);
         return remain - elaspsed;
     }
 
-    protected void addTrivialMoveToStats() {
+    protected void addTrivialMoveToStats () {
         nbTrivialMoves++;
         nbTotalMoves++;
     }
 
-    protected void addCSPMoveToStats() {
+    protected void addCSPMoveToStats () {
         nbCSPMoves++;
         nbTotalMoves++;
     }
-    protected void addUncertainMoveToStats() {
+
+    protected void addUncertainMoveToStats () {
         nbUncertainMoves++;
         nbTotalMoves++;
     }
 
     @Override
-    public String getName() { return "CSP-Martin"; }
+    public String getName () {
+        return "CSP-Martin";
+    }
 
     @Override
-    public boolean isProbabilistic() {
+    public boolean isProbabilistic () {
         return false;
     }
 
     @Override
-    public double getProbabilitySuccessRate() {
+    public double getProbabilitySuccessRate () {
         return 0;
     }
 
     @Override
-    public double getTrivialMoveRate() {
+    public double getTrivialMoveRate () {
         return (double) nbTrivialMoves / nbTotalMoves;
     }
 
     @Override
-    public double getCSPMoveRate() {
+    public double getCSPMoveRate () {
         return (double) nbCSPMoves / nbTotalMoves;
     }
 
     @Override
-    public double getUncertainMoveRate() {
+    public double getUncertainMoveRate () {
         return (double) nbUncertainMoves / nbTotalMoves;
     }
 }
