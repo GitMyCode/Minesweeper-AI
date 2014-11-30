@@ -3,6 +3,8 @@ package minesweeper.ai.utilCSP;
 import minesweeper.Case;
 import minesweeper.Coup;
 import minesweeper.Move;
+import minesweeper.ai.dataRepresentation.FringeNode;
+import minesweeper.ai.dataRepresentation.Node;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,17 +38,17 @@ class Util {
         public void print(){
             printGrid(charGrid,cols);
         }
-        public BuildPrintGrid showFLagedFringe (Collection<Graph.Node> nodes) {
-            for (Graph.Node node : nodes) {
-                if (((Graph.FringeNode) node).state == Case.FLAGED) {
+        public BuildPrintGrid showFLagedFringe (Collection<Node> nodes) {
+            for (Node node : nodes) {
+                if (((FringeNode) node).state == Case.FLAGED) {
                     charGrid[node.indexInGrid] = '⚐';
                 }
             }
             return this;
         }
-        public BuildPrintGrid showDeactivatedFringe (Collection<Graph.Node> nodes) {
-            for (Graph.Node node : nodes) {
-                if (((Graph.FringeNode) node).isDeactivated) {
+        public BuildPrintGrid showDeactivatedFringe (Collection<Node> nodes) {
+            for (Node node : nodes) {
+                if (((FringeNode) node).isDeactivated) {
                     charGrid[node.indexInGrid] = 'X';
                 }
             }
@@ -171,28 +173,28 @@ class Util {
         }
     }
 
-    public static void printFrontiereNodeInOrder(Case[] gridOrigin,int nbcol, List<Graph.Node> frontiere){
+    public static void printFrontiereNodeInOrder(Case[] gridOrigin,int nbcol, List<Node> frontiere){
         Case[] cpy = gridOrigin.clone();
-        for(Graph.Node i: frontiere){
+        for(Node i: frontiere){
             printIndex(cpy,nbcol,i.indexInGrid);
         }
     }
 
-    public static void printDeactivatedFringe(Case[] gridOrigin, int nbcol,Collection<Graph.Node> nodes){
+    public static void printDeactivatedFringe(Case[] gridOrigin, int nbcol,Collection<Node> nodes){
 
         char[] gridChar = getGridToChar(gridOrigin);
-        for(Graph.Node node : nodes){
-            if(((Graph.FringeNode)node).isDeactivated){
+        for(Node node : nodes){
+            if(((FringeNode)node).isDeactivated){
                 gridChar[node.indexInGrid] = 'X';
             }
         }
         printGrid(gridChar,nbcol);
     }
-    public static void printFlaggedFringe(Case[] gridOrigin, int nbcol,Collection<Graph.Node> nodes){
+    public static void printFlaggedFringe(Case[] gridOrigin, int nbcol,Collection<Node> nodes){
 
         char[] gridChar = getGridToChar(gridOrigin);
-        for(Graph.Node node : nodes){
-            if(((Graph.FringeNode)node).state == Case.FLAGED){
+        for(Node node : nodes){
+            if(((FringeNode)node).state == Case.FLAGED){
                 gridChar[node.indexInGrid] = '⚐';
             }
         }
@@ -235,15 +237,15 @@ class Util {
 
     }
 
-    public static void printFrontiereNode(Case[] gridOrigin, int nbcol,Collection<? extends Graph.Node> frontiere){
+    public static void printFrontiereNode(Case[] gridOrigin, int nbcol,Collection<? extends Node> frontiere){
 
         String print="";
 
         int i=1;
         Case[] grid = gridOrigin.clone();
 
-        for(Graph.Node f : frontiere){
-            Graph.Node fn =  Graph.Node.class.cast(f);
+        for(Node f : frontiere){
+            Node fn = Node.class.cast(f);
             grid[fn.indexInGrid] = Case.BLOW;
         }
 

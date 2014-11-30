@@ -2,7 +2,7 @@ package minesweeper.ai;
 
 import minesweeper.Coup;
 import minesweeper.Move;
-import minesweeper.ai.utilCSP.Graph;
+import minesweeper.ai.dataRepresentation.FringeNode;
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;
@@ -11,29 +11,29 @@ import java.util.Random;
 public class ProbabilisticAIwithRandomSelection extends ProbabilisticAI {
 
     @Override
-    protected Move getSafestMove(PriorityQueue<Graph.FringeNode> allProbabilities) {
-        ArrayList<Graph.FringeNode> safestMoves = getSafestMoves(allProbabilities);
+    protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities) {
+        ArrayList<FringeNode> safestMoves = getSafestMoves(allProbabilities);
         addUncertainMoveToStats();
         return getRandomMove(safestMoves);
     }
 
-    private ArrayList<Graph.FringeNode> getSafestMoves(PriorityQueue<Graph.FringeNode> allProbabilities) {
-        ArrayList<Graph.FringeNode> safestMoves = new ArrayList<Graph.FringeNode>();
+    private ArrayList<FringeNode> getSafestMoves(PriorityQueue<FringeNode> allProbabilities) {
+        ArrayList<FringeNode> safestMoves = new ArrayList<FringeNode>();
         float safestProbability = allProbabilities.peek().probabilityMine;
 
         while (!allProbabilities.isEmpty()
                 && safestProbability == allProbabilities.peek().probabilityMine) {
-            Graph.FringeNode safestMove = allProbabilities.poll();
+            FringeNode safestMove = allProbabilities.poll();
             safestMoves.add(safestMove);
         }
 
         return safestMoves;
     }
 
-    private Move getRandomMove(ArrayList<Graph.FringeNode> movesList) {
+    private Move getRandomMove(ArrayList<FringeNode> movesList) {
         Random random = new Random();
         int randomIndex = random.nextInt(movesList.size());
-        Graph.FringeNode randomNode = movesList.get(randomIndex);
+        FringeNode randomNode = movesList.get(randomIndex);
         return new Move(randomNode.indexInGrid, Coup.SHOW);
     }
 }

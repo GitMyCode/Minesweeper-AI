@@ -4,7 +4,7 @@ import minesweeper.Case;
 import minesweeper.Coup;
 import minesweeper.Grid;
 import minesweeper.Move;
-import minesweeper.ai.utilCSP.Graph;
+import minesweeper.ai.dataRepresentation.FringeNode;
 
 import java.util.List;
 import java.util.PriorityQueue;
@@ -24,13 +24,13 @@ public class ProbabilisticAITest extends SafeOrRandomAI {
     }
 
     protected void addMovesWithProbabilities() {
-        PriorityQueue<Graph.FringeNode> allProbabilities = new PriorityQueue<Graph.FringeNode>();
+        PriorityQueue<FringeNode> allProbabilities = new PriorityQueue<FringeNode>();
 
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
-            List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
+            List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int totalValidAssignations = graph.nbValidAssignationsPerFrontier.get(frontierIndex);
 
-            for (Graph.FringeNode fn : fringeNodes) {
+            for (FringeNode fn : fringeNodes) {
                 fn.computeMineProbability(totalValidAssignations);
                 if (fn.isObviousMine()) {
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
@@ -50,17 +50,17 @@ public class ProbabilisticAITest extends SafeOrRandomAI {
         }
     }
 
-    protected Move getSafestMove(PriorityQueue<Graph.FringeNode> allProbabilities) {
-        Graph.FringeNode safestMove = allProbabilities.poll();
+    protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities) {
+        FringeNode safestMove = allProbabilities.poll();
         printProbabilities(allProbabilities);
         addUncertainMoveToStats();
-        if(safestMove.probabilityMine == 50){
+        if(safestMove.probabilityMine == 0.5f){
             int stop=0;
         }
         return new Move(safestMove.indexInGrid, Coup.SHOW);
     }
 
-    private void printProbabilities(PriorityQueue<Graph.FringeNode> allProbabilities) {
+    private void printProbabilities(PriorityQueue<FringeNode> allProbabilities) {
         System.out.println("###########################################");
         while (!allProbabilities.isEmpty()) {
             System.out.println(allProbabilities.poll().toString());
