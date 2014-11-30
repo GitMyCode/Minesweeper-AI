@@ -2,7 +2,9 @@ package minesweeper.ai.utilCSP;
 
 import minesweeper.Coup;
 import minesweeper.Move;
-import org.w3c.dom.html.HTMLIsIndexElement;
+import minesweeper.ai.dataRepresentation.FringeNode;
+import minesweeper.ai.dataRepresentation.Graph;
+import minesweeper.ai.dataRepresentation.HintNode;
 
 import java.util.*;
 
@@ -13,13 +15,32 @@ import static minesweeper.Case.*;
  */
 public class CSP {
 
+    /*
+    * TODO
+    *
+    * POUR TES TESTS UNIQUEMENT.
+    * CLASSE TEMPORAIRE, NE PAS Y FAIRE ATTENTION
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    * */
+
     public static Graph graph = null;
-    public static int nbValidAssignations =0;
+    public static int nbValidAssignations = 0;
     public static List<Integer> nbValidAssignationsPerFrontier;
     public static Set<Move> movesToPlay;
-    public static Set<Graph.HintNode> variableRemaining;
-    static void CSPonGraph(Graph g){
-        graph= g;
+    public static Set<HintNode> variableRemaining;
+
+    static void CSPonGraph (Graph g) {
+        graph = g;
         nbValidAssignationsPerFrontier = new ArrayList<Integer>();
         movesToPlay = new HashSet<Move>();
         CSPonAllFrontiers();
@@ -27,13 +48,13 @@ public class CSP {
     }
 
 
-     static private void CSPonAllFrontiers() {
+    static private void CSPonAllFrontiers () {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             long time = System.currentTimeMillis();
-            List<Graph.HintNode> hintBorder = graph.allHintNode.get(i);
-            List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(i);
+            List<HintNode> hintBorder = graph.allHintNode.get(i);
+            List<FringeNode> fringeNodes = graph.allFringeNodes.get(i);
             nbValidAssignations = 0;
-            variableRemaining = new HashSet<Graph.HintNode>();
+            variableRemaining = new HashSet<HintNode>();
             variableRemaining.addAll(hintBorder);
             recusivCSP(hintBorder.get(0), hintBorder, fringeNodes);
             nbValidAssignationsPerFrontier.add(nbValidAssignations);
@@ -41,21 +62,21 @@ public class CSP {
         }
     }
 
-    static private boolean iterativeCSP(Graph.HintNode startNode, List<Graph.FringeNode> fringeNodes) {
+    static private boolean iterativeCSP (HintNode startNode, List<FringeNode> fringeNodes) {
 
 
-        Stack<Graph.HintNode> stack = new Stack<Graph.HintNode>();
+        Stack<HintNode> stack = new Stack<HintNode>();
         stack.add(startNode);
 
-        while (!stack.isEmpty()){
-            Graph.HintNode currentNode = stack.peek();
+        while (!stack.isEmpty()) {
+            HintNode currentNode = stack.peek();
 
             currentNode.updateSurroundingAwareness();
 
-            List<Graph.FringeNode> undiscoveredFringe = currentNode.getUndiscoveredFringe();
+            List<FringeNode> undiscoveredFringe = currentNode.getUndiscoveredFringe();
             ArrayList<int[]> allFlagCombinations = currentNode.getAllFlagCombinations();
 
-            for(int[] combination : allFlagCombinations){
+            for (int[] combination : allFlagCombinations) {
 
                 int nbFlagToPlaceHere = currentNode.nbFlagToPlace;
                 addFlagsToUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
@@ -74,37 +95,37 @@ public class CSP {
         return false;
     }
 
-    static public void recusivCSP(Graph.HintNode currentNode,List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes){
+    static public void recusivCSP (HintNode currentNode, List<HintNode> hintNodes, List<FringeNode> fringeNodes) {
 
-        if(solutionFound(hintNodes)){
+        if (solutionFound(hintNodes)) {
             computeFlagHits(fringeNodes);
             nbValidAssignations++;
             return;
         }
 
-        if(currentNode.isUnsatisfiable()){
+        if (currentNode.isUnsatisfiable()) {
             variableRemaining.add(currentNode);
             return;
         }
-        if(currentNode.isSatisfied()){
+        if (currentNode.isSatisfied()) {
             variableRemaining.remove(currentNode);
-            Graph.HintNode chosenVariable = nextVariable(currentNode);
+            HintNode chosenVariable = nextVariable(currentNode);
             chosenVariable.updateSurroundingAwareness();
 
             recusivCSP(chosenVariable, hintNodes, fringeNodes);
             return;
         }
 
-        List<Graph.FringeNode> undiscoveredFringe = currentNode.getUndiscoveredFringe();
+        List<FringeNode> undiscoveredFringe = currentNode.getUndiscoveredFringe();
         ArrayList<int[]> allFlagCombinations = currentNode.getAllFlagCombinations();
 
-        for(int[] combination : allFlagCombinations){
+        for (int[] combination : allFlagCombinations) {
 
             int nbFlagToPlaceHere = currentNode.nbFlagToPlace;
             addFlagsToUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
             variableRemaining.remove(currentNode);
-            if(allFlagsOkay(currentNode)){
-                recusivCSP(nextVariable(currentNode),hintNodes,fringeNodes);
+            if (allFlagsOkay(currentNode)) {
+                recusivCSP(nextVariable(currentNode), hintNodes, fringeNodes);
             }
 
             variableRemaining.add(currentNode);
@@ -113,91 +134,92 @@ public class CSP {
         variableRemaining.remove(currentNode);
 
 
-
     }
 
 
-    static public boolean solutionFound(List<Graph.HintNode> hintNodes){
-        for(Graph.HintNode hn : hintNodes){
-            if(!hn.isSatisfied()){
+    static public boolean solutionFound (List<HintNode> hintNodes) {
+        for (HintNode hn : hintNodes) {
+            if (!hn.isSatisfied()) {
                 return false;
             }
         }
         return true;
     }
-    static public void computeFlagHits(List<Graph.FringeNode> fringeNodes) {
-        for (Graph.FringeNode fn : fringeNodes) {
-            if (fn.state == FLAGED) { fn.nbFlagsHit++; }
+
+    static public void computeFlagHits (List<FringeNode> fringeNodes) {
+        for (FringeNode fn : fringeNodes) {
+            if (fn.state == FLAGED) {
+                fn.nbFlagsHit++;
+            }
         }
     }
 
 
-
-    static public Graph.HintNode nextVariable(Graph.HintNode current){
-        Graph.HintNode nextV =null;
+    static public HintNode nextVariable (HintNode current) {
+        HintNode nextV = null;
         int MIV = Integer.MIN_VALUE; // Most Influence Variable;
-        for (Graph.HintNode hintNode : current.connectedHint){
-            if(!hintNode.isSatisfied() && hintNode.connectedHint.size() > MIV){
+        for (HintNode hintNode : current.connectedHint) {
+            if (!hintNode.isSatisfied() && hintNode.connectedHint.size() > MIV) {
                 MIV = hintNode.connectedHint.size();
                 nextV = hintNode;
             }
         }
 
-        if(nextV == null && !variableRemaining.isEmpty()){
+        if (nextV == null && !variableRemaining.isEmpty()) {
             nextV = variableRemaining.iterator().next();
             nextV.updateSurroundingAwareness();
         }
-        if(nextV ==null){
+        if (nextV == null) {
             System.out.println(" wtf");
         }
 
         return nextV;
     }
 
-    static private boolean allFlagsOkay(Graph.HintNode hintNode){
+    static private boolean allFlagsOkay (HintNode hintNode) {
 
-        for(Graph.HintNode hn : hintNode.connectedHint){
+        for (HintNode hn : hintNode.connectedHint) {
             hn.updateSurroundingAwareness();
-            if(hn.isUnsatisfiable()){
+            if (hn.isUnsatisfiable()) {
                 return false;
             }
         }
         return true;
     }
 
-     static private void addFlagsToUndiscoveredFringe(List<Graph.FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    static private void addFlagsToUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
 
 
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
-            Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
+            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
             fringeToFlag.state = FLAGED;
         }
-        for(Graph.FringeNode fn : undiscoveredFringe ){
-            if(fn.state != FLAGED){
+        for (FringeNode fn : undiscoveredFringe) {
+            if (fn.state != FLAGED) {
                 fn.isDeactivated = true;
             }
         }
 
     }
 
-    static private void removeFlagsFromUndiscoveredFringe(List<Graph.FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    static private void removeFlagsFromUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
-            Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
+            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
             fringeToFlag.state = UNDISCOVERED;
         }
-        for(Graph.FringeNode fn : undiscoveredFringe ){
-            if(fn.isDeactivated){
+        for (FringeNode fn : undiscoveredFringe) {
+            if (fn.isDeactivated) {
                 fn.isDeactivated = false;
             }
         }
     }
 
-    static public void addSafeMovesAndFlags() {
+    static public void addSafeMovesAndFlags () {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
-            List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
+            List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int nbPossibilityHere = nbValidAssignationsPerFrontier.get(frontierIndex);
 
-            for (Graph.FringeNode fn : fringeNodes) {
+            for (FringeNode fn : fringeNodes) {
                 if (fn.nbFlagsHit == 0) {
                     // 0% Mine
                     movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
@@ -208,8 +230,6 @@ public class CSP {
             }
         }
     }
-
-
 
 
 }
