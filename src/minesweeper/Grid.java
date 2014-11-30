@@ -36,7 +36,7 @@ public class Grid {
     public Grid(File f) {
         try {
             Scanner sc = new Scanner(f);
-            this.firstMove = true;
+            this.firstMove = false;
             this.nbLignes = sc.nextInt();
             this.nbCols = sc.nextInt();
             this.nbMines = sc.nextInt();
@@ -85,7 +85,6 @@ public class Grid {
    * */
     public Set<Move> checkMove(Set<Move> moves) {
         Set<Move> badMoves = new LinkedHashSet<Move>();
-        if(!firstMove){
             for (Move m : moves) {
                 if (underneathValues[m.index] != Case.MINE && m.coup == Coup.FLAG) {
                     badMoves.add(m);
@@ -93,7 +92,6 @@ public class Grid {
                     badMoves.add(m);
                 }
             }
-        }
 
         return badMoves;
     }
@@ -447,6 +445,16 @@ public class Grid {
             }
             fw.write(stringGridPlayerView);
             fw.close();
+    }
+
+    public Set<Integer> getSurroundFlag(int index){
+        Set<Integer> surroundsFlag = new LinkedHashSet<Integer>();
+        for(Integer i : this.getSurroundingIndex(index)){
+            if(this.gridPlayerView[i] == Case.FLAGED){
+                surroundsFlag.add(i);
+            }
+        }
+        return surroundsFlag;
     }
 
     public int countUnplacedFlags(int index) {

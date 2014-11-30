@@ -3,10 +3,16 @@ package minesweeper.ai.utilCSP;
 import minesweeper.Case;
 import minesweeper.Direction;
 import minesweeper.Grid;
+import minesweeper.Move;
+import minesweeper.ui.BoardGameView;
+
+import javax.swing.*;
+import javax.xml.bind.annotation.XmlElementDecl;
 
 import static minesweeper.Case.*;
 import static minesweeper.Direction.*;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -112,6 +118,10 @@ public class Graph {
         for(List<FringeNode> l : allFringeNodes){
             Set<HintNode> hintNodes = new LinkedHashSet<HintNode>();
             for(FringeNode fn : l){
+                for(HintNode hn : fn.hintNodes){
+                    hn.connectedHint.addAll(fn.hintNodes);
+                    hn.connectedHint.remove(hn);
+                }
                 //la liste des indices qui influence ce noeud
                 hintNodes.addAll(fn.hintNodes);
             }
@@ -142,8 +152,12 @@ public class Graph {
         mapFringeNode.put(startNode.indexInGrid, startNode);
 
         FringeNode lastNode = startNode;
+        FringeNode mostFlagToPlace =null;
+
+
         while(!queue.isEmpty()){
             FringeNode currentNode = (FringeNode) queue.remove();
+
             FringeNode nextNode =null;
              /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
 
@@ -160,6 +174,8 @@ public class Graph {
                     if(!mapFringeNode.containsKey(next)){
                         nextNode = new FringeNode(next);
                         nextNode.hintNodes = getHintNeirbour(grid,nextNode);
+
+
 
                         mapFringeNode.put(nextNode.indexInGrid,nextNode);
                         queue.add(nextNode);
@@ -191,14 +207,24 @@ public class Graph {
         }
 
 
+        /*
+        * TODO
+        * Je ne penses pas que c'est bon. Le graph devrait juste lié tout les noeud ensemble et
+        * Le CSP devrait lui même gerer comment il va circuler dans les NOdes
+        * */
+
+
         FringeNode TrueStart = lastNode;
+
+
+
 
         Stack<FringeNode> stack = new Stack<FringeNode>();
         stack.add(TrueStart);
         inBorderSoFar.add(TrueStart.indexInGrid);
         fringe.add(TrueStart);
 
-        while (!stack.isEmpty()){
+        while (!stack.isEmpty()){;
             FringeNode current = stack.peek();
             FringeNode nextNode = null;
             if(!current.fringeNeighbor.isEmpty() ){
@@ -241,6 +267,7 @@ public class Graph {
 
                 //Check si les deux noeud partage un indice (Et donc s'influence)
                 if(!Collections.disjoint(indiceNeirboursCurrentNode,indiceNeirboursNextNode)){
+
                     directions.add(D);
                 }
 
@@ -272,7 +299,7 @@ public class Graph {
                 if(mapHintNode.containsKey(indexHint)){
                     hn = mapHintNode.get(indexHint);
                 }else {
-                    hn = new HintNode(indexHint, this.gameGrid.countUnplacedFlags(indexHint));
+                    hn = new HintNode(indexHint, this.gameGrid.countUnplacedFlags(indexHint), this.gameGrid.getUndiscoveredneighbours(indexHint).size());
                     mapHintNode.put(indexHint,hn);
                 }
                 hintNodes.add(hn);
@@ -349,20 +376,24 @@ public class Graph {
     public class HintNode extends Node{
 
         public Set<FringeNode> connectedFringe;
+        public Set<HintNode> connectedHint;
         public int value;
         public int nbFlagToPlace;
         public int nbUndiscoveredNeighbors;
 
-        public HintNode(int index, int value){
+        public HintNode(int index, int value,int nbUndiscoveredNeighbors){
             super(index);
             this.value = value;
+            nbFlagToPlace = value;
+            this.nbUndiscoveredNeighbors = nbUndiscoveredNeighbors;
             connectedFringe = new LinkedHashSet<FringeNode>();
+            connectedHint = new LinkedHashSet<HintNode>();
         }
 
         public List<FringeNode> getUndiscoveredFringe() {
             List<Graph.FringeNode> undiscoveredFringe = new ArrayList<Graph.FringeNode>();
             for (Graph.FringeNode fn : connectedFringe) {
-                if (fn.state == UNDISCOVERED) {
+                if (fn.state == UNDISCOVERED && !fn.isDeactivated) {
                     undiscoveredFringe.add(fn);
                 }
             }
@@ -395,13 +426,19 @@ public class Graph {
             }
         }
 
-        public void makeConnectedFringe(Set<Integer> undiscov){
-            for(Integer v : undiscov){
-                this.connectedFringe.add(new FringeNode(v));
-            }
+
+        /*
+        * This method is use when the hint is satisfied and any more flag
+        * put on his fringe would invalid him (Foward checking)
+        * */
+        public void deactivateAccessibleFringe(){
+
         }
 
-        public boolean isOverAssigned() { return this.nbFlagToPlace < 0; }
+        public boolean isUnsatisfiable() {
+            updateSurroundingAwareness();
+            return ((this.nbFlagToPlace < 0 )||
+                    (nbUndiscoveredNeighbors < nbFlagToPlace)); }
         public boolean isSatisfied() { return this.nbFlagToPlace == 0; }
 
         /*
@@ -412,16 +449,34 @@ public class Graph {
         * */
         public void updateSurroundingAwareness(){
             int nbFlagToPlace = value;
-            int nbHide=0;
+            int nbPlaceForFlag=0;
             for(FringeNode fn : connectedFringe){
                 if(fn.state == FLAGED){
                     nbFlagToPlace--;
-                }else if(fn.state == UNDISCOVERED) {
-                    nbHide++;
+                }else if(fn.state == UNDISCOVERED && !fn.isDeactivated) {
+                    nbPlaceForFlag++;
                 }
             }
-            nbUndiscoveredNeighbors = nbHide;
+            nbUndiscoveredNeighbors = nbPlaceForFlag;
             this.nbFlagToPlace = nbFlagToPlace;
+        }
+        public Set<FringeNode> getFlaggedFringe(){
+            Set<FringeNode> flagged = new LinkedHashSet<FringeNode>();
+            for(FringeNode fn : connectedFringe){
+                if(fn.state == FLAGED){
+                    flagged.add(fn);
+                }
+            }
+            return flagged;
+        }
+        public Set<FringeNode> getDeactivatedFringe(){
+            Set<FringeNode> deactivatedFringe = new LinkedHashSet<FringeNode>();
+            for(FringeNode fn : connectedFringe){
+                if(fn.isDeactivated){
+                    deactivatedFringe.add(fn);
+                }
+            }
+            return deactivatedFringe;
         }
 
 
@@ -442,6 +497,7 @@ public class Graph {
         public LinkedHashSet<HintNode> hintNodes;
         public LinkedList<FringeNode> fringeNeighbor;
         public Case state = UNDISCOVERED;
+        public boolean isDeactivated = false;
 
 
         public FringeNode(int index) {
@@ -477,6 +533,29 @@ public class Graph {
 
         public String toString() {
             return "Probability of Mine : " + (this.probabilityMine*100) + "%";
+        }
+    }
+
+
+    public static void main (String[] args) {
+        final JFileChooser chooser = new JFileChooser(".");
+
+        if (chooser.showDialog(new JFrame("Choisir un fichier"), "Ok") == JFileChooser.APPROVE_OPTION) {
+            if (chooser.getSelectedFile() != null) {
+                chooser.getSelectedFile();
+
+                Grid grid = new Grid(chooser.getSelectedFile());
+                Graph graph = new Graph(grid);
+                CSP.CSPonGraph(graph);
+
+                Set<Move> errors = grid.checkMove(CSP.movesToPlay);
+                if(!errors.isEmpty()){
+                    System.out.println("ERREUR");
+                }
+
+            }
+
+
         }
     }
 }
