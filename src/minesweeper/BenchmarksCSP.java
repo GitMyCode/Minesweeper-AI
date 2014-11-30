@@ -28,7 +28,7 @@ public class BenchmarksCSP {
 
         File[] allTestFile = directory.listFiles();
         List<String[]> logsList = new ArrayList<String[]>();
-        for(StrategyCSP csp : CSPS){
+        for (StrategyCSP csp : CSPS) {
             System.out.println(csp.strategyToString());
             csp.addLineToExecutionLog(csp.strategyToString());
             for (File testFile : allTestFile) {
@@ -43,12 +43,12 @@ public class BenchmarksCSP {
 
         for (int logLine = 0; logLine < logsList.get(0).length; logLine++) {
             String logStringLine = "";
-            for(int cspLog = 0 ; cspLog < logsList.size(); cspLog++ ){
+            for (int cspLog = 0; cspLog < logsList.size(); cspLog++) {
                 String logLineForThisCSP = logsList.get(cspLog)[logLine];
                 String end = "";
-                if(cspLog == logsList.size()-1){
+                if (cspLog == logsList.size() - 1) {
                     end = "\n";
-                }else {
+                } else {
                     int spaceSize = 40 - logLineForThisCSP.length();
                     char[] spaceArray = new char[spaceSize];
                     Arrays.fill(spaceArray, ' ');
@@ -56,7 +56,7 @@ public class BenchmarksCSP {
                 }
 
 
-                logStringLine += logLineForThisCSP+end;
+                logStringLine += logLineForThisCSP + end;
             }
             System.out.print(logStringLine);
         }
