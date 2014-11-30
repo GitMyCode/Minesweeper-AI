@@ -27,7 +27,7 @@ public class Graph {
     public Grid gameGrid;
     public Case[] caseGrille;
 
-    public Graph (Grid gameGrid) {
+    public Graph(Grid gameGrid) {
         this.gameGrid = gameGrid;
         caseGrille = gameGrid.getCpyPlayerView();
 
@@ -51,7 +51,7 @@ public class Graph {
     * Va chercher les case qui sont entouré de case non-decouvert
     * C'est juste pour eviter que les frontieres fassent des détours
     * */
-    void lookForInvalidFringeNode (Case[] grid) {
+    void lookForInvalidFringeNode(Case[] grid) {
         for (Integer i = 0; i < grid.length; i++) {
             if (Case.isIndicatorCase(grid[i])) {
                 if (gameGrid.getUndiscoveredneighbours(i).size() == 8) {
@@ -64,7 +64,7 @@ public class Graph {
     /*
     * Va chercher les frontiers qui sont independantes
     * */
-    void findFrontier (Case[] grid) {
+    void findFrontier(Case[] grid) {
         //Un set pour s'assurer qu'on ne prend pas deux fois le meme noeud;
         for (int i = 0; i < grid.length; i++) {
 
@@ -130,7 +130,7 @@ public class Graph {
     * Methode qui recurse sur les noeuds et accumuler les nouveau qu'il trouve
     *
     * */
-    void putInFrontier (FringeNode startNode, List<FringeNode> fringe, Case[] grid) {
+    void putInFrontier(FringeNode startNode, List<FringeNode> fringe, Case[] grid) {
 
         Queue queue = new LinkedList();
         queue.add(startNode);
@@ -176,7 +176,7 @@ public class Graph {
     /*
     * Va aller chercher les prochaines directions qui menent vers un noeud valide
     * */
-    Set<Direction> getPossibleDirection (Case[] grid, int index) {
+    Set<Direction> getPossibleDirection(Case[] grid, int index) {
         Set<Direction> directions = new LinkedHashSet<Direction>();
 
         for (Direction D : HUIT_DIRECTIONS) {
@@ -204,7 +204,7 @@ public class Graph {
     /*
     * Retourne les cases voisines qui sont des index
     * */
-    Set<Integer> getIndiceNeirbours (Case[] grid, int index) {
+    Set<Integer> getIndiceNeirbours(Case[] grid, int index) {
         Set<Integer> indices = new LinkedHashSet<Integer>();
         for (Integer i : gameGrid.getSurroundingIndex(index)) {
             if (Case.isIndicatorCase(grid[i]) && !deactivatedNode.contains(i)) {
@@ -214,7 +214,7 @@ public class Graph {
         return indices;
     }
 
-    public LinkedHashSet<HintNode> getHintNeirbour (Case[] g, FringeNode fringeNode) {
+    public LinkedHashSet<HintNode> getHintNeirbour(Case[] g, FringeNode fringeNode) {
 
         LinkedHashSet<HintNode> hintNodes = new LinkedHashSet<HintNode>();
         for (Integer indexHint : gameGrid.getSurroundingIndex(fringeNode.indexInGrid)) {
@@ -237,7 +237,7 @@ public class Graph {
     }
 
 
-    public boolean isAFringeNode (Case[] grid, int index) {
+    public boolean isAFringeNode(Case[] grid, int index) {
 
         if (grid[index] == UNDISCOVERED) {
             for (Integer surround : gameGrid.getSurroundingIndex(index)) {

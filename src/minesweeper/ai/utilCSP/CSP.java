@@ -44,7 +44,7 @@ public class CSP {
     public static Set<Move> movesToPlay;
     public static Set<HintNode> variableRemaining;
 
-    static void CSPonGraph (Graph g) {
+    static void CSPonGraph(Graph g) {
         graph = g;
         nbValidAssignationsPerFrontier = new ArrayList<Integer>();
         movesToPlay = new HashSet<Move>();
@@ -53,7 +53,7 @@ public class CSP {
     }
 
 
-    static private void CSPonAllFrontiers () {
+    static private void CSPonAllFrontiers() {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             long time = System.currentTimeMillis();
             List<HintNode> hintBorder = graph.allHintNode.get(i);
@@ -67,7 +67,7 @@ public class CSP {
         }
     }
 
-    static private boolean iterativeCSP (HintNode startNode, List<FringeNode> fringeNodes) {
+    static private boolean iterativeCSP(HintNode startNode, List<FringeNode> fringeNodes) {
 
 
         Stack<HintNode> stack = new Stack<HintNode>();
@@ -100,7 +100,7 @@ public class CSP {
         return false;
     }
 
-    static public void recusivCSP (HintNode currentNode, List<HintNode> hintNodes, List<FringeNode> fringeNodes) {
+    static public void recusivCSP(HintNode currentNode, List<HintNode> hintNodes, List<FringeNode> fringeNodes) {
 
         if (solutionFound(hintNodes)) {
             computeFlagHits(fringeNodes);
@@ -142,7 +142,7 @@ public class CSP {
     }
 
 
-    static public boolean solutionFound (List<HintNode> hintNodes) {
+    static public boolean solutionFound(List<HintNode> hintNodes) {
         for (HintNode hn : hintNodes) {
             if (!hn.isSatisfied()) {
                 return false;
@@ -151,7 +151,7 @@ public class CSP {
         return true;
     }
 
-    static public void computeFlagHits (List<FringeNode> fringeNodes) {
+    static public void computeFlagHits(List<FringeNode> fringeNodes) {
         for (FringeNode fn : fringeNodes) {
             if (fn.state == FLAGED) {
                 fn.nbFlagsHit++;
@@ -160,7 +160,7 @@ public class CSP {
     }
 
 
-    static public HintNode nextVariable (HintNode current) {
+    static public HintNode nextVariable(HintNode current) {
         HintNode nextV = null;
         int MIV = Integer.MIN_VALUE; // Most Influence Variable;
         for (HintNode hintNode : current.connectedHint) {
@@ -181,7 +181,7 @@ public class CSP {
         return nextV;
     }
 
-    static private boolean allFlagsOkay (HintNode hintNode) {
+    static private boolean allFlagsOkay(HintNode hintNode) {
 
         for (HintNode hn : hintNode.connectedHint) {
             hn.updateSurroundingAwareness();
@@ -192,7 +192,7 @@ public class CSP {
         return true;
     }
 
-    static private void addFlagsToUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    static private void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
 
 
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
@@ -207,7 +207,7 @@ public class CSP {
 
     }
 
-    static private void removeFlagsFromUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    static private void removeFlagsFromUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
             FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
             fringeToFlag.state = UNDISCOVERED;
@@ -219,7 +219,7 @@ public class CSP {
         }
     }
 
-    static public void addSafeMovesAndFlags () {
+    static public void addSafeMovesAndFlags() {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int nbPossibilityHere = nbValidAssignationsPerFrontier.get(frontierIndex);
@@ -237,7 +237,7 @@ public class CSP {
     }
 
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         StrategyCSP simpleCSP = new SimpleCSP();
         StrategyCSP fowardcheckCSP = new FowardCheckCSP();
 

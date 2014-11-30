@@ -27,18 +27,18 @@ public class FowardCheckCSP implements StrategyCSP {
 
 
     @Override
-    public void executeCSPonGraph (Graph graph) {
+    public void executeCSPonGraph(Graph graph) {
         this.graph = graph;
         CSPonAllFrontiers();
 
     }
 
     @Override
-    public String strategyToString () {
+    public String strategyToString() {
         return "Foward checking";
     }
 
-    private void CSPonAllFrontiers () {
+    private void CSPonAllFrontiers() {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             long time = System.currentTimeMillis();
             List<HintNode> hintBorder = graph.allHintNode.get(i);
@@ -51,7 +51,7 @@ public class FowardCheckCSP implements StrategyCSP {
         }
     }
 
-    private boolean recurseCSP (List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
+    private boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
         /*if (!allFlagsOkay(hintNodes, index)) {
             return false;
         }*/
@@ -98,7 +98,7 @@ public class FowardCheckCSP implements StrategyCSP {
     }
 
 
-    private boolean allFlagsOkay (List<HintNode> hintNodes, int nbDone) {
+    private boolean allFlagsOkay(List<HintNode> hintNodes, int nbDone) {
         for (int i = 0; i < nbDone; i++) {
             if (!hintNodes.get(i).isSatisfied()) {
                 return false;
@@ -107,7 +107,7 @@ public class FowardCheckCSP implements StrategyCSP {
         return true;
     }
 
-    private boolean neighbourhoodOkey (HintNode hintNode) {
+    private boolean neighbourhoodOkey(HintNode hintNode) {
         for (HintNode hn : hintNode.connectedHint) {
             if (hn.isUnsatisfiable()) {
                 return false;
@@ -116,7 +116,7 @@ public class FowardCheckCSP implements StrategyCSP {
         return true;
     }
 
-    static public boolean solutionFound (List<HintNode> hintNodes) {
+    static public boolean solutionFound(List<HintNode> hintNodes) {
         for (HintNode hn : hintNodes) {
             if (!hn.isSatisfied()) {
                 return false;
@@ -125,11 +125,11 @@ public class FowardCheckCSP implements StrategyCSP {
         return true;
     }
 
-    private boolean solutionFound (int index, List<HintNode> hintNodes) {
+    private boolean solutionFound(int index, List<HintNode> hintNodes) {
         return (index >= hintNodes.size());
     }
 
-    private void computeFlagHits (List<FringeNode> fringeNodes) {
+    private void computeFlagHits(List<FringeNode> fringeNodes) {
         for (FringeNode fn : fringeNodes) {
             if (fn.state == FLAGED) {
                 fn.nbFlagsHit++;
@@ -137,7 +137,7 @@ public class FowardCheckCSP implements StrategyCSP {
         }
     }
 
-    private void addFlagsToUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    private void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
             FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
             fringeToFlag.state = FLAGED;
@@ -146,7 +146,7 @@ public class FowardCheckCSP implements StrategyCSP {
 
     }
 
-    private void removeFlagsFromUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    private void removeFlagsFromUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
             FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
             fringeToFlag.state = UNDISCOVERED;
@@ -158,7 +158,7 @@ public class FowardCheckCSP implements StrategyCSP {
         * This method is use when the hint is satisfied and any more flag
         * put on his fringe would invalid him (Foward checking)
         * */
-    private void deactivateFringe (List<FringeNode> fringe) {
+    private void deactivateFringe(List<FringeNode> fringe) {
         for (FringeNode fn : fringe) {
             if (fn.state != FLAGED) {
                 fn.isDeactivated = true;
@@ -169,7 +169,7 @@ public class FowardCheckCSP implements StrategyCSP {
     /*
     * Use for reactivating a fringe previously deactivated (When the CSP backtrack we need to free theses fringes)
     * */
-    private void activateFringe (List<FringeNode> fringe) {
+    private void activateFringe(List<FringeNode> fringe) {
         for (FringeNode fn : fringe) {
             if (fn.isDeactivated) {
                 fn.isDeactivated = false;
@@ -179,12 +179,12 @@ public class FowardCheckCSP implements StrategyCSP {
 
 
     @Override
-    public void addLineToExecutionLog (String line) {
+    public void addLineToExecutionLog(String line) {
         cumulatedTimeStats += line + "\n";
     }
 
     @Override
-    public String getExecutionLog () {
+    public String getExecutionLog() {
         return cumulatedTimeStats;
     }
 }

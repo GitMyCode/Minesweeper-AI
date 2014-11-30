@@ -30,16 +30,16 @@ class Util {
         char[] charGrid;
         int cols;
 
-        public BuildPrintGrid (Case[] grid, int nbcol) {
+        public BuildPrintGrid(Case[] grid, int nbcol) {
             cols = nbcol;
             charGrid = getGridToChar(grid);
         }
 
-        public void print () {
+        public void print() {
             printGrid(charGrid, cols);
         }
 
-        public BuildPrintGrid showFLagedFringe (Collection<Node> nodes) {
+        public BuildPrintGrid showFLagedFringe(Collection<Node> nodes) {
             for (Node node : nodes) {
                 if (((FringeNode) node).state == Case.FLAGED) {
                     charGrid[node.indexInGrid] = '⚐';
@@ -48,7 +48,7 @@ class Util {
             return this;
         }
 
-        public BuildPrintGrid showDeactivatedFringe (Collection<Node> nodes) {
+        public BuildPrintGrid showDeactivatedFringe(Collection<Node> nodes) {
             for (Node node : nodes) {
                 if (((FringeNode) node).isDeactivated) {
                     charGrid[node.indexInGrid] = 'X';
@@ -57,7 +57,7 @@ class Util {
             return this;
         }
 
-        public BuildPrintGrid showThisIndex (int index) {
+        public BuildPrintGrid showThisIndex(int index) {
             charGrid[index] = '★';
             return this;
         }
@@ -65,11 +65,11 @@ class Util {
 
     }
 
-    public static BuildPrintGrid command (Case[] grid, int nbcol) {
+    public static BuildPrintGrid command(Case[] grid, int nbcol) {
         return new BuildPrintGrid(grid, nbcol);
     }
 
-    public static void printGrid (Case[] grid, int nbcol) {
+    public static void printGrid(Case[] grid, int nbcol) {
         String print = "";
 
         int i = 1;
@@ -94,7 +94,7 @@ class Util {
         System.out.println(print);
     }
 
-    public static void printGrid (char[] charGrid, int nbcol) {
+    public static void printGrid(char[] charGrid, int nbcol) {
         String print = "";
         int i = 1;
         for (char c : charGrid) {
@@ -107,7 +107,7 @@ class Util {
         System.out.println(print);
     }
 
-    public static char[] getGridToChar (Case[] grid) {
+    public static char[] getGridToChar(Case[] grid) {
         char[] charGrid = new char[grid.length];
         int i = 0;
         for (Case c : grid) {
@@ -130,7 +130,7 @@ class Util {
         return charGrid;
     }
 
-    public static void printAllCoup (Case[] gridOriginal, int nbcol, Set<Move> coups) {
+    public static void printAllCoup(Case[] gridOriginal, int nbcol, Set<Move> coups) {
 
         String print = "";
 
@@ -171,21 +171,21 @@ class Util {
 
     }
 
-    public static void printFrontiereInOrder (Case[] gridOrigin, int nbcol, List<Integer> frontiere) {
+    public static void printFrontiereInOrder(Case[] gridOrigin, int nbcol, List<Integer> frontiere) {
         Case[] cpy = gridOrigin.clone();
         for (Integer i : frontiere) {
             printIndex(cpy, nbcol, i);
         }
     }
 
-    public static void printFrontiereNodeInOrder (Case[] gridOrigin, int nbcol, List<Node> frontiere) {
+    public static void printFrontiereNodeInOrder(Case[] gridOrigin, int nbcol, List<Node> frontiere) {
         Case[] cpy = gridOrigin.clone();
         for (Node i : frontiere) {
             printIndex(cpy, nbcol, i.indexInGrid);
         }
     }
 
-    public static void printDeactivatedFringe (Case[] gridOrigin, int nbcol, Collection<Node> nodes) {
+    public static void printDeactivatedFringe(Case[] gridOrigin, int nbcol, Collection<Node> nodes) {
 
         char[] gridChar = getGridToChar(gridOrigin);
         for (Node node : nodes) {
@@ -196,7 +196,7 @@ class Util {
         printGrid(gridChar, nbcol);
     }
 
-    public static void printFlaggedFringe (Case[] gridOrigin, int nbcol, Collection<Node> nodes) {
+    public static void printFlaggedFringe(Case[] gridOrigin, int nbcol, Collection<Node> nodes) {
 
         char[] gridChar = getGridToChar(gridOrigin);
         for (Node node : nodes) {
@@ -207,7 +207,7 @@ class Util {
         printGrid(gridChar, nbcol);
     }
 
-    public static void printFrontiere (Case[] gridOrigin, int nbcol, Set<Integer> frontiere) {
+    public static void printFrontiere(Case[] gridOrigin, int nbcol, Set<Integer> frontiere) {
 
         String print = "";
 
@@ -243,7 +243,7 @@ class Util {
 
     }
 
-    public static void printFrontiereNode (Case[] gridOrigin, int nbcol, Collection<? extends Node> frontiere) {
+    public static void printFrontiereNode(Case[] gridOrigin, int nbcol, Collection<? extends Node> frontiere) {
 
         String print = "";
 
@@ -281,7 +281,7 @@ class Util {
     }
 
 
-    public static void printFrontiere (Case[] gridOrigin, int nbcol, List<Integer> frontiere) {
+    public static void printFrontiere(Case[] gridOrigin, int nbcol, List<Integer> frontiere) {
 
         String print = "";
 
@@ -317,7 +317,7 @@ class Util {
 
     }
 
-    public static void printIndex (Case[] gridOrigin, int nbcol, Integer toShow) {
+    public static void printIndex(Case[] gridOrigin, int nbcol, Integer toShow) {
 
         String print = "";
 
