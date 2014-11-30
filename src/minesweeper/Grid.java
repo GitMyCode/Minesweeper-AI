@@ -36,7 +36,7 @@ public class Grid {
     public Grid(File f) {
         try {
             Scanner sc = new Scanner(f);
-            this.firstMove = true;
+            this.firstMove = false;
             this.nbLignes = sc.nextInt();
             this.nbCols = sc.nextInt();
             this.nbMines = sc.nextInt();
@@ -75,6 +75,25 @@ public class Grid {
 
         Arrays.fill(gridPlayerView, Case.UNDISCOVERED);
 
+    }
+
+
+    /*
+   * TODO
+   * Pour debuggage seulement Ne doit pas etre utiliser comme strategie dans
+   * Les AI
+   * */
+    public Set<Move> checkMove(Set<Move> moves) {
+        Set<Move> badMoves = new LinkedHashSet<Move>();
+            for (Move m : moves) {
+                if (underneathValues[m.index] != Case.MINE && m.coup == Coup.FLAG) {
+                    badMoves.add(m);
+                } else if (underneathValues[m.index] == Case.MINE && m.coup == Coup.SHOW) {
+                    badMoves.add(m);
+                }
+            }
+
+        return badMoves;
     }
 
     private Case[] createRandomGrid(int nbLignes, int nbColonnes, int nbMines, int firstClick) {
@@ -426,6 +445,16 @@ public class Grid {
             }
             fw.write(stringGridPlayerView);
             fw.close();
+    }
+
+    public Set<Integer> getSurroundFlag(int index){
+        Set<Integer> surroundsFlag = new LinkedHashSet<Integer>();
+        for(Integer i : this.getSurroundingIndex(index)){
+            if(this.gridPlayerView[i] == Case.FLAGED){
+                surroundsFlag.add(i);
+            }
+        }
+        return surroundsFlag;
     }
 
     public int countUnplacedFlags(int index) {
