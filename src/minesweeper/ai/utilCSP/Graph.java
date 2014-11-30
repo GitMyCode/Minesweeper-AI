@@ -26,9 +26,13 @@ public class Graph {
     public HashMap<Integer,FringeNode> mapFringeNode;
     public List<List<HintNode>> allHintNode;
     public List<List<FringeNode>> allFringeNodes;
+    public List<Integer> nbValidAssignationsPerFrontier;
+
+
+
     public Set<Integer> deactivatedNode;
-    Grid gameGrid;
-    Case[] caseGrille;
+    public Grid gameGrid;
+    public Case[] caseGrille;
 
     public Graph(Grid gameGrid){
         this.gameGrid = gameGrid;
@@ -40,6 +44,7 @@ public class Graph {
 
         allHintNode = new ArrayList<List<HintNode>>();
         allFringeNodes = new ArrayList<List<FringeNode>>();
+        nbValidAssignationsPerFrontier = new ArrayList<Integer>();
 
         lookForInvalidFringeNode(caseGrille);
         findFrontier(caseGrille);
