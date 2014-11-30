@@ -20,7 +20,9 @@ public class ProbabilisticAI extends SafeOrRandomAI {
     @Override
     protected void addMovesToPlay(Grid grid, Case[] gridCopy) {
         addMovesWithProbabilities();
-        if (this.movesToPlay.isEmpty()) { addRandomMove(grid, gridCopy); }
+        if (this.movesToPlay.isEmpty()) {
+            addRandomMove(grid, gridCopy);
+        }
     }
 
     protected void addMovesWithProbabilities() {
@@ -66,5 +68,7 @@ public class ProbabilisticAI extends SafeOrRandomAI {
     }
 
     @Override
-    public String getName() { return "Probabilistic AI"; }
+    public String getName() {
+        return "Probabilistic AI";
+    }
 }

@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import static minesweeper.Case.UNDISCOVERED;
 
 /**
-* Created by MB on 11/29/2014.
-*/
+ * Created by MB on 11/29/2014.
+ */
 public class FringeNode extends Node implements Comparable {
     public float probabilityMine = 0.5f;
     public int nbFlagsHit = 0;
@@ -19,18 +19,23 @@ public class FringeNode extends Node implements Comparable {
     public boolean isDeactivated = false;
 
 
-    public FringeNode (int index) {
+    public FringeNode(int index) {
         super(index);
         hintNodes = new LinkedHashSet<HintNode>();
         fringeNeighbor = new LinkedList<FringeNode>();
     }
 
     public void computeMineProbability(int totalAssignations) {
-        this.probabilityMine = (float)this.nbFlagsHit / totalAssignations;
+        this.probabilityMine = (float) this.nbFlagsHit / totalAssignations;
     }
 
-    public boolean isObviousMine() { return this.probabilityMine == 1; }
-    public boolean isSafe() { return this.probabilityMine == 0; }
+    public boolean isObviousMine() {
+        return this.probabilityMine == 1;
+    }
+
+    public boolean isSafe() {
+        return this.probabilityMine == 0;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -51,6 +56,6 @@ public class FringeNode extends Node implements Comparable {
     }
 
     public String toString() {
-        return "Probability of Mine : " + (this.probabilityMine*100) + "%";
+        return "Probability of Mine : " + (this.probabilityMine * 100) + "%";
     }
 }

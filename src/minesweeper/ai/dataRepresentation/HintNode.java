@@ -19,7 +19,7 @@ public class HintNode extends Node {
     public int nbFlagToPlace;
     public int nbUndiscoveredNeighbors;
 
-    public HintNode (int index, int value, int nbUndiscoveredNeighbors) {
+    public HintNode(int index, int value, int nbUndiscoveredNeighbors) {
         super(index);
         this.value = value;
         nbFlagToPlace = value;
@@ -28,7 +28,7 @@ public class HintNode extends Node {
         connectedHint = new LinkedHashSet<HintNode>();
     }
 
-    public List<FringeNode> getUndiscoveredFringe () {
+    public List<FringeNode> getUndiscoveredFringe() {
         List<FringeNode> undiscoveredFringe = new ArrayList<FringeNode>();
         for (FringeNode fn : connectedFringe) {
             if (fn.state == UNDISCOVERED && !fn.isDeactivated) {
@@ -38,7 +38,7 @@ public class HintNode extends Node {
         return undiscoveredFringe;
     }
 
-    public ArrayList<int[]> getAllFlagCombinations () {
+    public ArrayList<int[]> getAllFlagCombinations() {
         int[] combination = new int[this.nbFlagToPlace];
         ArrayList<int[]> listCombination = new ArrayList<int[]>();
         generateFlagCombinations(0, this.nbFlagToPlace, this.getUndiscoveredFringe().size(), combination, listCombination);
@@ -46,7 +46,7 @@ public class HintNode extends Node {
         return listCombination;
     }
 
-    public void generateFlagCombinations (int index, int nbFlag, int nbCase, int[] combinaison, ArrayList<int[]> listeC) {
+    public void generateFlagCombinations(int index, int nbFlag, int nbCase, int[] combinaison, ArrayList<int[]> listeC) {
         if (nbFlag == 0) {
             return;
         }
@@ -69,17 +69,17 @@ public class HintNode extends Node {
     * This method is use when the hint is satisfied and any more flag
     * put on his fringe would invalid him (Foward checking)
     * */
-    public void deactivateAccessibleFringe () {
+    public void deactivateAccessibleFringe() {
 
     }
 
-    public boolean isUnsatisfiable () {
+    public boolean isUnsatisfiable() {
         updateSurroundingAwareness();
         return ((this.nbFlagToPlace < 0) ||
                 (nbUndiscoveredNeighbors < nbFlagToPlace));
     }
 
-    public boolean isSatisfied () {
+    public boolean isSatisfied() {
         return this.nbFlagToPlace == 0;
     }
 
@@ -89,7 +89,7 @@ public class HintNode extends Node {
     * et celle qui sont encore non- decouverte
     * Il va ensuite updater ces varialbes
     * */
-    public void updateSurroundingAwareness () {
+    public void updateSurroundingAwareness() {
         int nbFlagToPlace = value;
         int nbPlaceForFlag = 0;
         for (FringeNode fn : connectedFringe) {
@@ -103,7 +103,7 @@ public class HintNode extends Node {
         this.nbFlagToPlace = nbFlagToPlace;
     }
 
-    public Set<FringeNode> getFlaggedFringe () {
+    public Set<FringeNode> getFlaggedFringe() {
         Set<FringeNode> flagged = new LinkedHashSet<FringeNode>();
         for (FringeNode fn : connectedFringe) {
             if (fn.state == FLAGED) {
@@ -113,7 +113,7 @@ public class HintNode extends Node {
         return flagged;
     }
 
-    public Set<FringeNode> getDeactivatedFringe () {
+    public Set<FringeNode> getDeactivatedFringe() {
         Set<FringeNode> deactivatedFringe = new LinkedHashSet<FringeNode>();
         for (FringeNode fn : connectedFringe) {
             if (fn.isDeactivated) {
@@ -125,12 +125,12 @@ public class HintNode extends Node {
 
 
     @Override
-    public boolean equals (Object obj) {
+    public boolean equals(Object obj) {
         return super.equals(obj);
     }
 
     @Override
-    public int hashCode () {
+    public int hashCode() {
         return super.hashCode();
     }
 }

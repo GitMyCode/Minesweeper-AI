@@ -4,12 +4,12 @@ public class Node {
 
     public int indexInGrid;
 
-    Node (int indexInGrid) {
+    Node(int indexInGrid) {
         this.indexInGrid = indexInGrid;
     }
 
     @Override
-    public boolean equals (Object obj) {
+    public boolean equals(Object obj) {
 
             /*
             * Tres wierd et certainement pas comforme aux bonnes pratiques.
@@ -33,7 +33,7 @@ public class Node {
     }
 
     @Override
-    public int hashCode () {
+    public int hashCode() {
         return indexInGrid;
     }
 }
