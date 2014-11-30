@@ -3,7 +3,7 @@ package minesweeper;
 import java.util.ArrayList;
 import java.util.Set;
 
-import minesweeper.ai.CSPGraph;
+import minesweeper.ai.SafeOrRandomAI;
 import minesweeper.ai.ProbabilisticAI;
 import minesweeper.ai.ProbabilisticAIwithRandomSelection;
 import minesweeper.ai.RandomArtificialPlayer;
@@ -17,7 +17,7 @@ public final class Benchmarks {
 
     public final static ArtificialPlayer[] JOUEURS = {
             new RandomArtificialPlayer(),
-            new CSPGraph(),
+            new SafeOrRandomAI(),
             new ProbabilisticAI(),
             new ProbabilisticAIwithRandomSelection()
     };
