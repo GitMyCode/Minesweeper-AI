@@ -4,18 +4,16 @@
 package minesweeper.ai;
 
 import minesweeper.*;
-import minesweeper.ai.utilCSP.Graph;
-import minesweeper.ai.utilCSP.strategyCSP.FowardCheckCSP;
-import minesweeper.ai.utilCSP.strategyCSP.SimpleCSP;
-import minesweeper.ai.utilCSP.strategyCSP.StrategyCSP;
-import minesweeper.exceptions.TimeOverException;
+import minesweeper.ai.dataRepresentation.FringeNode;
+import minesweeper.ai.dataRepresentation.Graph;
+import minesweeper.ai.strategyCSP.FowardCheckCSP;
+import minesweeper.ai.strategyCSP.StrategyCSP;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import static minesweeper.Case.FLAGED;
 import static minesweeper.Case.UNDISCOVERED;
 
 public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
@@ -85,10 +83,10 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
 
     protected void addSafeMovesAndFlags() {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
-            List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
+            List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int nbPossibilityHere = graph.nbValidAssignationsPerFrontier.get(frontierIndex);
 
-            for (Graph.FringeNode fn : fringeNodes) {
+            for (FringeNode fn : fringeNodes) {
                 if (fn.nbFlagsHit == 0) {
                     // 0% Mine
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));

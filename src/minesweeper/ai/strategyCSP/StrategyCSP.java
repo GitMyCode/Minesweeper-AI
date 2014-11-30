@@ -1,6 +1,6 @@
-package minesweeper.ai.utilCSP.strategyCSP;
+package minesweeper.ai.strategyCSP;
 
-import minesweeper.ai.utilCSP.Graph;
+import minesweeper.ai.dataRepresentation.Graph;
 
 /**
  * Created by MB on 11/29/2014.

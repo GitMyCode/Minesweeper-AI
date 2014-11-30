@@ -1,15 +1,13 @@
-package minesweeper.ai.utilCSP.strategyCSP;
+package minesweeper.ai.strategyCSP;
 
-import minesweeper.Case;
-import minesweeper.Coup;
 import minesweeper.Grid;
 import minesweeper.Move;
-import minesweeper.ai.utilCSP.Graph;
-import minesweeper.exceptions.TimeOverException;
+import minesweeper.ai.dataRepresentation.FringeNode;
+import minesweeper.ai.dataRepresentation.Graph;
+import minesweeper.ai.dataRepresentation.HintNode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import static minesweeper.Case.*;
@@ -46,8 +44,8 @@ public class SimpleCSP implements StrategyCSP{
     private void CSPonAllFrontiers() {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             long time = System.currentTimeMillis();
-            List<Graph.HintNode> hintBorder = graph.allHintNode.get(i);
-            List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(i);
+            List<HintNode> hintBorder = graph.allHintNode.get(i);
+            List<FringeNode> fringeNodes = graph.allFringeNodes.get(i);
             nbValidAssignations = 0;
             recurseCSP(hintBorder, fringeNodes, 0);
             graph.nbValidAssignationsPerFrontier.add(nbValidAssignations);
@@ -55,7 +53,7 @@ public class SimpleCSP implements StrategyCSP{
         }
     }
 
-    private boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) {
+    private boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
         if (!allFlagsOkay(hintNodes, index)) { return false; }
 
         if (solutionFound(index, hintNodes)) {
@@ -64,7 +62,7 @@ public class SimpleCSP implements StrategyCSP{
             return true;
         }
 
-        Graph.HintNode variableToSatisfy = hintNodes.get(index);
+        HintNode variableToSatisfy = hintNodes.get(index);
         variableToSatisfy.updateSurroundingAwareness();
 
         if (variableToSatisfy.isUnsatisfiable()) { return false; }
@@ -72,7 +70,7 @@ public class SimpleCSP implements StrategyCSP{
             return recurseCSP(hintNodes, fringeNodes, index + 1);
         }
 
-        List<Graph.FringeNode> undiscoveredFringe = variableToSatisfy.getUndiscoveredFringe();
+        List<FringeNode> undiscoveredFringe = variableToSatisfy.getUndiscoveredFringe();
         ArrayList<int[]> allFlagCombinations = variableToSatisfy.getAllFlagCombinations();
 
         for (int[] combination : allFlagCombinations) {
@@ -88,15 +86,15 @@ public class SimpleCSP implements StrategyCSP{
     }
 
 
-    private boolean allFlagsOkay(List<Graph.HintNode> hintNodes, int nbDone) {
+    private boolean allFlagsOkay(List<HintNode> hintNodes, int nbDone) {
         for (int i = 0; i < nbDone; i++) {
-            Graph.HintNode hintNode = hintNodes.get(i);
+            HintNode hintNode = hintNodes.get(i);
             int value = hintNode.value;
 
-            Set<Graph.FringeNode> neighborsFringe = hintNode.connectedFringe;
+            Set<FringeNode> neighborsFringe = hintNode.connectedFringe;
 
             int nbFlag = 0;
-            for (Graph.FringeNode fn : neighborsFringe) {
+            for (FringeNode fn : neighborsFringe) {
                 if (fn.state == FLAGED) { nbFlag++; }
             }
 
@@ -107,26 +105,26 @@ public class SimpleCSP implements StrategyCSP{
         return true;
     }
 
-    private boolean solutionFound(int index, List<Graph.HintNode> hintNodes) {
+    private boolean solutionFound(int index, List<HintNode> hintNodes) {
         return (index >= hintNodes.size());
     }
 
-    private void computeFlagHits(List<Graph.FringeNode> fringeNodes) {
-        for (Graph.FringeNode fn : fringeNodes) {
+    private void computeFlagHits(List<FringeNode> fringeNodes) {
+        for (FringeNode fn : fringeNodes) {
             if (fn.state == FLAGED) { fn.nbFlagsHit++; }
         }
     }
 
-    private void addFlagsToUndiscoveredFringe(List<Graph.FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    private void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
-            Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
+            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
             fringeToFlag.state = FLAGED;
         }
     }
 
-    private void removeFlagsFromUndiscoveredFringe(List<Graph.FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    private void removeFlagsFromUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
-            Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
+            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
             fringeToFlag.state = UNDISCOVERED;
         }
     }

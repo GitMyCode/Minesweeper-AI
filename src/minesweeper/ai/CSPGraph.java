@@ -6,7 +6,9 @@ package minesweeper.ai;
 import minesweeper.*;
 import minesweeper.Case;
 import minesweeper.Coup;
-import minesweeper.ai.utilCSP.Graph;
+import minesweeper.ai.dataRepresentation.FringeNode;
+import minesweeper.ai.dataRepresentation.Graph;
+import minesweeper.ai.dataRepresentation.HintNode;
 import minesweeper.exceptions.TimeOverException;
 
 import static minesweeper.Case.*;
@@ -75,8 +77,8 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
     private void CSPonAllFrontiers() throws TimeOverException {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             long time = System.currentTimeMillis();
-            List<Graph.HintNode> hintBorder = graph.allHintNode.get(i);
-            List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(i);
+            List<HintNode> hintBorder = graph.allHintNode.get(i);
+            List<FringeNode> fringeNodes = graph.allFringeNodes.get(i);
             nbValidAssignations = 0;
             recurseCSP(hintBorder, fringeNodes, 0);
             nbValidAssignationsPerFrontier.add(nbValidAssignations);
@@ -84,7 +86,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         }
     }
 
-    private boolean recurseCSP(List<Graph.HintNode> hintNodes, List<Graph.FringeNode> fringeNodes, int index) throws TimeOverException {
+    private boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) throws TimeOverException {
         if (isTimeUp()) { throw new TimeOverException(); }
         if (!allFlagsOkay(hintNodes, index)) { return false; }
 
@@ -94,12 +96,12 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
             return true;
         }
 
-        Graph.HintNode variableToSatisfy = hintNodes.get(index);
+        HintNode variableToSatisfy = hintNodes.get(index);
         variableToSatisfy.updateSurroundingAwareness();
 
         if (variableToSatisfy.isUnsatisfiable()) { return false; }
         if (variableToSatisfy.isSatisfied()) {
-            List<Graph.FringeNode> fringe = variableToSatisfy.getUndiscoveredFringe();
+            List<FringeNode> fringe = variableToSatisfy.getUndiscoveredFringe();
             deactivateFringe(fringe);
             /*
             * TODO
@@ -110,7 +112,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
             return true;
         }
 
-        List<Graph.FringeNode> undiscoveredFringe = variableToSatisfy.getUndiscoveredFringe();
+        List<FringeNode> undiscoveredFringe = variableToSatisfy.getUndiscoveredFringe();
         ArrayList<int[]> allFlagCombinations = variableToSatisfy.getAllFlagCombinations();
 
         for (int[] combination : allFlagCombinations) {
@@ -133,7 +135,7 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         return END;
     }
 
-    private boolean allFlagsOkay(List<Graph.HintNode> hintNodes, int nbDone) {
+    private boolean allFlagsOkay(List<HintNode> hintNodes, int nbDone) {
         for(int i=0; i<nbDone ; i++){
             if(!hintNodes.get(i).isSatisfied()){
                 return false;
@@ -156,8 +158,8 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         }*/
         return true;
     }
-    private boolean neighbourhoodOkey(Graph.HintNode hintNode){
-        for(Graph.HintNode hn : hintNode.connectedHint){
+    private boolean neighbourhoodOkey(HintNode hintNode){
+        for(HintNode hn : hintNode.connectedHint){
             hn.updateSurroundingAwareness();
             if(hn.isUnsatisfiable()){
                 return false;
@@ -166,8 +168,8 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         return true;
     }
 
-    static public boolean solutionFound(List<Graph.HintNode> hintNodes){
-        for(Graph.HintNode hn : hintNodes){
+    static public boolean solutionFound(List<HintNode> hintNodes){
+        for(HintNode hn : hintNodes){
             if(!hn.isSatisfied()){
                 return false;
             }
@@ -175,28 +177,28 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         return true;
     }
 
-    private boolean solutionFound(int index, List<Graph.HintNode> hintNodes) {
+    private boolean solutionFound(int index, List<HintNode> hintNodes) {
         return (index >= hintNodes.size());
     }
 
-    private void computeFlagHits(List<Graph.FringeNode> fringeNodes) {
-        for (Graph.FringeNode fn : fringeNodes) {
+    private void computeFlagHits(List<FringeNode> fringeNodes) {
+        for (FringeNode fn : fringeNodes) {
             if (fn.state == FLAGED) { fn.nbFlagsHit++; }
         }
     }
 
-    private void addFlagsToUndiscoveredFringe(List<Graph.FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    private void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
-            Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
+            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
             fringeToFlag.state = FLAGED;
         }
         deactivateFringe(undiscoveredFringe);
 
     }
 
-    private void removeFlagsFromUndiscoveredFringe(List<Graph.FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    private void removeFlagsFromUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
-            Graph.FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
+            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
             fringeToFlag.state = UNDISCOVERED;
         }
         activateFringe(undiscoveredFringe);
@@ -205,8 +207,8 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
         * This method is use when the hint is satisfied and any more flag
         * put on his fringe would invalid him (Foward checking)
         * */
-    private void deactivateFringe(List<Graph.FringeNode> fringe){
-        for(Graph.FringeNode fn : fringe){
+    private void deactivateFringe(List<FringeNode> fringe){
+        for(FringeNode fn : fringe){
             if(fn.state != FLAGED){
                 fn.isDeactivated = true;
             }
@@ -215,8 +217,8 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
     /*
     * Use for reactivating a fringe previously deactivated (When the CSP backtrack we need to free theses fringes)
     * */
-    private void activateFringe(List<Graph.FringeNode> fringe){
-        for(Graph.FringeNode fn : fringe){
+    private void activateFringe(List<FringeNode> fringe){
+        for(FringeNode fn : fringe){
             if(fn.isDeactivated){
                 fn.isDeactivated = false;
             }
@@ -243,10 +245,10 @@ public class CSPGraph implements ArtificialPlayer, Benchmarkable {
 
     protected void addSafeMovesAndFlags() {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
-            List<Graph.FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
+            List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int nbPossibilityHere = nbValidAssignationsPerFrontier.get(frontierIndex);
 
-            for (Graph.FringeNode fn : fringeNodes) {
+            for (FringeNode fn : fringeNodes) {
                 if (fn.nbFlagsHit == 0) {
                     // 0% Mine
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
