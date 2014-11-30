@@ -43,7 +43,6 @@ public class Graph {
         findFrontier(caseGrille);
 
         nbFrontiere = allHintNode.size();
-        int stop = 0;
 
     }
 
@@ -67,14 +66,10 @@ public class Graph {
     * */
     void findFrontier (Case[] grid) {
         //Un set pour s'assurer qu'on ne prend pas deux fois le meme noeud;
-        Set<Integer> inFrontiereSoFar = new HashSet<Integer>();
         for (int i = 0; i < grid.length; i++) {
 
-            if (!inFrontiereSoFar.contains(i) && isAFringeNode(grid, i)) {
-
-
+            if (!mapFringeNode.containsKey(i) && isAFringeNode(grid, i)) {
                 FringeNode fringeNode = new FringeNode(i);
-
 
                 //Va chercher les indices qui influence ce Noeud
                 fringeNode.hintNodes = getHintNeirbour(grid, fringeNode);
@@ -83,11 +78,9 @@ public class Graph {
                 * Et une parce que c'est ce qu'on retourne. ( c'est plus facile d'iterer sur les liste puiqu'on a un index)
                 */
                 List<FringeNode> front = new ArrayList<FringeNode>();
-                /*front.add(fringeNode);
-                inFrontiereSoFar.add(fringeNode);*/
 
                 //On ce lance dans la recursion pour accumuler les nodes suivant
-                putInFrontier(fringeNode, front, inFrontiereSoFar, grid);
+                putInFrontier(fringeNode, front, grid);
 
                 //Ajoute la frontier accumuler durant la recursion aux Nodes déja visité
                 //Je contraint les frontiers a etre au moins plus que 2 sinon on ne peut pas faire grand chose
@@ -137,7 +130,7 @@ public class Graph {
     * Methode qui recurse sur les noeuds et accumuler les nouveau qu'il trouve
     *
     * */
-    void putInFrontier (FringeNode startNode, List<FringeNode> fringe, Set<Integer> inBorderSoFar, Case[] grid) {
+    void putInFrontier (FringeNode startNode, List<FringeNode> fringe, Case[] grid) {
 
         Queue queue = new LinkedList();
         queue.add(startNode);
@@ -145,7 +138,6 @@ public class Graph {
         mapFringeNode.put(startNode.indexInGrid, startNode);
 
         FringeNode lastNode = startNode;
-        FringeNode mostFlagToPlace = null;
 
 
         while (!queue.isEmpty()) {
@@ -154,7 +146,7 @@ public class Graph {
             FringeNode nextNode = null;
              /*Va chercher les prochains direction disponible (qui menent a un noeud non visite)*/
 
-            Set<Direction> thisDirection = getPossibleDirection(grid, currentNode.indexInGrid, inBorderSoFar);
+            Set<Direction> thisDirection = getPossibleDirection(grid, currentNode.indexInGrid);
             //Si aucun direction alors on backtrack
 
             if (!(thisDirection == null || thisDirection.isEmpty())) {
@@ -169,67 +161,13 @@ public class Graph {
 
                         mapFringeNode.put(nextNode.indexInGrid, nextNode);
                         queue.add(nextNode);
-
-                        if (nextDirection.getCompDir().size() > 1) {
-                            nextNode.fringeNeighbor.addLast(currentNode);
-                            currentNode.fringeNeighbor.addLast(nextNode);
-                        } else {
-                            nextNode.fringeNeighbor.addFirst(currentNode);
-                            currentNode.fringeNeighbor.addFirst(nextNode);
-                        }
-
-                        lastNode = nextNode;
-                    } else {
-                        if (currentNode.fringeNeighbor.contains(mapFringeNode.get(next))) {
-                            if (nextDirection.getCompDir().size() > 1) {
-                                currentNode.fringeNeighbor.addLast(mapFringeNode.get(next));
-                            } else {
-                                currentNode.fringeNeighbor.addFirst(mapFringeNode.get(next));
-                            }
-                        }
-
-
-                    }
-
-                }
-            }
-
-        }
-
-
-        /*
-        * TODO
-        * Je ne penses pas que c'est bon. Le graph devrait juste lié tout les noeud ensemble et
-        * Le CSP devrait lui même gerer comment il va circuler dans les NOdes
-        * */
-
-
-        FringeNode TrueStart = lastNode;
-
-
-        Stack<FringeNode> stack = new Stack<FringeNode>();
-        stack.add(TrueStart);
-        inBorderSoFar.add(TrueStart.indexInGrid);
-        fringe.add(TrueStart);
-
-        while (!stack.isEmpty()) {
-            ;
-            FringeNode current = stack.peek();
-            FringeNode nextNode = null;
-            if (!current.fringeNeighbor.isEmpty()) {
-                for (FringeNode f : current.fringeNeighbor) {
-                    if (!inBorderSoFar.contains(f.indexInGrid)) {
-                        nextNode = f;
-                        stack.add(nextNode);
                         fringe.add(nextNode);
-                        inBorderSoFar.add(nextNode.indexInGrid);
-                        break;
+
                     }
+
                 }
             }
-            if (nextNode == null) {
-                stack.pop();
-            }
+
         }
 
     }
@@ -238,7 +176,7 @@ public class Graph {
     /*
     * Va aller chercher les prochaines directions qui menent vers un noeud valide
     * */
-    Set<Direction> getPossibleDirection (Case[] grid, int index, Set<Integer> frontiere) {
+    Set<Direction> getPossibleDirection (Case[] grid, int index) {
         Set<Direction> directions = new LinkedHashSet<Direction>();
 
         for (Direction D : HUIT_DIRECTIONS) {
@@ -246,7 +184,7 @@ public class Graph {
 
 
             if (gameGrid.isStepThisDirInGrid(D, index) &&
-                    //!frontiere.contains(next) &&
+                    !mapFringeNode.containsKey(next) &&
                     isAFringeNode(grid, next)) {
                 Collection<Integer> indiceNeirboursCurrentNode = getIndiceNeirbours(grid, index);
                 Collection<Integer> indiceNeirboursNextNode = getIndiceNeirbours(grid, next);

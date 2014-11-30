@@ -15,6 +15,24 @@ import static minesweeper.Case.*;
  */
 public class CSP {
 
+    /*
+    * TODO
+    *
+    * POUR TES TESTS UNIQUEMENT.
+    * CLASSE TEMPORAIRE, NE PAS Y FAIRE ATTENTION
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    * */
+
     public static Graph graph = null;
     public static int nbValidAssignations = 0;
     public static List<Integer> nbValidAssignationsPerFrontier;

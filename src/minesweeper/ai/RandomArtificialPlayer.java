@@ -13,21 +13,21 @@ import java.util.List;
 import java.util.Random;
 
 /**
-* Projet de joueur artificiel de Minesweeper avec différents algorithmes
-* Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
-*
-* Automne 2014
-* Par l'équipe:
-*   Martin Bouchard
-*   Frédéric Vachon
-*   Louis-Bertrand Varin
-*   Geneviève Lalonde
-*   Nilovna Bascunan-Vasquez
-*/
+ * Projet de joueur artificiel de Minesweeper avec différents algorithmes
+ * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
+ * <p/>
+ * Automne 2014
+ * Par l'équipe:
+ * Martin Bouchard
+ * Frédéric Vachon
+ * Louis-Bertrand Varin
+ * Geneviève Lalonde
+ * Nilovna Bascunan-Vasquez
+ */
 public class RandomArtificialPlayer implements ArtificialPlayer {
 
     @Override
-    public Set<Move> getNextMoves(Grid grid, int delay) {
+    public Set<Move> getNextMoves (Grid grid, int delay) {
 
         Case[] myView = grid.getCpyPlayerView();
         Random ran = new Random();
@@ -60,7 +60,7 @@ public class RandomArtificialPlayer implements ArtificialPlayer {
     }
 
     @Override
-    public String getName() {
+    public String getName () {
         return "Random Artificial Player";
     }
 

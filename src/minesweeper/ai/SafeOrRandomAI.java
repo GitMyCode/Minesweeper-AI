@@ -35,7 +35,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     StrategyCSP csp;
 
     @Override
-    public Set<Move> getNextMoves(Grid grid, int delay) {
+    public Set<Move> getNextMoves (Grid grid, int delay) {
         this.gameGrid = grid;
         Case[] gridCopy = grid.getCpyPlayerView();
         startTimer(delay);
@@ -57,13 +57,13 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
         return movesToPlay;
     }
 
-    private boolean isTimeUp() {
-        END = (timeRemaining() < LIMITE) ? true: END;
+    private boolean isTimeUp () {
+        END = (timeRemaining() < LIMITE) ? true : END;
         return END;
     }
 
 
-    protected void addMovesToPlay(Grid grid, Case[] gridCopy) {
+    protected void addMovesToPlay (Grid grid, Case[] gridCopy) {
         if (this.movesToPlay.isEmpty()) {
             addSafeMovesAndFlags();
             if (this.movesToPlay.isEmpty()) {
@@ -71,7 +71,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
                 addUncertainMoveToStats();
             } else {
                 Set<Move> errors = grid.checkMove(movesToPlay);
-                if(!errors.isEmpty()){
+                if (!errors.isEmpty()) {
                     System.out.println("ERREUR");
                 }
 
@@ -81,7 +81,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
         }
     }
 
-    protected void addSafeMovesAndFlags() {
+    protected void addSafeMovesAndFlags () {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int nbPossibilityHere = graph.nbValidAssignationsPerFrontier.get(frontierIndex);
@@ -98,7 +98,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
         }
     }
 
-    protected void addRandomMove(Grid grid, Case[] gridCopy) {
+    protected void addRandomMove (Grid grid, Case[] gridCopy) {
         List<Integer> legalMoves = new ArrayList<Integer>();
         for (int i = 0; i < grid.length; i++) {
             if (gridCopy[i] == UNDISCOVERED) {
@@ -111,58 +111,63 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
         this.movesToPlay.add(new Move(index, Coup.SHOW));
     }
 
-    private void startTimer(int delai) {
+    private void startTimer (int delai) {
         END = false;
         timer = System.currentTimeMillis();
         remain = delai;
     }
 
-    private String showTimeRemaing() { return ("Time: " + timeRemaining() + " ms"); }
+    private String showTimeRemaing () {
+        return ("Time: " + timeRemaining() + " ms");
+    }
 
-    public long timeRemaining() {
+    public long timeRemaining () {
         long elaspsed = (System.currentTimeMillis() - timer);
         return remain - elaspsed;
     }
 
-    protected void addTrivialMoveToStats() {
+    protected void addTrivialMoveToStats () {
         nbTrivialMoves++;
         nbTotalMoves++;
     }
 
-    protected void addCSPMoveToStats() {
+    protected void addCSPMoveToStats () {
         nbCSPMoves++;
         nbTotalMoves++;
     }
-    protected void addUncertainMoveToStats() {
+
+    protected void addUncertainMoveToStats () {
         nbUncertainMoves++;
         nbTotalMoves++;
     }
 
     @Override
-    public String getName() { return "Safe or Random"; }
+    public String getName () {
+        return "Safe or Random";
+    }
 
     @Override
-    public boolean isProbabilistic() {
+    public boolean isProbabilistic () {
         return false;
     }
 
     @Override
-    public double getProbabilitySuccessRate() {
+    public double getProbabilitySuccessRate () {
         return 0;
     }
 
     @Override
-    public double getTrivialMoveRate() {
+    public double getTrivialMoveRate () {
         return (double) nbTrivialMoves / nbTotalMoves;
     }
 
     @Override
-    public double getCSPMoveRate() {
+    public double getCSPMoveRate () {
         return (double) nbCSPMoves / nbTotalMoves;
     }
 
     @Override
-    public double getUncertainMoveRate() {
+    public double getUncertainMoveRate () {
         return (double) nbUncertainMoves / nbTotalMoves;
     }
 }
