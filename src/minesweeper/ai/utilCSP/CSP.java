@@ -16,13 +16,13 @@ import static minesweeper.Case.*;
 public class CSP {
 
     public static Graph graph = null;
-    public static int nbValidAssignations =0;
+    public static int nbValidAssignations = 0;
     public static List<Integer> nbValidAssignationsPerFrontier;
     public static Set<Move> movesToPlay;
     public static Set<HintNode> variableRemaining;
 
-    static void CSPonGraph(Graph g){
-        graph= g;
+    static void CSPonGraph (Graph g) {
+        graph = g;
         nbValidAssignationsPerFrontier = new ArrayList<Integer>();
         movesToPlay = new HashSet<Move>();
         CSPonAllFrontiers();
@@ -30,7 +30,7 @@ public class CSP {
     }
 
 
-     static private void CSPonAllFrontiers() {
+    static private void CSPonAllFrontiers () {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             long time = System.currentTimeMillis();
             List<HintNode> hintBorder = graph.allHintNode.get(i);
@@ -44,13 +44,13 @@ public class CSP {
         }
     }
 
-    static private boolean iterativeCSP(HintNode startNode, List<FringeNode> fringeNodes) {
+    static private boolean iterativeCSP (HintNode startNode, List<FringeNode> fringeNodes) {
 
 
         Stack<HintNode> stack = new Stack<HintNode>();
         stack.add(startNode);
 
-        while (!stack.isEmpty()){
+        while (!stack.isEmpty()) {
             HintNode currentNode = stack.peek();
 
             currentNode.updateSurroundingAwareness();
@@ -58,7 +58,7 @@ public class CSP {
             List<FringeNode> undiscoveredFringe = currentNode.getUndiscoveredFringe();
             ArrayList<int[]> allFlagCombinations = currentNode.getAllFlagCombinations();
 
-            for(int[] combination : allFlagCombinations){
+            for (int[] combination : allFlagCombinations) {
 
                 int nbFlagToPlaceHere = currentNode.nbFlagToPlace;
                 addFlagsToUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
@@ -77,19 +77,19 @@ public class CSP {
         return false;
     }
 
-    static public void recusivCSP(HintNode currentNode,List<HintNode> hintNodes, List<FringeNode> fringeNodes){
+    static public void recusivCSP (HintNode currentNode, List<HintNode> hintNodes, List<FringeNode> fringeNodes) {
 
-        if(solutionFound(hintNodes)){
+        if (solutionFound(hintNodes)) {
             computeFlagHits(fringeNodes);
             nbValidAssignations++;
             return;
         }
 
-        if(currentNode.isUnsatisfiable()){
+        if (currentNode.isUnsatisfiable()) {
             variableRemaining.add(currentNode);
             return;
         }
-        if(currentNode.isSatisfied()){
+        if (currentNode.isSatisfied()) {
             variableRemaining.remove(currentNode);
             HintNode chosenVariable = nextVariable(currentNode);
             chosenVariable.updateSurroundingAwareness();
@@ -101,13 +101,13 @@ public class CSP {
         List<FringeNode> undiscoveredFringe = currentNode.getUndiscoveredFringe();
         ArrayList<int[]> allFlagCombinations = currentNode.getAllFlagCombinations();
 
-        for(int[] combination : allFlagCombinations){
+        for (int[] combination : allFlagCombinations) {
 
             int nbFlagToPlaceHere = currentNode.nbFlagToPlace;
             addFlagsToUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
             variableRemaining.remove(currentNode);
-            if(allFlagsOkay(currentNode)){
-                recusivCSP(nextVariable(currentNode),hintNodes,fringeNodes);
+            if (allFlagsOkay(currentNode)) {
+                recusivCSP(nextVariable(currentNode), hintNodes, fringeNodes);
             }
 
             variableRemaining.add(currentNode);
@@ -116,86 +116,87 @@ public class CSP {
         variableRemaining.remove(currentNode);
 
 
-
     }
 
 
-    static public boolean solutionFound(List<HintNode> hintNodes){
-        for(HintNode hn : hintNodes){
-            if(!hn.isSatisfied()){
+    static public boolean solutionFound (List<HintNode> hintNodes) {
+        for (HintNode hn : hintNodes) {
+            if (!hn.isSatisfied()) {
                 return false;
             }
         }
         return true;
     }
-    static public void computeFlagHits(List<FringeNode> fringeNodes) {
+
+    static public void computeFlagHits (List<FringeNode> fringeNodes) {
         for (FringeNode fn : fringeNodes) {
-            if (fn.state == FLAGED) { fn.nbFlagsHit++; }
+            if (fn.state == FLAGED) {
+                fn.nbFlagsHit++;
+            }
         }
     }
 
 
-
-    static public HintNode nextVariable(HintNode current){
-        HintNode nextV =null;
+    static public HintNode nextVariable (HintNode current) {
+        HintNode nextV = null;
         int MIV = Integer.MIN_VALUE; // Most Influence Variable;
-        for (HintNode hintNode : current.connectedHint){
-            if(!hintNode.isSatisfied() && hintNode.connectedHint.size() > MIV){
+        for (HintNode hintNode : current.connectedHint) {
+            if (!hintNode.isSatisfied() && hintNode.connectedHint.size() > MIV) {
                 MIV = hintNode.connectedHint.size();
                 nextV = hintNode;
             }
         }
 
-        if(nextV == null && !variableRemaining.isEmpty()){
+        if (nextV == null && !variableRemaining.isEmpty()) {
             nextV = variableRemaining.iterator().next();
             nextV.updateSurroundingAwareness();
         }
-        if(nextV ==null){
+        if (nextV == null) {
             System.out.println(" wtf");
         }
 
         return nextV;
     }
 
-    static private boolean allFlagsOkay(HintNode hintNode){
+    static private boolean allFlagsOkay (HintNode hintNode) {
 
-        for(HintNode hn : hintNode.connectedHint){
+        for (HintNode hn : hintNode.connectedHint) {
             hn.updateSurroundingAwareness();
-            if(hn.isUnsatisfiable()){
+            if (hn.isUnsatisfiable()) {
                 return false;
             }
         }
         return true;
     }
 
-     static private void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    static private void addFlagsToUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
 
 
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
             FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
             fringeToFlag.state = FLAGED;
         }
-        for(FringeNode fn : undiscoveredFringe ){
-            if(fn.state != FLAGED){
+        for (FringeNode fn : undiscoveredFringe) {
+            if (fn.state != FLAGED) {
                 fn.isDeactivated = true;
             }
         }
 
     }
 
-    static private void removeFlagsFromUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    static private void removeFlagsFromUndiscoveredFringe (List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
             FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
             fringeToFlag.state = UNDISCOVERED;
         }
-        for(FringeNode fn : undiscoveredFringe ){
-            if(fn.isDeactivated){
+        for (FringeNode fn : undiscoveredFringe) {
+            if (fn.isDeactivated) {
                 fn.isDeactivated = false;
             }
         }
     }
 
-    static public void addSafeMovesAndFlags() {
+    static public void addSafeMovesAndFlags () {
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int nbPossibilityHere = nbValidAssignationsPerFrontier.get(frontierIndex);
@@ -211,8 +212,6 @@ public class CSP {
             }
         }
     }
-
-
 
 
 }
