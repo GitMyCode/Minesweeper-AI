@@ -82,7 +82,7 @@ public class SimpleCSP implements StrategyCSP {
     }
 
 
-    private boolean allFlagsOkay(List<HintNode> hintNodes, int nbDone) {
+    protected boolean allFlagsOkay(List<HintNode> hintNodes, int nbDone) {
         for (int i = 0; i < nbDone; i++) {
             HintNode hintNode = hintNodes.get(i);
             int value = hintNode.value;
