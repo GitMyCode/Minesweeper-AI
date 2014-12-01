@@ -17,15 +17,8 @@ import static minesweeper.Case.*;
  */
 public class SimpleCSP implements StrategyCSP {
 
-    private final int LIMITE = 10;
-    private long timer;
-    private long remain;
-    private boolean END = false;
-
     protected int nbValidAssignations = 0;
-    protected Grid gameGrid;
     protected Graph graph;
-    protected Set<Move> movesToPlay;
     protected String cumulatedTimeStats = "";
 
 
@@ -40,8 +33,7 @@ public class SimpleCSP implements StrategyCSP {
         return "Simple CSP";
     }
 
-
-    private void CSPonAllFrontiers() {
+    protected void CSPonAllFrontiers() {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             long time = System.currentTimeMillis();
             List<HintNode> hintBorder = graph.allHintNode.get(i);
@@ -53,7 +45,7 @@ public class SimpleCSP implements StrategyCSP {
         }
     }
 
-    private boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
+    protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
         if (!allFlagsOkay(hintNodes, index)) {
             return false;
         }
@@ -111,11 +103,11 @@ public class SimpleCSP implements StrategyCSP {
         return true;
     }
 
-    private boolean solutionFound(int index, List<HintNode> hintNodes) {
+    protected boolean solutionFound(int index, List<HintNode> hintNodes) {
         return (index >= hintNodes.size());
     }
 
-    private void computeFlagHits(List<FringeNode> fringeNodes) {
+    protected void computeFlagHits(List<FringeNode> fringeNodes) {
         for (FringeNode fn : fringeNodes) {
             if (fn.state == FLAGED) {
                 fn.nbFlagsHit++;
@@ -123,14 +115,14 @@ public class SimpleCSP implements StrategyCSP {
         }
     }
 
-    private void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    protected void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
             FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
             fringeToFlag.state = FLAGED;
         }
     }
 
-    private void removeFlagsFromUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
+    protected void removeFlagsFromUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
             FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);
             fringeToFlag.state = UNDISCOVERED;
