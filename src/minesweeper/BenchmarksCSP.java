@@ -27,6 +27,8 @@ public class BenchmarksCSP {
         File directory = new File("src\\minesweeper\\ai\\utilCSP\\benchmarkGridCSP");
 
         File[] allTestFile = directory.listFiles();
+        final int columnSize = 40;
+
         List<String[]> logsList = new ArrayList<String[]>();
         for (StrategyCSP csp : CSPS) {
             System.out.println(csp.strategyToString());
@@ -49,7 +51,7 @@ public class BenchmarksCSP {
                 if (cspLog == logsList.size() - 1) {
                     end = "\n";
                 } else {
-                    int spaceSize = 40 - logLineForThisCSP.length();
+                    int spaceSize = columnSize - logLineForThisCSP.length();
                     char[] spaceArray = new char[spaceSize];
                     Arrays.fill(spaceArray, ' ');
                     end = new String(spaceArray);
