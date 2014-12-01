@@ -7,9 +7,6 @@ import minesweeper.ai.dataRepresentation.HintNode;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by fred on 30/11/14.
- */
 public class RemainingFlagsCSP extends SimpleCSP {
 
     private int flagsRemaining = 0;

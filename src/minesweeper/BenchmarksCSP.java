@@ -1,7 +1,7 @@
 package minesweeper;
 
 import minesweeper.ai.dataRepresentation.Graph;
-import minesweeper.ai.strategyCSP.FowardCheckCSP;
+import minesweeper.ai.strategyCSP.ForwardCheckCSP;
 import minesweeper.ai.strategyCSP.SimpleCSP;
 import minesweeper.ai.strategyCSP.StrategyCSP;
 
@@ -17,7 +17,7 @@ public class BenchmarksCSP {
 
     public final static StrategyCSP[] CSPS = {
             new SimpleCSP(),
-            new FowardCheckCSP()
+            new ForwardCheckCSP()
 
     };
 

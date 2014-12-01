@@ -12,7 +12,7 @@ import static minesweeper.Case.*;
 /**
  * Created by MB on 11/29/2014.
  */
-public class FowardCheckCSP extends SimpleCSP implements StrategyCSP {
+public class ForwardCheckCSP extends SimpleCSP implements StrategyCSP {
 
     @Override
     public void executeCSPonGraph(Graph graph) {
