@@ -1,16 +1,11 @@
 package minesweeper.ai.utilCSP;
 
 import minesweeper.Coup;
-import minesweeper.Grid;
 import minesweeper.Move;
 import minesweeper.ai.dataRepresentation.FringeNode;
 import minesweeper.ai.dataRepresentation.Graph;
 import minesweeper.ai.dataRepresentation.HintNode;
-import minesweeper.ai.strategyCSP.FowardCheckCSP;
-import minesweeper.ai.strategyCSP.SimpleCSP;
-import minesweeper.ai.strategyCSP.StrategyCSP;
 
-import java.io.File;
 import java.util.*;
 
 import static minesweeper.Case.*;
