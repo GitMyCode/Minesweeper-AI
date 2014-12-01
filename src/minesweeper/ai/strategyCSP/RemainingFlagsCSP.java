@@ -74,4 +74,9 @@ public class RemainingFlagsCSP extends SimpleCSP {
 
         return count;
     }
+
+    @Override
+    public String strategyToString() {
+        return "Remaining Flags CSP";
+    }
 }
