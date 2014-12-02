@@ -16,8 +16,8 @@ public class Graph {
 
     public int nbFrontiere = 0;
 
-    public HashMap<Integer, HintNode> mapHintNode;
-    public HashMap<Integer, FringeNode> mapFringeNode;
+    public HashMap<Integer, HintNode> knownHintNodes;
+    public HashMap<Integer, FringeNode> knownFringeNodes;
     public List<List<HintNode>> allHintNode;
     public List<List<FringeNode>> allFringeNodes;
     public List<Integer> nbValidAssignationsPerFrontier;
@@ -32,8 +32,8 @@ public class Graph {
         caseGrille = gameGrid.getCpyPlayerView();
 
         deactivatedNode = new HashSet<Integer>();
-        mapHintNode = new HashMap<Integer, HintNode>();
-        mapFringeNode = new HashMap<Integer, FringeNode>();
+        knownHintNodes = new HashMap<Integer, HintNode>();
+        knownFringeNodes = new HashMap<Integer, FringeNode>();
 
         allHintNode = new ArrayList<List<HintNode>>();
         allFringeNodes = new ArrayList<List<FringeNode>>();
@@ -68,7 +68,7 @@ public class Graph {
         //Un set pour s'assurer qu'on ne prend pas deux fois le meme noeud;
         for (int i = 0; i < grid.length; i++) {
 
-            if (!mapFringeNode.containsKey(i) && isAFringeNode(grid, i)) {
+            if (!knownFringeNodes.containsKey(i) && isAFringeNode(grid, i)) {
                 FringeNode fringeNode = new FringeNode(i);
 
                 //Va chercher les indices qui influence ce Noeud
@@ -76,7 +76,7 @@ public class Graph {
 
                 List<FringeNode> front = new ArrayList<FringeNode>();
                 front.add(fringeNode);
-                mapFringeNode.put(i, fringeNode);
+                knownFringeNodes.put(i, fringeNode);
 
                 //On ce lance dans la recursion pour accumuler les nodes suivant
                 putInFrontier(fringeNode, front, grid);
@@ -134,7 +134,7 @@ public class Graph {
         Queue queue = new LinkedList();
         queue.add(startNode);
 
-        mapFringeNode.put(startNode.indexInGrid, startNode);
+        knownFringeNodes.put(startNode.indexInGrid, startNode);
 
         FringeNode lastNode = startNode;
 
@@ -153,12 +153,12 @@ public class Graph {
                     int next = currentNode.indexInGrid + gameGrid.step(nextDirection);
 
 
-                    if (!mapFringeNode.containsKey(next)) {
+                    if (!knownFringeNodes.containsKey(next)) {
                         nextNode = new FringeNode(next);
                         nextNode.hintNodes = getHintNeirbour(grid, nextNode);
 
 
-                        mapFringeNode.put(nextNode.indexInGrid, nextNode);
+                        knownFringeNodes.put(nextNode.indexInGrid, nextNode);
                         queue.add(nextNode);
                         fringe.add(nextNode);
                     }
@@ -179,7 +179,7 @@ public class Graph {
 
 
             if (gameGrid.isStepThisDirInGrid(D, index) &&
-                    !mapFringeNode.containsKey(next) &&
+                    !knownFringeNodes.containsKey(next) &&
                     isAFringeNode(grid, next)) {
                 Collection<Integer> indiceNeirboursCurrentNode = getIndiceNeirbours(grid, index);
                 Collection<Integer> indiceNeirboursNextNode = getIndiceNeirbours(grid, next);
@@ -216,11 +216,11 @@ public class Graph {
 
             if (Case.isIndicatorCase(g[indexHint])) {
                 HintNode hn = null;
-                if (mapHintNode.containsKey(indexHint)) {
-                    hn = mapHintNode.get(indexHint);
+                if (knownHintNodes.containsKey(indexHint)) {
+                    hn = knownHintNodes.get(indexHint);
                 } else {
                     hn = new HintNode(indexHint, this.gameGrid.countUnplacedFlags(indexHint), this.gameGrid.getUndiscoveredneighbours(indexHint).size());
-                    mapHintNode.put(indexHint, hn);
+                    knownHintNodes.put(indexHint, hn);
                 }
                 hintNodes.add(hn);
                 hn.connectedFringe.add(fringeNode);
