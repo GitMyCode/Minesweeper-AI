@@ -94,7 +94,8 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         }
 
         public GameBuilder loadGrid (File f) {
-            this.grid = new Grid(f);
+            this.grid = new Grid();
+            this.grid.loadFromFile(f);
             this.nbCols = grid.nbCols;
             this.nbLignes = grid.nbLignes;
             this.nbMines = grid.nbMines;
