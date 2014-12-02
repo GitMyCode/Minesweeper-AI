@@ -33,34 +33,7 @@ public class Grid {
     public Case[] underneathValues;
     public Case[] gridPlayerView;
 
-    public Grid(File f) {
-        try {
-            Scanner sc = new Scanner(f);
-            this.firstMove = false;
-            this.nbLignes = sc.nextInt();
-            this.nbCols = sc.nextInt();
-            this.nbMines = sc.nextInt();
-            this.nbFlagsRemaining = sc.nextInt();
-            this.nbMinesRemaining = sc.nextInt();
-            this.length = nbCols * nbLignes;
-            this.nbFlagsRemaining = nbMines;
-            this.nbMinesRemaining = nbMines;
-
-            this.gridPlayerView = new Case[length];
-            this.underneathValues = new Case[length];
-
-            for (int i = 0; i < length; i++) {
-                this.underneathValues[i] = Case.caseFromInt(sc.nextInt());
-            }
-
-            String s = sc.next();
-            for (int i = 0; i < length; i++) {
-                this.gridPlayerView[i] = Case.caseFromInt(sc.nextInt());
-            }
-
-        } catch (Exception e) {
-            System.out.println("Erreur remake grid:" + e);
-        }
+    public Grid() {
     }
 
     public Grid(int nbLignes, int nbCols, int nbMines) {
@@ -74,7 +47,6 @@ public class Grid {
         this.gridPlayerView = new Case[nbCols * nbLignes];
 
         Arrays.fill(gridPlayerView, Case.UNDISCOVERED);
-
     }
 
 
@@ -415,6 +387,40 @@ public class Grid {
     public String getATimeStampedGridName() {
         Format formatter = new SimpleDateFormat("MM-dd_hh-mm-ss");
         return  "grid-" + (formatter.format(new Date()));
+    }
+
+    public void loadFromFile(File gridFile) {
+
+        try {
+
+            Scanner sc = new Scanner(gridFile);
+            this.firstMove = false;
+            this.nbLignes = sc.nextInt();
+            this.nbCols = sc.nextInt();
+            this.nbMines = sc.nextInt();
+            this.nbFlagsRemaining = sc.nextInt();
+            this.nbMinesRemaining = sc.nextInt();
+            this.length = nbCols * nbLignes;
+            this.nbFlagsRemaining = nbMines;
+            this.nbMinesRemaining = nbMines;
+
+            this.gridPlayerView = new Case[length];
+            this.underneathValues = new Case[length];
+
+            for (int i = 0; i < length; i++) {
+                this.underneathValues[i] = Case.caseFromInt(sc.nextInt());
+            }
+
+            String s = sc.next();
+            for (int i = 0; i < length; i++) {
+                this.gridPlayerView[i] = Case.caseFromInt(sc.nextInt());
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erreur remake grid:" + e);
+        }
+
+
     }
 
     public void saveToFile(String fileName) throws Exception {
