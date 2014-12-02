@@ -24,7 +24,7 @@ public class BenchmarksCSP {
 
     public static void main(String[] args) {
 
-        File directory = new File("src\\minesweeper\\ai\\utilCSP\\benchmarkGridCSP");
+        File directory = new File("src/minesweeper/ai/utilCSP/benchmarkGridCSP");
 
         File[] allTestFile = directory.listFiles();
         final int columnSize = 40;
@@ -34,7 +34,8 @@ public class BenchmarksCSP {
             System.out.println(csp.strategyToString());
             csp.addLineToExecutionLog(csp.strategyToString());
             for (File testFile : allTestFile) {
-                Grid testGrid = new Grid(testFile);
+                Grid testGrid = new Grid();
+                testGrid.loadFromFile(testFile);
                 Graph testGraph = new Graph(testGrid);
                 csp.addLineToExecutionLog("--------- " + testFile.getName() + " ---------");
                 csp.executeCSPonGraph(testGraph);
