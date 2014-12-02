@@ -74,10 +74,9 @@ public class Graph {
                 //Va chercher les indices qui influence ce Noeud
                 fringeNode.hintNodes = getHintNeirbour(grid, fringeNode);
 
-                /*un Set pour s'assurer un frontiere de noeud unique
-                * Et une parce que c'est ce qu'on retourne. ( c'est plus facile d'iterer sur les liste puiqu'on a un index)
-                */
                 List<FringeNode> front = new ArrayList<FringeNode>();
+                front.add(fringeNode);
+                mapFringeNode.put(i, fringeNode);
 
                 //On ce lance dans la recursion pour accumuler les nodes suivant
                 putInFrontier(fringeNode, front, grid);
@@ -162,14 +161,10 @@ public class Graph {
                         mapFringeNode.put(nextNode.indexInGrid, nextNode);
                         queue.add(nextNode);
                         fringe.add(nextNode);
-
                     }
-
                 }
             }
-
         }
-
     }
 
 
