@@ -8,6 +8,7 @@ import minesweeper.ai.dataRepresentation.FringeNode;
 import minesweeper.ai.dataRepresentation.Graph;
 import minesweeper.ai.strategyCSP.ForwardCheckCSP;
 import minesweeper.ai.strategyCSP.RemainingFlagsCSP;
+import minesweeper.ai.strategyCSP.SimpleCSP;
 import minesweeper.ai.strategyCSP.StrategyCSP;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
             return movesToPlay;
         }
 
-        csp = new RemainingFlagsCSP();
+        csp = new SimpleCSP();
 
         graph = new Graph(grid);
         csp.executeCSPonGraph(graph);
