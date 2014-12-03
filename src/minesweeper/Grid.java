@@ -152,6 +152,17 @@ public class Grid {
         return nbFlagsRemaining;
     }
 
+    public int getNbUndiscoveredCases() {
+        int reponse = 0;
+        for (int i = 0; i < length; i++) {
+            if (gridPlayerView[i] == Case.UNDISCOVERED) {
+                reponse++;
+
+            }
+        }
+        return reponse;
+    }
+
     public Set<Coup> getLegalCaseCoup(int index) {
         Case c = gridPlayerView[index];
         switch (c) {
