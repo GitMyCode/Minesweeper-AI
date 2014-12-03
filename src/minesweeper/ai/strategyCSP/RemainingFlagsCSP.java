@@ -7,25 +7,15 @@ import minesweeper.ai.dataRepresentation.HintNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemainingFlagsCSP extends SimpleCSP {
+public class RemainingFlagsCSP extends CSPBluePrint {
 
     private int flagsRemaining = 0;
 
     @Override
-    protected void CSPonAllFrontiers() {
+    protected void optionalActionBeforeCSPonFrontiers() {
         flagsRemaining = graph.gameGrid.getNbFlagsRemaining();
-
-        for (int i = 0; i < graph.allHintNode.size(); i++) {
-            long time = System.currentTimeMillis();
-            List<HintNode> hintBorder = graph.allHintNode.get(i);
-            List<FringeNode> fringeNodes = graph.allFringeNodes.get(i);
-            nbValidAssignations = 0;
-            graph.nbMinimalAssignementsPerFrontier.add(Integer.MAX_VALUE);
-            recurseCSP(hintBorder, fringeNodes, 0);
-            graph.nbValidAssignationsPerFrontier.add(nbValidAssignations);
-            addLineToExecutionLog("frontiere (" + i + ") :" + (System.currentTimeMillis() - time) + " ms");
-        }
     }
+
 
     @Override
     protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
