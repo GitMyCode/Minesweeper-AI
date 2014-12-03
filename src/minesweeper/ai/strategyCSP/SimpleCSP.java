@@ -39,6 +39,7 @@ public class SimpleCSP implements StrategyCSP {
             List<HintNode> hintBorder = graph.allHintNode.get(i);
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(i);
             nbValidAssignations = 0;
+            graph.nbMinimalAssignementsPerFrontier.add(Integer.MAX_VALUE);
             recurseCSP(hintBorder, fringeNodes, 0);
             graph.nbValidAssignationsPerFrontier.add(nbValidAssignations);
             addLineToExecutionLog("frontiere (" + i + ") :" + (System.currentTimeMillis() - time) + " ms");
@@ -46,12 +47,16 @@ public class SimpleCSP implements StrategyCSP {
     }
 
     protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
+
         if (!allFlagsOkay(hintNodes, index)) {
             return false;
         }
 
         if (solutionFound(index, hintNodes)) {
-            computeFlagHits(fringeNodes);
+            int indexDernier = graph.nbMinimalAssignementsPerFrontier.size() - 1;
+            int nbFlags = computeFlagHits(fringeNodes);
+            int minimum = Math.min(graph.nbMinimalAssignementsPerFrontier.get(indexDernier), nbFlags);
+            graph.nbMinimalAssignementsPerFrontier.set(indexDernier, minimum);
             nbValidAssignations++;
             return true;
         }
@@ -107,12 +112,15 @@ public class SimpleCSP implements StrategyCSP {
         return (index >= hintNodes.size());
     }
 
-    protected void computeFlagHits(List<FringeNode> fringeNodes) {
+    protected int computeFlagHits(List<FringeNode> fringeNodes) {
+        int nbFlagsAssigned = 0;
         for (FringeNode fn : fringeNodes) {
             if (fn.state == FLAGED) {
                 fn.nbFlagsHit++;
+                nbFlagsAssigned += 1;
             }
         }
+        return nbFlagsAssigned;
     }
 
     protected void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {

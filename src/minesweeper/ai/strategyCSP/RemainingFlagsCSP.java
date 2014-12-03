@@ -20,6 +20,7 @@ public class RemainingFlagsCSP extends SimpleCSP {
             List<HintNode> hintBorder = graph.allHintNode.get(i);
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(i);
             nbValidAssignations = 0;
+            graph.nbMinimalAssignementsPerFrontier.add(Integer.MAX_VALUE);
             recurseCSP(hintBorder, fringeNodes, 0);
             graph.nbValidAssignationsPerFrontier.add(nbValidAssignations);
             addLineToExecutionLog("frontiere (" + i + ") :" + (System.currentTimeMillis() - time) + " ms");
@@ -34,7 +35,10 @@ public class RemainingFlagsCSP extends SimpleCSP {
         }
 
         if (solutionFound(index, hintNodes)) {
-            computeFlagHits(fringeNodes);
+            int indexDernier = graph.nbMinimalAssignementsPerFrontier.size() - 1;
+            int nbFlags = computeFlagHits(fringeNodes);
+            int minimum = Math.min(graph.nbMinimalAssignementsPerFrontier.get(indexDernier), nbFlags);
+            graph.nbMinimalAssignementsPerFrontier.set(indexDernier, minimum);
             nbValidAssignations++;
             return true;
         }
