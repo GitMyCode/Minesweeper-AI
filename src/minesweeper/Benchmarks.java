@@ -1,5 +1,7 @@
 package minesweeper;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -7,10 +9,10 @@ import minesweeper.ai.*;
 
 public final class Benchmarks {
 
-    public final static int NB_PARTIES = 10;
-    public final static int GRID_ROWS = 20;
-    public final static int GRID_COLUMNS = 20;
-    public final static int NB_MINES = 100;
+    public final static int NB_PARTIES = 100;
+    public final static int GRID_ROWS = 16;
+    public final static int GRID_COLUMNS = 30;
+    public final static int NB_MINES = 99;
 
     public final static ArtificialPlayer[] JOUEURS = {
             new SafeOrRandomAI(),
@@ -24,6 +26,7 @@ public final class Benchmarks {
     private static int nbVictoires;
     private static ArrayList<Long> timeToSolutionList;
     private static ArrayList<Double> probabilitySuccessRateList;
+    private static NumberFormat formatter = new DecimalFormat("#0.00");
 
     private Benchmarks() {
 
@@ -53,16 +56,16 @@ public final class Benchmarks {
                     timeToSolutionList.add(endTime - startTime);
                 }
 
-                probabilitySuccessRateList.add(((Benchmarkable)ai).getProbabilitySuccessRate());
-                System.out.print(((Benchmarkable)ai).getProbabilitySuccessRate());
+                probabilitySuccessRateList.add(((Benchmarkable) ai).getProbabilitySuccessRate());
             }
 
             System.out.println("--- " + ai.getName() + " ---");
             System.out.println("Nombre de victoires : " + nbVictoires);
-            System.out.println("% de victoires : " + getVictoryRate() + "%");
-            System.out.println("% de défaites : " + getLossRate() + "%");
-            System.out.println("Temps de résolution moyen : " + getMeanTimeToSolution() + "ms");
-            System.out.println("Taux de réussite moyen sous incertitude : " + getAverageProbabilitySuccessRate() + "%");
+            System.out.println("% de victoires : " + formatter.format(getVictoryRate()) + "%");
+            System.out.println("% de défaites : " + formatter.format(getLossRate()) + "%");
+            System.out.println("Temps de résolution moyen : " + formatter.format(getMeanTimeToSolution()) + "ms");
+            System.out.println("Taux de réussite moyen sous incertitude : " + formatter.format(getAverageProbabilitySuccessRate()) + "%");
+            System.out.println();
         }
 
     }
@@ -88,7 +91,7 @@ public final class Benchmarks {
             total += d;
         }
 
-        return total / probabilitySuccessRateList.size();
+        return (total / probabilitySuccessRateList.size()) * 100;
     }
 
     public static double getVictoryRate() {
