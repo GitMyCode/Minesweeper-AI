@@ -81,8 +81,10 @@ public class AdventurerAI extends SafeOrRandomAI {
     protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities, double probabiliteExterieur) {
         Move reponse;
         FringeNode safestMove = allProbabilities.poll();
-        if (probabiliteExterieur < safestMove.probabilityMine) {
-            ArrayList<Integer> undiscoveredIndex = graph.gameGrid.getUndiscoveredCases();
+        ArrayList<Integer> undiscoveredIndex = graph.gameGrid.getUndiscoveredCases();
+        if (!undiscoveredIndex.isEmpty()
+                && probabiliteExterieur < safestMove.probabilityMine) {
+
             reponse = new Move(undiscoveredIndex.get(0), Coup.SHOW);
             System.out.println("Meilleur move de jouer dans l'inconnu");
         } else {
