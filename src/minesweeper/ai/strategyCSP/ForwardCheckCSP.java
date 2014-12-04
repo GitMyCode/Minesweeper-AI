@@ -1,7 +1,6 @@
 package minesweeper.ai.strategyCSP;
 
 import minesweeper.ai.dataRepresentation.FringeNode;
-import minesweeper.ai.dataRepresentation.Graph;
 import minesweeper.ai.dataRepresentation.HintNode;
 
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import static minesweeper.Case.*;
 /**
  * Created by MB on 11/29/2014.
  */
-public class ForwardCheckCSP extends CSPBluePrint {
+public class ForwardCheckCSP extends AbstractCSP {
 
 
     @Override

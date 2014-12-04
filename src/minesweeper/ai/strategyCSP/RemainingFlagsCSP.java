@@ -7,7 +7,7 @@ import minesweeper.ai.dataRepresentation.HintNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemainingFlagsCSP extends CSPBluePrint {
+public class RemainingFlagsCSP extends AbstractCSP {
 
     private int flagsRemaining = 0;
 

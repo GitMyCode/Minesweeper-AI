@@ -1,21 +1,15 @@
 package minesweeper.ai.strategyCSP;
 
-import minesweeper.Grid;
-import minesweeper.Move;
 import minesweeper.ai.dataRepresentation.FringeNode;
-import minesweeper.ai.dataRepresentation.Graph;
 import minesweeper.ai.dataRepresentation.HintNode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import static minesweeper.Case.*;
 
 /**
  * Created by MB on 11/29/2014.
  */
-public class SimpleCSP extends CSPBluePrint {
+public class SimpleCSP extends AbstractCSP {
 
 
     protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
