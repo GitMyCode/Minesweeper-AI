@@ -7,6 +7,7 @@ import minesweeper.Move;
 import minesweeper.ai.dataRepresentation.FringeNode;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -62,18 +63,34 @@ public class AdventurerAI extends SafeOrRandomAI {
             System.out.println("Probabilite à l'extérieur de la frontière : " + probabiliteExterieur);
         }
 
+        if (probabiliteExterieur <= 0.0) {
+            ArrayList<Integer> undiscoveredIndexes = graph.gameGrid.getUndiscoveredCases();
+            for (int i : undiscoveredIndexes) {
+                movesToPlay.add(new Move(i, Coup.SHOW));
+            }
+            System.out.println("L'inconnu est fucking safe!");
+        } 
+
 
         if (movesToPlay.isEmpty() && !allProbabilities.isEmpty()) {
-            Move safestMove = getSafestMove(allProbabilities);
+            Move safestMove = getSafestMove(allProbabilities, probabiliteExterieur);
             this.movesToPlay.add(safestMove);
         }
     }
 
-    protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities) {
+    protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities, double probabiliteExterieur) {
+        Move reponse;
         FringeNode safestMove = allProbabilities.poll();
-        printProbabilities(allProbabilities);
+        if (probabiliteExterieur < safestMove.probabilityMine) {
+            ArrayList<Integer> undiscoveredIndex = graph.gameGrid.getUndiscoveredCases();
+            reponse = new Move(undiscoveredIndex.get(0), Coup.SHOW);
+            System.out.println("Meilleur move de jouer dans l'inconnu");
+        } else {
+            reponse = new Move(safestMove.indexInGrid, Coup.SHOW);
+        }
+        System.out.println();
         addUncertainMoveToStats();
-        return new Move(safestMove.indexInGrid, Coup.SHOW);
+        return reponse;
     }
 
     private void printProbabilities(PriorityQueue<FringeNode> allProbabilities) {

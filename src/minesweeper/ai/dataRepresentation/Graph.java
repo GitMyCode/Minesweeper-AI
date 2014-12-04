@@ -70,7 +70,7 @@ public class Graph {
         //Un set pour s'assurer qu'on ne prend pas deux fois le meme noeud;
         for (int i = 0; i < grid.length; i++) {
 
-            if (!knownFringeNodes.containsKey(i) && isAFringeNode(grid, i)) {
+            if (!knownFringeNodes.containsKey(i) && gameGrid.isAFringeNode(i)) {
                 FringeNode fringeNode = new FringeNode(i);
 
                 //Va chercher les indices qui influence ce Noeud
@@ -182,7 +182,7 @@ public class Graph {
 
             if (gameGrid.isStepThisDirInGrid(D, index) &&
                     !knownFringeNodes.containsKey(next) &&
-                    isAFringeNode(grid, next)) {
+                    gameGrid.isAFringeNode(next)) {
                 Collection<Integer> indiceNeirboursCurrentNode = getIndiceNeirbours(grid, index);
                 Collection<Integer> indiceNeirboursNextNode = getIndiceNeirbours(grid, next);
 
@@ -233,17 +233,5 @@ public class Graph {
 
     }
 
-
-    public boolean isAFringeNode(Case[] grid, int index) {
-
-        if (grid[index] == UNDISCOVERED) {
-            for (Integer surround : gameGrid.getSurroundingIndex(index)) {
-                if (Case.isIndicatorCase(grid[surround])) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
 }
