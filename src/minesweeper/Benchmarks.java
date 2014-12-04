@@ -8,12 +8,11 @@ import minesweeper.ai.*;
 public final class Benchmarks {
 
     public final static int NB_PARTIES = 10;
-    public final static int GRID_ROWS = 50;
-    public final static int GRID_COLUMNS = 50;
-    public final static int NB_MINES = 10;
+    public final static int GRID_ROWS = 20;
+    public final static int GRID_COLUMNS = 20;
+    public final static int NB_MINES = 100;
 
     public final static ArtificialPlayer[] JOUEURS = {
-            new RandomArtificialPlayer(),
             new SafeOrRandomAI(),
             new ProbabilisticAI(),
             new ProbabilisticAIwithRandomSelection(),
@@ -35,6 +34,7 @@ public final class Benchmarks {
         for (ArtificialPlayer ai: JOUEURS) {
             nbVictoires = 0;
             timeToSolutionList = new ArrayList<Long>();
+            probabilitySuccessRateList = new ArrayList<Double>();
 
             for(int i=0; i<NB_PARTIES; ++i) {
                 startTime = System.currentTimeMillis();
@@ -53,6 +53,8 @@ public final class Benchmarks {
                     timeToSolutionList.add(endTime - startTime);
                 }
 
+                probabilitySuccessRateList.add(((Benchmarkable)ai).getProbabilitySuccessRate());
+                System.out.print(((Benchmarkable)ai).getProbabilitySuccessRate());
             }
 
             System.out.println("--- " + ai.getName() + " ---");
@@ -60,7 +62,7 @@ public final class Benchmarks {
             System.out.println("% de victoires : " + getVictoryRate() + "%");
             System.out.println("% de défaites : " + getLossRate() + "%");
             System.out.println("Temps de résolution moyen : " + getMeanTimeToSolution() + "ms");
-            System.out.println("Taux de réussite moyen sous incertitude : " + getMeanTimeToSolution() + "%");
+            System.out.println("Taux de réussite moyen sous incertitude : " + getAverageProbabilitySuccessRate() + "%");
         }
 
     }

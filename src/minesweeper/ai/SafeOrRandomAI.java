@@ -6,8 +6,6 @@ package minesweeper.ai;
 import minesweeper.*;
 import minesweeper.ai.dataRepresentation.FringeNode;
 import minesweeper.ai.dataRepresentation.Graph;
-import minesweeper.ai.strategyCSP.ForwardCheckCSP;
-import minesweeper.ai.strategyCSP.RemainingFlagsCSP;
 import minesweeper.ai.strategyCSP.SimpleCSP;
 import minesweeper.ai.strategyCSP.StrategyCSP;
 
@@ -30,7 +28,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     protected int nbCSPMoves;
     protected int nbUncertainMoves;
     protected int nbTotalMoves;
-    protected double probabilitySuccessRare;
+    protected double probabilitySuccessRate;
 
     StrategyCSP csp;
 
@@ -142,7 +140,8 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
         moves.add(move);
 
         if (!gameGrid.checkMove(moves).isEmpty()) {
-             probabilitySuccessRare = (double) nbUncertainMoves / (nbUncertainMoves + 1);
+            probabilitySuccessRate = ((double) nbUncertainMoves) / (nbUncertainMoves + 1);
+            System.out.println("Check move négatif : " + probabilitySuccessRate);
         }
         nbUncertainMoves++;
         nbTotalMoves++;
@@ -160,7 +159,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
 
     @Override
     public double getProbabilitySuccessRate() {
-        return 0;
+        return probabilitySuccessRate;
     }
 
     @Override
