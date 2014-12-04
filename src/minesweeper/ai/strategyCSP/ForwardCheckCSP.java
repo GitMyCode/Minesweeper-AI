@@ -1,7 +1,6 @@
 package minesweeper.ai.strategyCSP;
 
 import minesweeper.ai.dataRepresentation.FringeNode;
-import minesweeper.ai.dataRepresentation.Graph;
 import minesweeper.ai.dataRepresentation.HintNode;
 
 import java.util.ArrayList;
@@ -12,13 +11,8 @@ import static minesweeper.Case.*;
 /**
  * Created by MB on 11/29/2014.
  */
-public class ForwardCheckCSP extends SimpleCSP implements StrategyCSP {
+public class ForwardCheckCSP extends AbstractCSP {
 
-    @Override
-    public void executeCSPonGraph(Graph graph) {
-        this.graph = graph;
-        CSPonAllFrontiers();
-    }
 
     @Override
     public String strategyToString() {
@@ -108,15 +102,5 @@ public class ForwardCheckCSP extends SimpleCSP implements StrategyCSP {
                 fn.isDeactivated = false;
             }
         }
-    }
-
-    @Override
-    public void addLineToExecutionLog(String line) {
-        cumulatedTimeStats += line + "\n";
-    }
-
-    @Override
-    public String getExecutionLog() {
-        return cumulatedTimeStats;
     }
 }
