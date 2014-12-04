@@ -90,7 +90,7 @@ public class AdventurerAI extends ProbabilisticAI {
             reponse = new Move(safestMove.indexInGrid, Coup.SHOW);
         }
         System.out.println();
-        addUncertainMoveToStats();
+        addUncertainMoveToStats(reponse);
         return reponse;
     }
 

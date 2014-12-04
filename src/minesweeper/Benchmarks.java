@@ -3,10 +3,7 @@ package minesweeper;
 import java.util.ArrayList;
 import java.util.Set;
 
-import minesweeper.ai.SafeOrRandomAI;
-import minesweeper.ai.ProbabilisticAI;
-import minesweeper.ai.ProbabilisticAIwithRandomSelection;
-import minesweeper.ai.RandomArtificialPlayer;
+import minesweeper.ai.*;
 
 public final class Benchmarks {
 
@@ -19,13 +16,15 @@ public final class Benchmarks {
             new RandomArtificialPlayer(),
             new SafeOrRandomAI(),
             new ProbabilisticAI(),
-            new ProbabilisticAIwithRandomSelection()
+            new ProbabilisticAIwithRandomSelection(),
+            new AdventurerAI()
     };
 
     private static long startTime = 0;
     private static long endTime = 0;
     private static int nbVictoires;
     private static ArrayList<Long> timeToSolutionList;
+    private static ArrayList<Double> probabilitySuccessRateList;
 
     private Benchmarks() {
 
@@ -53,6 +52,7 @@ public final class Benchmarks {
                     endTime = System.currentTimeMillis();
                     timeToSolutionList.add(endTime - startTime);
                 }
+
             }
 
             System.out.println("--- " + ai.getName() + " ---");
@@ -60,6 +60,7 @@ public final class Benchmarks {
             System.out.println("% de victoires : " + getVictoryRate() + "%");
             System.out.println("% de défaites : " + getLossRate() + "%");
             System.out.println("Temps de résolution moyen : " + getMeanTimeToSolution() + "ms");
+            System.out.println("Taux de réussite moyen sous incertitude : " + getMeanTimeToSolution() + "%");
         }
 
     }
@@ -76,6 +77,16 @@ public final class Benchmarks {
         }
 
         return (double) totalTime / timeToSolutionList.size();
+    }
+
+    public static double getAverageProbabilitySuccessRate() {
+        double total = 0.0;
+
+        for (Double d: probabilitySuccessRateList) {
+            total += d;
+        }
+
+        return total / probabilitySuccessRateList.size();
     }
 
     public static double getVictoryRate() {
