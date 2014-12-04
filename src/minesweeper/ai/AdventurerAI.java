@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-public class AdventurerAI extends SafeOrRandomAI {
+public class AdventurerAI extends ProbabilisticAI {
 
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
@@ -54,7 +54,6 @@ public class AdventurerAI extends SafeOrRandomAI {
             }
         }
 
-
         double probabiliteExterieur = 100.0;
 
         if (nbCasesSurFrontiere > 0 && graph.gameGrid.getNbUndiscoveredCases() - nbCasesSurFrontiere > 0) {
@@ -95,16 +94,6 @@ public class AdventurerAI extends SafeOrRandomAI {
         return reponse;
     }
 
-    private void printProbabilities(PriorityQueue<FringeNode> allProbabilities) {
-        System.out.println("###########################################");
-        while (!allProbabilities.isEmpty()) {
-            System.out.println(allProbabilities.poll().toString());
-        }
-        System.out.println("###########################################");
-    }
-
     @Override
-    public String getName() {
-        return "Probabilistic AI";
-    }
+    public String getName() { return "Adventurer AI"; }
 }
