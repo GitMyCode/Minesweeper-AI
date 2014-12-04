@@ -9,7 +9,7 @@ import minesweeper.ai.*;
 
 public final class Benchmarks {
 
-    public final static int NB_PARTIES = 100;
+    public final static int NB_PARTIES = 2000;
     public final static int GRID_ROWS = 16;
     public final static int GRID_COLUMNS = 30;
     public final static int NB_MINES = 99;
@@ -25,6 +25,9 @@ public final class Benchmarks {
     private static long endTime = 0;
     private static int nbVictoires;
     private static ArrayList<Long> timeToSolutionList;
+    private static ArrayList<Double> trivialMoveRateList;
+    private static ArrayList<Double> safeMoveRateList;
+    private static ArrayList<Double> uncertainMoveRateList;
     private static ArrayList<Double> probabilitySuccessRateList;
     private static NumberFormat formatter = new DecimalFormat("#0.00");
 
@@ -37,6 +40,9 @@ public final class Benchmarks {
         for (ArtificialPlayer ai: JOUEURS) {
             nbVictoires = 0;
             timeToSolutionList = new ArrayList<Long>();
+            trivialMoveRateList = new ArrayList<Double>();
+            safeMoveRateList = new ArrayList<Double>();
+            uncertainMoveRateList = new ArrayList<Double>();
             probabilitySuccessRateList = new ArrayList<Double>();
 
             for(int i=0; i<NB_PARTIES; ++i) {
@@ -56,22 +62,19 @@ public final class Benchmarks {
                     timeToSolutionList.add(endTime - startTime);
                 }
 
-                probabilitySuccessRateList.add(((Benchmarkable) ai).getProbabilitySuccessRate());
+                trivialMoveRateList.add(((Benchmarkable)ai).getTrivialMoveRate());
+                safeMoveRateList.add(((Benchmarkable)ai).getCSPMoveRate());
+                uncertainMoveRateList.add(((Benchmarkable)ai).getUncertainMoveRate());
+                probabilitySuccessRateList.add(((Benchmarkable)ai).getProbabilitySuccessRate());
             }
 
-            System.out.println("--- " + ai.getName() + " ---");
-            System.out.println("Nombre de victoires : " + nbVictoires);
-            System.out.println("% de victoires : " + formatter.format(getVictoryRate()) + "%");
-            System.out.println("% de défaites : " + formatter.format(getLossRate()) + "%");
-            System.out.println("Temps de résolution moyen : " + formatter.format(getMeanTimeToSolution()) + "ms");
-            System.out.println("Taux de réussite moyen sous incertitude : " + formatter.format(getAverageProbabilitySuccessRate()) + "%");
-            System.out.println();
+            printResult(ai);
         }
 
     }
 
     public static double getMeanTimeToSolution() {
-        long totalTime = 0;
+        double totalTime = 0;
 
         if (timeToSolutionList.isEmpty()) {
             return 0.0;
@@ -99,5 +102,60 @@ public final class Benchmarks {
     }
     public static double getLossRate() {
         return ((double) (NB_PARTIES - nbVictoires) / NB_PARTIES) * 100;
+    }
+
+    public static double getAverageTrivialMoveRate() {
+        double totalTime = 0;
+
+        if (trivialMoveRateList.isEmpty()) {
+            return 0.0;
+        }
+
+        for (double time: trivialMoveRateList) {
+            totalTime += time;
+        }
+
+        return ((double) totalTime / trivialMoveRateList.size()) * 100;
+    }
+
+    public static double getAverageSafeMoveRate() {
+        double totalTime = 0;
+
+        if (safeMoveRateList.isEmpty()) {
+            return 0.0;
+        }
+
+        for (double time: safeMoveRateList) {
+            totalTime += time;
+        }
+
+        return ((double) totalTime / safeMoveRateList.size()) * 100;
+    }
+
+    public static double getAverageUncertainMoveRate() {
+        double totalTime = 0;
+
+        if (uncertainMoveRateList.isEmpty()) {
+            return 0.0;
+        }
+
+        for (double time: uncertainMoveRateList) {
+            totalTime += time;
+        }
+
+        return ((double) totalTime / uncertainMoveRateList.size()) * 100;
+    }
+
+    private static void printResult(ArtificialPlayer ai) {
+        System.out.println("--- " + ai.getName() + " ---");
+        System.out.println("Nombre de victoires : " + nbVictoires);
+        System.out.println("% de victoires : " + formatter.format(getVictoryRate()) + "%");
+        System.out.println("% de défaites : " + formatter.format(getLossRate()) + "%");
+        System.out.println("Temps de résolution moyen : " + formatter.format(getMeanTimeToSolution()) + "ms");
+        System.out.println("Taux de réussite moyen sous incertitude : " + formatter.format(getAverageProbabilitySuccessRate()) + "%");
+        System.out.println("Taux moyen de coups triviaux : " + formatter.format(getAverageTrivialMoveRate()) + "%");
+        System.out.println("Taux moyen de coups certains : " + formatter.format(getAverageSafeMoveRate()) + "%");
+        System.out.println("Taux moyen de coups incertains : " + formatter.format(getAverageUncertainMoveRate()) + "%");
+        System.out.println();
     }
 }

@@ -18,14 +18,6 @@ public class AdventurerAI extends ProbabilisticAI {
         return super.getNextMoves(grid, delay);
     }
 
-    @Override
-    protected void addMovesToPlay(Grid grid, Case[] gridCopy) {
-        addMovesWithProbabilities();
-        if (this.movesToPlay.isEmpty()) {
-            addRandomMove(grid, gridCopy);
-        }
-    }
-
     protected void addMovesWithProbabilities() {
         PriorityQueue<FringeNode> allProbabilities = new PriorityQueue<FringeNode>();
 
@@ -59,7 +51,6 @@ public class AdventurerAI extends ProbabilisticAI {
         if (nbCasesSurFrontiere > 0 && graph.gameGrid.getNbUndiscoveredCases() - nbCasesSurFrontiere > 0) {
             probabiliteExterieur = ((double)graph.gameGrid.getNbFlagsRemaining() - (double)nbMinimumMinesInFrontieres) / 
                                     (graph.gameGrid.getNbUndiscoveredCases() - nbCasesSurFrontiere);
-            //System.out.println("Probabilite à l'extérieur de la frontière : " + probabiliteExterieur);
         }
 
         if (probabiliteExterieur <= 0.0) {
@@ -67,8 +58,7 @@ public class AdventurerAI extends ProbabilisticAI {
             for (int i : undiscoveredIndexes) {
                 movesToPlay.add(new Move(i, Coup.SHOW));
             }
-            //System.out.println("L'inconnu est fucking safe!");
-        } 
+        }
 
 
         if (movesToPlay.isEmpty() && !allProbabilities.isEmpty()) {
@@ -85,11 +75,9 @@ public class AdventurerAI extends ProbabilisticAI {
                 && probabiliteExterieur < safestMove.probabilityMine) {
 
             reponse = new Move(undiscoveredIndex.get(0), Coup.SHOW);
-            //System.out.println("Meilleur move de jouer dans l'inconnu");
         } else {
             reponse = new Move(safestMove.indexInGrid, Coup.SHOW);
         }
-        //System.out.println();
         addUncertainMoveToStats(reponse);
         return reponse;
     }
