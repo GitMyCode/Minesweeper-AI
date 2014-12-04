@@ -55,7 +55,6 @@ public class ProbabilisticAI extends SafeOrRandomAI {
     protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities) {
         FringeNode safestNode = allProbabilities.poll();
         Move safestMove = new Move(safestNode.indexInGrid, Coup.SHOW);
-        printProbabilities(allProbabilities);
         addUncertainMoveToStats(safestMove);
         return safestMove;
     }
@@ -73,7 +72,4 @@ public class ProbabilisticAI extends SafeOrRandomAI {
 
     @Override
     public boolean isProbabilistic() { return true; }
-
-    @Override
-    public double getProbabilitySuccessRate() { return 0; }
 }

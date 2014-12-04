@@ -63,8 +63,12 @@ public class Grid {
         for (Move m : moves) {
             if (underneathValues[m.index] != Case.MINE && m.coup == Coup.FLAG) {
                 badMoves.add(m);
+                //System.out.println("BAD MOVE");
             } else if (underneathValues[m.index] == Case.MINE && m.coup == Coup.SHOW) {
                 badMoves.add(m);
+                //System.out.println("BAD MOVE");
+            } else {
+                //System.out.println("GOOD MOVE");
             }
         }
 
