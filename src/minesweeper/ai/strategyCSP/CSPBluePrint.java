@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Created by MB on 12/2/2014.
  */
-public class CSPBluePrint implements StrategyCSP {
+public abstract class CSPBluePrint implements StrategyCSP {
 
     protected int nbValidAssignations = 0;
     protected Graph graph;
