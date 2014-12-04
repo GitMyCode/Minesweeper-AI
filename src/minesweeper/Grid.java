@@ -152,6 +152,16 @@ public class Grid {
         return nbFlagsRemaining;
     }
 
+    public ArrayList<Integer> getUndiscoveredCases() {
+        ArrayList<Integer> reponse = new ArrayList<Integer>();
+        for (int i = 0; i < length; i++) {
+            if (gridPlayerView[i] == Case.UNDISCOVERED && !this.isAFringeNode(i)) {
+                reponse.add(i);
+            }
+        }
+        return reponse;
+    }
+
     public int getNbUndiscoveredCases() {
         int reponse = 0;
         for (int i = 0; i < length; i++) {
@@ -161,6 +171,18 @@ public class Grid {
             }
         }
         return reponse;
+    }
+
+    public boolean isAFringeNode(int index) {
+
+        if (this.gridPlayerView[index] == Case.UNDISCOVERED) {
+            for (Integer surround : this.getSurroundingIndex(index)) {
+                if (Case.isIndicatorCase(this.gridPlayerView[surround])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public Set<Coup> getLegalCaseCoup(int index) {
