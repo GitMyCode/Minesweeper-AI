@@ -26,11 +26,11 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     protected Graph graph;
     protected Set<Move> movesToPlay;
 
-    protected int nbTrivialMoves;
-    protected int nbCSPMoves;
-    protected int nbUncertainMoves;
-    protected int nbTotalMoves;
-    protected double probabilitySuccessRate;
+    protected int nbTrivialMoves = 0;
+    protected int nbCSPMoves = 0;
+    protected int nbUncertainMoves = 0;
+    protected int nbTotalMoves = 0;
+    protected double probabilitySuccessRate = 0;
 
     StrategyCSP csp;
 
@@ -144,6 +144,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
         if (!gameGrid.checkMove(moves).isEmpty()) {
             probabilitySuccessRate = (double) nbUncertainMoves / (nbUncertainMoves + 1);
         }
+
         nbUncertainMoves++;
         nbTotalMoves++;
     }
@@ -164,7 +165,9 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     }
 
     @Override
-    public double getTrivialMoveRate() { return (double) nbTrivialMoves / nbTotalMoves; }
+    public double getTrivialMoveRate() {
+        return (double) nbTrivialMoves / nbTotalMoves;
+    }
 
     @Override
     public double getCSPMoveRate() {

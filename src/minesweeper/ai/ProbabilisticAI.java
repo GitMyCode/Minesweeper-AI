@@ -22,6 +22,11 @@ public class ProbabilisticAI extends SafeOrRandomAI {
         addMovesWithProbabilities();
         if (this.movesToPlay.isEmpty()) {
             addRandomMove(grid, gridCopy);
+            Move move = null;
+            for (Move m: movesToPlay) {
+                move = m;
+            }
+            addUncertainMoveToStats(move);
         }
     }
 
