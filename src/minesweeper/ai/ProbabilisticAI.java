@@ -41,8 +41,8 @@ public class ProbabilisticAI extends SafeOrRandomAI {
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.SHOW));
                     addCSPMoveToStats();
                 }
-                allProbabilities.offer(fn);
 
+                allProbabilities.offer(fn);
             }
         }
 
@@ -53,10 +53,11 @@ public class ProbabilisticAI extends SafeOrRandomAI {
     }
 
     protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities) {
-        FringeNode safestMove = allProbabilities.poll();
+        FringeNode safestNode = allProbabilities.poll();
+        Move safestMove = new Move(safestNode.indexInGrid, Coup.SHOW);
         printProbabilities(allProbabilities);
-        addUncertainMoveToStats();
-        return new Move(safestMove.indexInGrid, Coup.SHOW);
+        addUncertainMoveToStats(safestMove);
+        return safestMove;
     }
 
     private void printProbabilities(PriorityQueue<FringeNode> allProbabilities) {
@@ -68,7 +69,11 @@ public class ProbabilisticAI extends SafeOrRandomAI {
     }
 
     @Override
-    public String getName() {
-        return "Probabilistic AI";
-    }
+    public String getName() { return "Probabilistic AI"; }
+
+    @Override
+    public boolean isProbabilistic() { return true; }
+
+    @Override
+    public double getProbabilitySuccessRate() { return 0; }
 }

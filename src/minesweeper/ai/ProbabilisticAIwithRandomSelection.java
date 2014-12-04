@@ -13,7 +13,6 @@ public class ProbabilisticAIwithRandomSelection extends ProbabilisticAI {
     @Override
     protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities) {
         ArrayList<FringeNode> safestMoves = getSafestMoves(allProbabilities);
-        addUncertainMoveToStats();
         return getRandomMove(safestMoves);
     }
 
@@ -34,6 +33,9 @@ public class ProbabilisticAIwithRandomSelection extends ProbabilisticAI {
         Random random = new Random();
         int randomIndex = random.nextInt(movesList.size());
         FringeNode randomNode = movesList.get(randomIndex);
-        return new Move(randomNode.indexInGrid, Coup.SHOW);
+        Move move = new Move(randomNode.indexInGrid, Coup.SHOW);
+        addUncertainMoveToStats(move);
+
+        return move;
     }
 }

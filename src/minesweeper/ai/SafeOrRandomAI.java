@@ -11,10 +11,7 @@ import minesweeper.ai.strategyCSP.RemainingFlagsCSP;
 import minesweeper.ai.strategyCSP.SimpleCSP;
 import minesweeper.ai.strategyCSP.StrategyCSP;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import static minesweeper.Case.UNDISCOVERED;
 
@@ -33,6 +30,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     protected int nbCSPMoves;
     protected int nbUncertainMoves;
     protected int nbTotalMoves;
+    protected double probabilitySuccessRare;
 
     StrategyCSP csp;
 
@@ -55,7 +53,6 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
 
         addMovesToPlay(grid, gridCopy);
 
-
         return movesToPlay;
     }
 
@@ -70,13 +67,15 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
             addSafeMovesAndFlags();
             if (this.movesToPlay.isEmpty()) {
                 addRandomMove(grid, gridCopy);
-                addUncertainMoveToStats();
+
+                for (Move m: movesToPlay) {
+                    addUncertainMoveToStats(m);
+                }
             } else {
                 Set<Move> errors = grid.checkMove(movesToPlay);
                 if (!errors.isEmpty()) {
                     System.out.println("ERREUR");
                 }
-
 
                 addCSPMoveToStats();
             }
@@ -138,7 +137,13 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
         nbTotalMoves++;
     }
 
-    protected void addUncertainMoveToStats() {
+    protected void addUncertainMoveToStats(Move move) {
+        Set<Move> moves = new LinkedHashSet<Move>();
+        moves.add(move);
+
+        if (!gameGrid.checkMove(moves).isEmpty()) {
+             probabilitySuccessRare = (double) nbUncertainMoves / (nbUncertainMoves + 1);
+        }
         nbUncertainMoves++;
         nbTotalMoves++;
     }
@@ -159,9 +164,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     }
 
     @Override
-    public double getTrivialMoveRate() {
-        return (double) nbTrivialMoves / nbTotalMoves;
-    }
+    public double getTrivialMoveRate() { return (double) nbTrivialMoves / nbTotalMoves; }
 
     @Override
     public double getCSPMoveRate() {

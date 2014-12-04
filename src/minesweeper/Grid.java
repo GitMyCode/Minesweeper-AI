@@ -57,13 +57,16 @@ public class Grid {
    * */
     public Set<Move> checkMove(Set<Move> moves) {
         Set<Move> badMoves = new LinkedHashSet<Move>();
-            for (Move m : moves) {
-                if (underneathValues[m.index] != Case.MINE && m.coup == Coup.FLAG) {
-                    badMoves.add(m);
-                } else if (underneathValues[m.index] == Case.MINE && m.coup == Coup.SHOW) {
-                    badMoves.add(m);
-                }
+
+        if (firstMove) return badMoves;
+
+        for (Move m : moves) {
+            if (underneathValues[m.index] != Case.MINE && m.coup == Coup.FLAG) {
+                badMoves.add(m);
+            } else if (underneathValues[m.index] == Case.MINE && m.coup == Coup.SHOW) {
+                badMoves.add(m);
             }
+        }
 
         return badMoves;
     }
