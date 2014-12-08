@@ -9,7 +9,7 @@ import minesweeper.ai.*;
 
 public final class Benchmarks {
 
-    public final static int NB_PARTIES = 2000;
+    public final static int NB_PARTIES = 400;
     public final static int GRID_ROWS = 16;
     public final static int GRID_COLUMNS = 30;
     public final static int NB_MINES = 99;
@@ -28,7 +28,8 @@ public final class Benchmarks {
     private static ArrayList<Double> trivialMoveRateList;
     private static ArrayList<Double> safeMoveRateList;
     private static ArrayList<Double> uncertainMoveRateList;
-    private static ArrayList<Double> probabilitySuccessRateList;
+    private static int nbProbabilitySuccess;
+    private static int nbProbabilityFails;
     private static NumberFormat formatter = new DecimalFormat("#0.00");
 
     private Benchmarks() {
@@ -43,7 +44,9 @@ public final class Benchmarks {
             trivialMoveRateList = new ArrayList<Double>();
             safeMoveRateList = new ArrayList<Double>();
             uncertainMoveRateList = new ArrayList<Double>();
-            probabilitySuccessRateList = new ArrayList<Double>();
+            nbProbabilitySuccess = 0;
+            nbProbabilityFails = 0;
+
 
             for(int i=0; i<NB_PARTIES; ++i) {
                 startTime = System.currentTimeMillis();
@@ -65,7 +68,10 @@ public final class Benchmarks {
                 trivialMoveRateList.add(((Benchmarkable)ai).getTrivialMoveRate());
                 safeMoveRateList.add(((Benchmarkable)ai).getCSPMoveRate());
                 uncertainMoveRateList.add(((Benchmarkable)ai).getUncertainMoveRate());
-                probabilitySuccessRateList.add(((Benchmarkable)ai).getProbabilitySuccessRate());
+                nbProbabilitySuccess += ((Benchmarkable) ai).getNbProbabilitySuccess();
+                nbProbabilityFails += ((Benchmarkable) ai).getNbProbabilityFails();
+                //System.out.println("nbProbabilitySuccess : " + nbProbabilitySuccess);
+                //System.out.println("nbProbabilityFails : " + nbProbabilityFails);
             }
 
             printResult(ai);
@@ -88,18 +94,11 @@ public final class Benchmarks {
     }
 
     public static double getAverageProbabilitySuccessRate() {
-        double total = 0.0;
-
-        for (Double d: probabilitySuccessRateList) {
-            total += d;
-        }
-
-        return (total / probabilitySuccessRateList.size()) * 100;
+        double total = (double) nbProbabilityFails / (nbProbabilitySuccess  + nbProbabilityFails);
+        return (1 - total) * 100;
     }
 
-    public static double getVictoryRate() {
-        return ((double) nbVictoires / NB_PARTIES) * 100;
-    }
+    public static double getVictoryRate() { return ((double) nbVictoires / NB_PARTIES) * 100; }
     public static double getLossRate() {
         return ((double) (NB_PARTIES - nbVictoires) / NB_PARTIES) * 100;
     }
