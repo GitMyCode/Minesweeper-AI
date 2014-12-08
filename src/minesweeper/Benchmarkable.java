@@ -4,7 +4,8 @@ public interface Benchmarkable {
 
     public boolean isProbabilistic();
 
-    public double getProbabilitySuccessRate();
+    public int getNbProbabilitySuccess();
+    public int getNbProbabilityFails();
     public double getTrivialMoveRate();
     public double getCSPMoveRate();
     public double getUncertainMoveRate();

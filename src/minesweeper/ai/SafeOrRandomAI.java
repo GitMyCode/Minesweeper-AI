@@ -15,7 +15,7 @@ import java.util.*;
 
 import static minesweeper.Case.UNDISCOVERED;
 
-public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
+      public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
 
     private final int LIMITE = 10;
     private long timer;
@@ -30,7 +30,8 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     protected int nbCSPMoves = 0;
     protected int nbUncertainMoves = 0;
     protected int nbTotalMoves = 0;
-    protected double probabilitySuccessRate = 0;
+    protected int nbProbabilityFails = 0;
+    protected int nbProbabilitySuccess = 0;
 
     StrategyCSP csp;
 
@@ -68,6 +69,9 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
             if (this.movesToPlay.isEmpty()) {
                 addRandomMove(grid, gridCopy);
 
+                if (movesToPlay.size() == 0) {
+                    System.out.println(movesToPlay.size());
+                }
                 for (Move m: movesToPlay) {
                     addUncertainMoveToStats(m);
                 }
@@ -142,7 +146,9 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
         moves.add(move);
 
         if (!gameGrid.checkMove(moves).isEmpty()) {
-            probabilitySuccessRate = (double) nbUncertainMoves / (nbUncertainMoves + 1);
+            nbProbabilityFails++;
+        } else {
+            nbProbabilitySuccess++;
         }
 
         nbUncertainMoves++;
@@ -160,9 +166,10 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     }
 
     @Override
-    public double getProbabilitySuccessRate() {
-        return probabilitySuccessRate;
-    }
+    public int getNbProbabilitySuccess() { return this.nbProbabilitySuccess; }
+
+    @Override
+    public int getNbProbabilityFails() { return this.nbProbabilityFails; }
 
     @Override
     public double getTrivialMoveRate() {
