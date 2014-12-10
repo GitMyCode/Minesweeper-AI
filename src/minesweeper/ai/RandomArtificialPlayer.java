@@ -1,16 +1,8 @@
 package minesweeper.ai;
 
-import minesweeper.Grid;
-import minesweeper.Move;
-import minesweeper.Case;
-import minesweeper.Coup;
-import minesweeper.ArtificialPlayer;
+import minesweeper.*;
 
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Projet de joueur artificiel de Minesweeper avec différents algorithmes
@@ -24,11 +16,19 @@ import java.util.Random;
  * Geneviève Lalonde
  * Nilovna Bascunan-Vasquez
  */
-public class RandomArtificialPlayer implements ArtificialPlayer {
+public class RandomArtificialPlayer implements ArtificialPlayer, Benchmarkable {
+
+    protected Grid gameGrid;
+
+    protected int nbUncertainMoves = 0;
+    protected int nbTotalMoves = 0;
+    protected int nbProbabilityFails = 0;
+    protected int nbProbabilitySuccess = 0;
 
     @Override
     public Set<Move> getNextMoves (Grid grid, int delay) {
 
+        gameGrid = grid;
         Case[] myView = grid.getCpyPlayerView();
         Random ran = new Random();
 
@@ -54,14 +54,54 @@ public class RandomArtificialPlayer implements ArtificialPlayer {
         }
 
         Set<Move> moves = new HashSet<Move>();
-        moves.add(new Move(index, coup));
+        Move move = new Move(index, coup);
+        moves.add(move);
+        addUncertainMoveToStats(move);
         return moves;
 
     }
 
+    protected void addUncertainMoveToStats(Move move) {
+        Set<Move> moves = new LinkedHashSet<Move>();
+        moves.add(move);
+
+        if (!gameGrid.checkMove(moves).isEmpty()) {
+            nbProbabilityFails++;
+        } else {
+            nbProbabilitySuccess++;
+        }
+
+        nbUncertainMoves++;
+        nbTotalMoves++;
+    }
+
     @Override
-    public String getName () {
+    public String getName() {
         return "Random Artificial Player";
     }
 
+    @Override
+    public int getNbProbabilitySuccess() {
+        return nbProbabilitySuccess;
+    }
+
+    @Override
+    public int getNbProbabilityFails() {
+        return nbProbabilityFails;
+    }
+
+    @Override
+    public double getTrivialMoveRate() {
+        return 0;
+    }
+
+    @Override
+    public double getCSPMoveRate() {
+        return 0;
+    }
+
+    @Override
+    public double getUncertainMoveRate() {
+        return 0;
+    }
 }

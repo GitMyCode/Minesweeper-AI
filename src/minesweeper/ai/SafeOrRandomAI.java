@@ -6,16 +6,14 @@ package minesweeper.ai;
 import minesweeper.*;
 import minesweeper.ai.dataRepresentation.FringeNode;
 import minesweeper.ai.dataRepresentation.Graph;
-import minesweeper.ai.strategyCSP.ForwardCheckCSP;
 import minesweeper.ai.strategyCSP.RemainingFlagsCSP;
-import minesweeper.ai.strategyCSP.SimpleCSP;
 import minesweeper.ai.strategyCSP.StrategyCSP;
 
 import java.util.*;
 
 import static minesweeper.Case.UNDISCOVERED;
 
-      public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
+public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
 
     private final int LIMITE = 10;
     private long timer;
@@ -158,11 +156,6 @@ import static minesweeper.Case.UNDISCOVERED;
     @Override
     public String getName() {
         return "Safe or Random";
-    }
-
-    @Override
-    public boolean isProbabilistic() {
-        return false;
     }
 
     @Override

@@ -15,6 +15,7 @@ public final class Benchmarks {
     public final static int NB_MINES = 99;
 
     public final static ArtificialPlayer[] JOUEURS = {
+            new RandomArtificialPlayer(),
             new SafeOrRandomAI(),
             new ProbabilisticAI(),
             new ProbabilisticAIwithRandomSelection(),
