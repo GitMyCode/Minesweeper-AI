@@ -35,12 +35,10 @@ public class WindowMinesweeper extends JFrame {
     private String selectedDesign = GLOBAL.DEFAULT_DESIGN;
     private int timeDelay = GLOBAL.DEFAULT_DELAY;
     private int limiteReflexion = GLOBAL.DEFAULT_MAXTHINK;
-    private int caseSize =GLOBAL.CELL_SIZE;
+    private int caseSize = GLOBAL.CELL_SIZE;
 
     private File savedGridToPlay = null;
-    private final String emptyLabelName = "Charger une grille enregistree precedemment";
 
-    private JLabel importLabel;
     private JLabel nbLinesLabel;
     private JLabel nbColumnsLabel;
     private JLabel percentMinesLabel;
@@ -227,18 +225,11 @@ public class WindowMinesweeper extends JFrame {
 
     private void importGameFileAction() {
         importGameFileChooser = new JFileChooser(".");
-        /*To keep the last selected as default*/
-        //if (!importLabel.getText().equals(emptyLabelName)) {
-            //importGameFileChooser.setSelectedFile(new File(importLabel.getText()));
-        //}
         if (importGameFileChooser.showDialog(new JFrame(), "Sélectionner partie à importer") == JFileChooser.APPROVE_OPTION) {
             if (importGameFileChooser.getSelectedFile() != null) {
                 readFile(importGameFileChooser.getSelectedFile());
                 updateGrilleSettings();
                 loadGridToBoard();
-                importLabel.setText(importGameFileChooser.getSelectedFile().getName());
-            } else {
-                importLabel.setText(emptyLabelName);
             }
         }
 
