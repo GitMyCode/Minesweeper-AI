@@ -3,14 +3,15 @@ package minesweeper.ui;
 import minesweeper.utils.ClassFinder;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.io.File;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -25,207 +26,177 @@ import java.util.List;
  *   Geneviève Lalonde
  *   Nilovna Bascunan-Vasquez
  */
-class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener{
-
-    /*
-    * TODO
-    * FAIRE LE MENAGE
-    * */
+public class WindowMinesweeper extends JFrame {
 
     private int nbMines = GLOBAL.NBMINES;
-    private int nbLignes = GLOBAL.NBLIGNE;
-    private int col = GLOBAL.NBCOL;
-    private String choosedAi = GLOBAL.DEFAULT_AI;
-    private String choosedDesign = GLOBAL.DEFAULT_DESIGN;
+    private int nbLines = GLOBAL.NBLIGNE;
+    private int nbColumns = GLOBAL.NBCOL;
+    private String selectedAi = GLOBAL.DEFAULT_AI;
+    private String selectedDesign = GLOBAL.DEFAULT_DESIGN;
     private int timeDelay = GLOBAL.DEFAULT_DELAY;
-    private int thinkLimit = GLOBAL.DEFAULT_MAXTHINK;
-    private int caseSize =GLOBAL.CELL_SIZE;
+    private int limiteReflexion = GLOBAL.DEFAULT_MAXTHINK;
+    private int caseSize = GLOBAL.CELL_SIZE;
 
+    private File savedGridToPlay = null;
 
-    private final TextListener textListener = new TextListener();
+    private JLabel nbLinesLabel;
+    private JLabel nbColumnsLabel;
+    private JLabel percentMinesLabel;
+    private JLabel aiLabel;
+    private JLabel delaiLabel;
+    private JLabel designLabel;
+    private JLabel sizeCasesLabel;
+    private JLabel limiteReflexionLabel;
+    private JLabel nbMinesLabel;
+    private JSpinner nbColumnsSpinner;
+    private JSpinner nbLinesSpinner;
+    private JSpinner percentMinesSpinner;
+    private JSpinner sizeCasesSpinner;
+    private JSpinner limiteReflexionSpinner;
+    private JSpinner delaiSpinner;
+    private JComboBox aiComboBox;
+    private JComboBox designComboBox;
+    private JButton newGameBtn;
+    private JButton importGameBtn;
+    private JPanel rootPanel;
+    private JPanel grillePanel;
+    private JPanel joueurArtificielPanel;
+    private JPanel designPanel;
+    private JFileChooser importGameFileChooser;
 
-    private final JButton create;
-    private final JButton importGrid;
-    private final JLabel importLabel;
-    private final JLabel label_choice_row;
-    private final JLabel label_choice_col;
-    private final JLabel label_mine;
-    private final JLabel labelAi;
-    private final JLabel labelTimer;
-
-
-    JLabel slideMineLabel;
-    private final JSlider sliderMines;
-    private final JTextField choiceCol;
-    private final JTextField choiceRow;
-    JTextField choiceMines;
-    private final JTextField choiceTimer;
-    private final JTextField choiceMaxTime;
-    private final JTextField choiceSizeCase;
-    private final JPanel panelCreation;
-    private final JComboBox<String> choixAI;
-    private final JComboBox<String> choixDesign;
-    private JFileChooser chooser;
-    private final List<Class<?>> classes;
-    private final List<String> allDesign;
-
-    private File savedGridToPlay =null;
-    private final String emptyLabelName = "Charger une grille enregistree precedemment";
-
-    private WindowMinesweeper(){
-
-        create = new JButton("Creer une nouvelle partie");
-        create.addActionListener(this);
-
-
-        label_choice_row = new JLabel("Nb lignes");
-        label_choice_col = new JLabel("Nb col");
-        label_mine       = new JLabel("Nb mines: " + nbMines);
-
-        Dimension dim_jtext = new Dimension(120,20);
-        choiceRow = new JTextField(""+ nbLignes);
-        choiceRow.setPreferredSize(dim_jtext);
-        choiceRow.setMinimumSize(dim_jtext);
-        choiceRow.getDocument().addDocumentListener(textListener);
-
-        choiceCol = new JTextField(""+col);
-        choiceCol.setPreferredSize(dim_jtext);
-        choiceCol.setMinimumSize(dim_jtext);
-        choiceCol.getDocument().addDocumentListener(textListener);
-
-
-        sliderMines = new JSlider(JSlider.HORIZONTAL,0,35,20);
-        sliderMines.addChangeListener(this);
-        sliderMines.setMajorTickSpacing(5);
-        sliderMines.setMinorTickSpacing(1);
-        sliderMines.setPaintTicks(true);
-        sliderMines.setPaintLabels(true);
-        sliderMines.setSize(new Dimension(280, 50));
-        sliderMines.setMinimumSize(new Dimension(220, 50));
-
-
-
-        choiceSizeCase = new JTextField(""+caseSize);
-        choiceSizeCase.setPreferredSize(new Dimension(40,20));
-        choiceSizeCase.setMinimumSize(new Dimension(40,20));
-
-        choiceTimer = new JTextField(""+GLOBAL.DEFAULT_DELAY);
-        choiceTimer.setPreferredSize(dim_jtext);
-        choiceTimer.setMinimumSize(dim_jtext);
-        labelTimer  = new JLabel("Delai (ms)");
-
-        choiceMaxTime = new JTextField(""+GLOBAL.DEFAULT_MAXTHINK);
-        choiceMaxTime.setPreferredSize(dim_jtext);
-        choiceMaxTime.setMinimumSize(dim_jtext);
-
-        panelCreation = new JPanel(new GridBagLayout());
-        panelCreation.setBackground(Color.orange);
-        Dimension panel_creation_dim = new Dimension(700,300);
-        panelCreation.setPreferredSize(panel_creation_dim);
-        panelCreation.setMinimumSize(panel_creation_dim);
-        panelCreation.setMaximumSize(panel_creation_dim);
-
-        choixAI = new JComboBox<String>();
-        labelAi = new JLabel("AI");
-        classes = ClassFinder.find("minesweeper.ai");
-        for(Class<?> c : classes){
-            String name = c.getName();
-            choixAI.addItem(name);
-        }
-
-        choixDesign = new JComboBox<String>();
-        allDesign = ClassFinder.findFolder("minesweeper.ui.design");
-        for(String s : allDesign){
-            choixDesign.addItem(s);
-        }
-
-
-
-        GLOBAL.addItem(panelCreation, label_choice_row, 0, 0, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, choiceRow, 1, 0, 1, 1, GridBagConstraints.EAST);
-        GLOBAL.addItem(panelCreation, label_choice_col, 0, 1, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, choiceCol, 1, 1, 1, 1, GridBagConstraints.EAST);
-
-
-        GLOBAL.addItem(panelCreation, label_mine, 0, 2, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, sliderMines, 1, 2, 1, 1, GridBagConstraints.EAST);
-
-
-
-        GLOBAL.addItem(panelCreation, create, 0, 3, 0, 0, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, labelAi, 0, 4, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, choixAI, 1, 4, 1, 1, GridBagConstraints.EAST);
-
-        GLOBAL.addItem(panelCreation, labelTimer, 0, 5, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, choiceTimer, 1, 5, 1, 1, GridBagConstraints.EAST);
-
-        GLOBAL.addItem(panelCreation, new JLabel("Limite reflexion"), 0, 6, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, choiceMaxTime, 1, 6, 1, 1, GridBagConstraints.EAST);
-
-        GLOBAL.addItem(panelCreation, new JLabel("Taille des cases"), 0, 7, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, choiceSizeCase, 1, 7, 1, 1, GridBagConstraints.EAST);
-
-        GLOBAL.addItem(panelCreation, new JLabel("Design: "), 0, 8, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(panelCreation, choixDesign, 1, 8, 1, 1, GridBagConstraints.EAST);
-
-        importLabel = new JLabel(emptyLabelName);
-        importGrid = new JButton("Importer");
-        importGrid.addActionListener(this);
-        GLOBAL.addItem(panelCreation,importGrid, 1, 9, 1, 1, GridBagConstraints.EAST);
-        GLOBAL.addItem(panelCreation,importLabel, 0, 9, 3, 1, GridBagConstraints.WEST);
-
-
-        add(panelCreation, BorderLayout.NORTH);
-        add(create,BorderLayout.SOUTH);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        pack();
-    }
-
+    private List<Class<?>> aiList;
+    private List<String> designsList;
 
     public static void main (String[] args) {
+        // Création de la fenêtre principale
+        WindowMinesweeper f = new WindowMinesweeper();
+    }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
+    public WindowMinesweeper() {
+        setContentPane(rootPanel);
+        setTitle("Démineur");
+
+        // UI Elements action listener
+        importGameBtn.addActionListener(new ActionListener() {
             @Override
-            public void run() {
-
-                System.gc();
-                new WindowMinesweeper().setVisible(true);
-                System.gc();
+            public void actionPerformed(ActionEvent e) {
+                importGameFileAction();
             }
         });
 
+        newGameBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateGrilleSettings();
+                createBoard();
+            }
+        });
+
+        percentMinesSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+               updateMines();
+            }
+        });
+
+        nbLinesSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                updateMines();
+            }
+        });
+
+        nbColumnsSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+               updateMines();
+            }
+        });
+
+        nbMinesLabel.setText("Nombre de mines: " + nbMines);
+
+        pack();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
     }
 
+    // Create Custom UI Elements
+    private void createUIComponents() {
+        nbLinesSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 999, 1));
+        nbLinesSpinner.setValue(new Integer(nbLines));
+        nbLinesSpinner.setMinimumSize(new Dimension(60, 20));
+        JSpinner.NumberEditor nbLinesEditor = new JSpinner.NumberEditor(nbLinesSpinner, "#");
+        nbLinesSpinner.setEditor(nbLinesEditor);
+
+        nbColumnsSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 999, 1));
+        nbColumnsSpinner.setValue(new Integer(nbColumns));
+        nbColumnsSpinner.setMinimumSize(new Dimension(60, 20));
+        JSpinner.NumberEditor nbColEditor = new JSpinner.NumberEditor(nbColumnsSpinner, "#");
+        nbColumnsSpinner.setEditor(nbColEditor);
+
+        percentMinesSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 35, 1));
+        percentMinesSpinner.setValue(new Integer(15));
+        percentMinesSpinner.setMinimumSize(new Dimension(60, 20));
+        percentMinesSpinner.setToolTipText("Maximum de 35%");
+        JSpinner.NumberEditor percentMinesEditor = new JSpinner.NumberEditor(percentMinesSpinner, "#");
+        percentMinesSpinner.setEditor(percentMinesEditor);
+
+        aiComboBox = new JComboBox<String>();
+        aiList = ClassFinder.find("minesweeper.ai");
+        for(Class<?> c : aiList){
+            String name = c.getSimpleName();
+            aiComboBox.addItem(name);
+        }
+
+        designComboBox = new JComboBox<String>();
+        designsList = ClassFinder.findFolder("minesweeper.ui.design");
+        for(String d : designsList){
+            designComboBox.addItem(d);
+        }
+
+        delaiSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 9999, 1));
+        delaiSpinner.setValue(new Integer(timeDelay));
+        delaiSpinner.setMinimumSize(new Dimension(60, 20));
+        JSpinner.NumberEditor delaiEditor = new JSpinner.NumberEditor(delaiSpinner, "#");
+        delaiSpinner.setEditor(delaiEditor);
+
+        limiteReflexionSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 9999, 1));
+        limiteReflexionSpinner.setValue(new Integer(limiteReflexion));
+        limiteReflexionSpinner.setMinimumSize(new Dimension(60, 20));
+        JSpinner.NumberEditor limiteReflexionEditor = new JSpinner.NumberEditor(limiteReflexionSpinner, "#");
+        limiteReflexionSpinner.setEditor(limiteReflexionEditor);
+
+        sizeCasesSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 999, 1));
+        sizeCasesSpinner.setValue(new Integer(GLOBAL.CELL_SIZE));
+        sizeCasesSpinner.setMinimumSize(new Dimension(60, 20));
+        JSpinner.NumberEditor sizeCasesEditor = new JSpinner.NumberEditor(sizeCasesSpinner, "#");
+        sizeCasesSpinner.setEditor(sizeCasesEditor);
+    }
 
     void createBoard(){
-
         System.gc();
         new Thread(
                 (new Runnable() {
                     @Override
                     public void run() {
                         BoardGameView bv = new BoardGameView.GameBuilder().
-                                row(nbLignes).
-                                col(col).
+                                row(nbLines).
+                                col(nbColumns).
                                 mines(nbMines).
                                 delay(timeDelay).
-                                think(thinkLimit).
-                                aiName(choosedAi).
+                                think(limiteReflexion).
+                                aiName("minesweeper.ai." + selectedAi).
                                 caseSize(caseSize).
-                                design(choosedDesign).
+                                design(selectedDesign).
                                 build();
                         bv.setVisible(true);
                         bv.setLocationRelativeTo(null);
-
-                        /*BoardGameView bv = new BoardGameView(lignes,cols,mines,aiName,timeDelay,thinkLimit,caseSize);
-                        bv.setVisible(true);
-                        bv.setLocationRelativeTo(null);*/
-
                     }
                 })
         ).start();
         System.gc();
     }
+
     void loadGridToBoard(){
         System.out.println("Charger une grille");
         System.gc();
@@ -233,14 +204,13 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
                 (new Runnable() {
                     @Override
                     public void run() {
-                        //BoardGameView bv = new BoardGameView(new Grid(savedGridToPlay),aiName,timeDelay,thinkLimit,caseSize);
                         BoardGameView bv = new BoardGameView.GameBuilder().
                                 loadGrid(savedGridToPlay).
-                                aiName(choosedAi).
+                                aiName("minesweeper.ai." + selectedAi).
                                 caseSize(caseSize).
                                 delay(timeDelay).
-                                think(thinkLimit).
-                                design(choosedDesign).
+                                think(limiteReflexion).
+                                design(selectedDesign).
                                 build();
                         bv.setVisible(true);
                         bv.setLocationRelativeTo(null);
@@ -250,41 +220,18 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
         );
         t.start();
 
-
-
         System.gc();
-
     }
 
-    @Override
-    public void actionPerformed (ActionEvent actionEvent) {
-
-        if(actionEvent.getActionCommand().equals("Creer une nouvelle partie")){
-            updateParameter();
-            createBoard();
-
-        }else if(actionEvent.getActionCommand().equals("Importer")) {
-            chooser = new JFileChooser(".");
-                /*To keep the last selected as default*/
-                if (!importLabel.getText().equals(emptyLabelName)){
-                    chooser.setSelectedFile(new File(importLabel.getText()));
-                }
-                if (chooser.showDialog(new JFrame("Choisir un fichier"),"Ok") == JFileChooser.APPROVE_OPTION) {
-                    if (chooser.getSelectedFile() != null) {
-                        readFile(chooser.getSelectedFile());
-
-                        updateParameter();
-
-                        loadGridToBoard();
-                        importLabel.setText(chooser.getSelectedFile().getName());
-
-                    } else {
-                        importLabel.setText(emptyLabelName);
-                    }
-                }
-
+    private void importGameFileAction() {
+        importGameFileChooser = new JFileChooser(".");
+        if (importGameFileChooser.showDialog(new JFrame(), "Sélectionner partie à importer") == JFileChooser.APPROVE_OPTION) {
+            if (importGameFileChooser.getSelectedFile() != null) {
+                readFile(importGameFileChooser.getSelectedFile());
+                updateGrilleSettings();
+                loadGridToBoard();
+            }
         }
-
 
     }
 
@@ -292,58 +239,26 @@ class WindowMinesweeper extends JFrame implements ActionListener, ChangeListener
         savedGridToPlay = f;
     }
 
-
-    @Override
-    public void stateChanged (ChangeEvent e) {
-
-        JSlider source =(JSlider) e.getSource();
-        if(!source.getValueIsAdjusting()){
-            updateMine();
-        }
+    void updateGrilleSettings(){
+        updateMines();
+        // Grille settings
+        nbLines = (Integer)nbLinesSpinner.getValue();
+        nbColumns = (Integer)nbColumnsSpinner.getValue();
+        // Joueur artificiel settings
+        selectedAi = (String)aiComboBox.getSelectedItem();
+        timeDelay = (Integer)delaiSpinner.getValue();
+        limiteReflexion = (Integer)limiteReflexionSpinner.getValue();
+        // Design settings
+        selectedDesign = (String)designComboBox.getSelectedItem();
+        caseSize = (Integer)sizeCasesSpinner.getValue();
     }
 
-    private class TextListener implements DocumentListener{
-        @Override
-        public void insertUpdate (DocumentEvent e) {
-            updateMine();
-        }
+    void updateMines(){
+        Integer nbLinesText = (Integer)nbLinesSpinner.getValue();
+        Integer nbColumnsText = (Integer)nbColumnsSpinner.getValue();
+        float minePercentage = (Integer)percentMinesSpinner.getValue();
 
-        @Override
-        public void removeUpdate (DocumentEvent e) {
-            updateMine();
-        }
-
-        @Override
-        public void changedUpdate (DocumentEvent e) {
-            updateMine();
-        }
-    }
-
-
-    void updateParameter(){
-        String text_row = choiceRow.getText();
-        String text_col = choiceCol.getText();
-        nbLignes = Integer.parseInt(text_row);
-        col = Integer.parseInt(text_col);
-        choosedAi = (String)choixAI.getSelectedItem();
-        timeDelay= Integer.parseInt(choiceTimer.getText());
-        thinkLimit= Integer.parseInt(choiceMaxTime.getText());
-        choosedDesign =(String) choixDesign.getSelectedItem();
-
-        caseSize = Integer.parseInt(choiceSizeCase.getText());
-
-    }
-
-    void updateMine(){
-        String text_row = choiceRow.getText();
-        String text_col = choiceCol.getText();
-        int lignes = (text_row.equals(""))? 0 :Integer.parseInt(text_row);
-        int col = (text_col.equals(""))? 0 :Integer.parseInt(text_col);
-
-        float minePercentage = sliderMines.getValue();
-
-        nbMines = (int)((lignes*col) * (minePercentage/100));
-        label_mine.setText("Nb mines: " + nbMines);
-
+        nbMines = (int)((nbLinesText * nbColumnsText) * (minePercentage / 100));
+        nbMinesLabel.setText("Nombre de mines: " + nbMines);
     }
 }

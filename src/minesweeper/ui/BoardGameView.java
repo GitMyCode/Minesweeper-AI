@@ -5,10 +5,7 @@ import minesweeper.Grid;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.text.Format;
@@ -27,73 +24,89 @@ import java.util.Date;
  * Geneviève Lalonde
  * Nilovna Bascunan-Vasquez
  */
-public class BoardGameView extends JFrame implements ActionListener, OutputObserver {
-    private Rule yAxis;
-    private Rule xAxis;
-    private Box cadre;
-    private JPanel containterField;
-
-    /*Game statistic*/
-    private JLabel flagRemaining;
-    private JLabel winsTotal;
-    private JLabel lostTotal;
-
-    private JPanel menu;
-
-    private JButton reset;
-    private JButton start;
-    private JButton step;
-    private JButton stop;
-
-    private JRadioButton rbInfinite;
-    private JRadioButton rbStopAfterGame;
-    private ButtonGroup buttonGroup;
-    private JButton infinite;
-    private JButton saveGridToFile;
-
-    private GridView gv;
-    private GridController gridController;
-    private final Grid grid;
-    private final ArtificialPlayer ai;
-
-    private JTextArea messageTextArea;
-
+public class BoardGameView extends JFrame implements OutputObserver {
     /*Object for running game*/
     private GameRunner runner = null;
     private Runnable task = null;
     private Thread t = null;
 
-    private boolean infiniteGame = GLOBAL.CONTINUE_AFTER;
-    private final int nbMines = 0;
+    private boolean isInfiniteGame = GLOBAL.CONTINUE_AFTER;
+    private int nbMines = 0;
     private int delayTime = 100;
     private int nbLost = 0;
     private int nbWins = 0;
     private int thinkLimit = 1000;
     private int caseSize = 16;
+    private int nbCols = 0;
+    private int nbLines = 0;
+    private String designName = GLOBAL.DEFAULT_DESIGN;
+    private final ArtificialPlayer ai;
+
+    private GridView grilleGv;
+    private GridController gridController;
+    private final Grid grid;
+
+    private Box grilleGameBox;
+    private JButton startGameBtn;
+    private JButton pauseGameBtn;
+    private JButton resetGameBtn;
+    private JButton nextStepGameBtn;
+    private JButton saveGameBtn;
+    private JPanel infoCurrentGamePanel;
+    private JLabel aiNameLabel;
+    private JLabel nbLignesLabel;
+    private JLabel nbColsLabel;
+    private JLabel nbMinesLabel;
+    private JLabel nbMinesValueLabel;
+    private JLabel nbLignesValueLabel;
+    private JLabel nbColsValueLabel;
+    private JLabel aiNameValueLabel;
+    private JLabel nbFlagsLabel;
+    private JLabel nbWinsLabel;
+    private JLabel nbLossLabel;
+    private JLabel nbLossValueLabel;
+    private JLabel nbWinsValueLabel;
+    private JLabel nbFlagsValueLabel;
+    private JLabel continueGameLabel;
+    private JPanel statistiquesPanel;
+    private JPanel optionsGamePanel;
+    private JPanel debugPanel;
+    private JPanel rootPanel;
+    private JPanel statsContentPanel;
+    private JPanel optionsBtnPanel;
+    private JPanel rightSidePanel;
+    private JPanel leftSidePanel;
+    private JRadioButton yesContinueGameRbtn;
+    private JRadioButton noContinueGameRbtn;
+    private JScrollPane debugScrollPane;
+    private JTextArea debugTextArea;
 
     public static class GameBuilder {
+        // Defaults if not set
         int nbLignes = GLOBAL.NBLIGNE;
         int nbCols = GLOBAL.NBCOL;
         int nbMines = GLOBAL.NBMINES;
         int delayTime = GLOBAL.DEFAULT_DELAY;
         int thinkLimit = GLOBAL.DEFAULT_MAXTHINK;
         int caseSize = GLOBAL.CELL_SIZE;
+
         Grid grid = null;
         ArtificialPlayer ai;
-        String aiString;
-        String designFolder = GLOBAL.DEFAULT_DESIGN;
+        String aiName;
+        String designName = GLOBAL.DEFAULT_DESIGN;
 
         public GameBuilder () {
+
         }
 
-        public BoardGameView build () {
+        public BoardGameView build() {
             if (this.grid == null) {
                 this.grid = new Grid(nbLignes, nbCols, nbMines);
             }
             return new BoardGameView(this);
         }
 
-        public GameBuilder loadGrid (File f) {
+        public GameBuilder loadGrid(File f) {
             this.grid = new Grid();
             this.grid.loadFromFile(f);
             this.nbCols = grid.nbCols;
@@ -102,112 +115,173 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             return this;
         }
 
-        public GameBuilder row (int nbLignes) {
+        public GameBuilder row(int nbLignes) {
             this.nbLignes = nbLignes;
             return this;
         }
 
-        public GameBuilder design (String s) {
-            this.designFolder = s;
+        public GameBuilder design(String designName) {
+            this.designName = designName;
             return this;
         }
 
-        public GameBuilder col (int nbCols) {
+        public GameBuilder col(int nbCols) {
             this.nbCols = nbCols;
             return this;
         }
 
-        public GameBuilder mines (int nbMines) {
+        public GameBuilder mines(int nbMines) {
             this.nbMines = nbMines;
             return this;
         }
 
-        public GameBuilder delay (int delayTime) {
+        public GameBuilder delay(int delayTime) {
             this.delayTime = delayTime;
             return this;
         }
 
-        public GameBuilder think (int thinkLimit) {
+        public GameBuilder think(int thinkLimit) {
             this.thinkLimit = thinkLimit;
             return this;
         }
 
-        public GameBuilder caseSize (int caseSize) {
+        public GameBuilder caseSize(int caseSize) {
             this.caseSize = caseSize;
             return this;
         }
 
-        public GameBuilder aiName (String aiName) {
-            this.aiString = aiName;
+        public GameBuilder aiName(String aiName) {
+            this.aiName = aiName;
             this.ai = getAI(aiName);
             return this;
         }
 
-// --Commented out by Inspection START (2014-11-13 12:16):
-//        public GameBuilder grid (Grid grid) {
-//            this.grid = grid;
-//            return this;
-//        }
-// --Commented out by Inspection STOP (2014-11-13 12:16)
-
-        /*Prend le nom du fichier et va chercher la class puis cree une instance*/
-        private ArtificialPlayer getAI (String name) {
+        // Prend le nom du ai et va chercher la class puis cree une instance
+        private ArtificialPlayer getAI(String aiName) {
             ArtificialPlayer returnAi = null;
             try {
-                Class c = Class.forName(name);
+                Class c = Class.forName(aiName);
                 Constructor<?> constructor = c.getConstructor();
                 returnAi = (ArtificialPlayer) constructor.newInstance();
-
             } catch (Exception e) {
                 System.out.println(e);
             }
             return returnAi;
         }
-
     }
 
     private BoardGameView (GameBuilder b) {
         this.grid = b.grid;
         this.caseSize = b.caseSize;
+        this.nbCols = b.nbCols;
+        this.nbMines = b.nbMines;
+        this.nbLines = b.nbLignes;
         this.ai = b.ai;
         this.delayTime = b.delayTime;
         this.thinkLimit = b.thinkLimit;
-        setTitle(ai.getName());
+        this.designName = b.designName;
 
-        constructUi(b.nbLignes, b.nbCols, b.caseSize, b.designFolder);
-        pack();
+        setContentPane(rootPanel);
+        setTitle(this.ai.getName());
+
+        // Valeurs par défaut pour certains éléments du UI
+        int percentMines = (nbMines * 100) / (nbCols * nbLines);
+        nbLignesValueLabel.setText(String.valueOf(nbLines));
+        nbColsValueLabel.setText(String.valueOf(nbCols));
+        nbMinesValueLabel.setText(String.valueOf(nbMines) + " (" + String.valueOf(percentMines) + " %)");
+        aiNameValueLabel.setText(ai.getName());
+        yesContinueGameRbtn.setSelected(isInfiniteGame);
+        message("Initialiser l'IA: " + this.ai.getName());
+
+        // Action listeners
+        startGameBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startGame();
+            }
+        });
+
+        pauseGameBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (runner != null) {
+                    runner.terminate();
+                    runner = null;
+                }
+            }
+        });
+
+        resetGameBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetGame();
+            }
+        });
+
+        nextStepGameBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((JButton) e.getSource()).setEnabled(false);
+                if (runner == null) {
+                    startGame();
+                    runner.terminate();
+                }
+            }
+        });
+
+        saveGameBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveGrid();
+            }
+        });
+
+        yesContinueGameRbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isInfiniteGame = true;
+            }
+        });
+
+        noContinueGameRbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isInfiniteGame = false;
+            }
+        });
+
         this.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing (WindowEvent windowEvent) {
-                super.windowClosing(windowEvent);
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
                 closingCleanUp();
             }
         });
-        linkMVC();
+
+        pack();
+        setVisible(true);
     }
 
-    @Override
-    public void actionPerformed (ActionEvent actionEvent) {
+    private void createUIComponents() {
+        int width = (nbCols * (caseSize)); //pour expert : 480
+        int height = (nbLines * (caseSize)); //pour expert :280
 
-        if (actionEvent.getActionCommand() == "Demarrer") {
-            startGame();
-        } else if (actionEvent.getActionCommand() == "Arreter") {
-            if (runner != null) {
-                runner.terminate();
-                runner = null;
-            }
-        } else if (actionEvent.getActionCommand() == "Reinitialiser") {
-            resetGame();
-        } else if (actionEvent.getActionCommand() == "Parties infinies") {
-            infiniteGame = true;
-            startGame();
-        } else if (actionEvent.getActionCommand() == "Prochain pas") {
-            ((JButton) actionEvent.getSource()).setEnabled(false);
-            if (runner == null) {
-                startGame();
-                runner.terminate();
-            }
-        }
+        nbFlagsValueLabel = new JLabel();
+
+        // Contruire la grille du jeu
+        grilleGameBox = new Box(BoxLayout.Y_AXIS);
+        grilleGameBox.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
+        // Setter la GridView  (grill)
+        grilleGv = new GridView(nbLines, nbCols, width, height, caseSize, designName);
+        grilleGv.setBackground(new Color(0x33383D));
+        grilleGv.setGrid(grid);
+        gridController = new GridControllerImpl(grid, grilleGv, nbFlagsValueLabel);
+        grilleGv.setController(gridController);
+        grilleGv.repaint();
+
+        leftSidePanel = new JPanel(new GridBagLayout());
+        leftSidePanel.add(grilleGv);
     }
 
     private synchronized void startGame () {
@@ -246,22 +320,22 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         }
         if (runner != null) runner.terminate();
         runner = null;
-        gv.repaint();
-        flagRemaining.setText(String.valueOf(nbMines));
-        step.setEnabled(true);
-        message("Reinitialiser");
+        grilleGv.repaint();
+        nbFlagsValueLabel.setText(String.valueOf(nbMines));
+        nextStepGameBtn.setEnabled(true);
+        message("Grille réinitialisée.");
     }
 
 
     /* De connect5 auteur Éric beaudry */
     public synchronized void message (final String msg) {
-        messageTextArea.append(msg + "\n");
-        messageTextArea.setCaretPosition(messageTextArea.getDocument().getLength());
+        debugTextArea.append(msg + "\n");
+        debugTextArea.setCaretPosition(debugTextArea.getDocument().getLength());
     }
 
     @Override
     public synchronized void callback () {
-        if (infiniteGame && (runner != null && runner.isRunning())) {
+        if (isInfiniteGame && (runner != null && runner.isRunning())) {
             resetGame();
             startGame();
         } else {
@@ -269,32 +343,22 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
         }
 
         /*Remettre disponible le step button au cas ou il avait ete desactive (pour prevenir  le spam)*/
-        step.setEnabled(true);
-
+        nextStepGameBtn.setEnabled(true);
     }
 
     @Override
-    public void updateLost () {
+    public void updateLost() {
         nbLost++;
-        lostTotal.setText(String.valueOf(nbLost));
+        nbLossValueLabel.setText(String.valueOf(nbLost));
     }
 
     @Override
-    public void updateWins () {
+    public void updateWins() {
         nbWins++;
-        winsTotal.setText(String.valueOf(nbWins));
+        nbWinsValueLabel.setText(String.valueOf(nbWins));
     }
 
-    void updateGameLoopChoice () {
-        if (rbInfinite.isSelected()) {
-            infiniteGame = true;
-        } else {
-            infiniteGame = false;
-        }
-    }
-
-    private void closingCleanUp () {
-        System.out.println("Fermeture");
+    private void closingCleanUp() {
         if (t != null) {
             t.interrupt();
         }
@@ -319,152 +383,4 @@ public class BoardGameView extends JFrame implements ActionListener, OutputObser
             System.out.println(e);
         }
     }
-
-    private void constructUi (int nbLignes, int nbCols, int caseSize, String designFolder) {
-        createGridView(nbLignes, nbCols, caseSize, designFolder);
-        flagRemaining = new JLabel("" + nbMines);
-
-        menu = new JPanel(new GridBagLayout());
-
-        reset = new JButton("Reinitialiser");
-        start = new JButton("Demarrer");
-        infinite = new JButton("Parties infinies");
-        step = new JButton("Prochain pas");
-        stop = new JButton("Arreter");
-        stop.addActionListener(this);
-        reset.addActionListener(this);
-        start.addActionListener(this);
-        infinite.addActionListener(this);
-        step.addActionListener(this);
-
-        rbInfinite = new JRadioButton("Continuer apres la partie");
-        rbStopAfterGame = new JRadioButton("Arreter apres la partie");
-        buttonGroup = new ButtonGroup();
-        buttonGroup.add(rbInfinite);
-        buttonGroup.add(rbStopAfterGame);
-        rbInfinite.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed (ActionEvent actionEvent) {
-                updateGameLoopChoice();
-            }
-        });
-
-        rbStopAfterGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed (ActionEvent actionEvent) {
-                updateGameLoopChoice();
-            }
-        });
-
-        rbInfinite.setSelected(GLOBAL.CONTINUE_AFTER);
-
-        saveGridToFile = new JButton("Enregistrer la grille");
-        saveGridToFile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed (ActionEvent e) {
-                saveGrid();
-            }
-        });
-
-        JPanel topMenu = new JPanel(new GridBagLayout());
-        GLOBAL.addItem(topMenu, reset, 0, 0, 1, 1, GridBagConstraints.CENTER);
-        GLOBAL.addItem(topMenu, start, 0, 1, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(topMenu, step, 1, 1, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(topMenu, stop, 2, 1, 1, 1, GridBagConstraints.WEST);
-
-        GLOBAL.addItem(menu, topMenu, 0, 0, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, rbInfinite, 0, 1, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, rbStopAfterGame, 0, 2, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(menu, saveGridToFile, 0, 3, 1, 1, GridBagConstraints.WEST);
-
-        add(menu, BorderLayout.EAST);
-
-        JPanel bottomPanel = new JPanel(new GridBagLayout());
-        JPanel bottomPanelScore = new JPanel(new GridBagLayout());
-        JScrollPane pane = new JScrollPane();
-        messageTextArea = new JTextArea();
-        messageTextArea.setColumns(30);
-        messageTextArea.setEditable(false);
-        messageTextArea.setRows(5);
-        pane.setViewportView(messageTextArea);
-
-        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb drapeaux: "), 0, 0, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanelScore, flagRemaining, 1, 0, 1, 1, GridBagConstraints.EAST);
-
-        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb defaites: "), 0, 1, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanelScore, lostTotal = new JLabel("0"), 1, 1, 1, 1, GridBagConstraints.EAST);
-
-        GLOBAL.addItem(bottomPanelScore, new JLabel("Nb victoires: "), 0, 2, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanelScore, winsTotal = new JLabel("0"), 1, 2, 1, 1, GridBagConstraints.EAST);
-
-        GLOBAL.addItem(bottomPanel, bottomPanelScore, 0, 0, 1, 1, GridBagConstraints.WEST);
-        GLOBAL.addItem(bottomPanel, pane, 1, 0, 1, 1, GridBagConstraints.WEST);
-        add(bottomPanel, BorderLayout.SOUTH);
-
-        message("Initialiser l'IA: " + ai.getName());
-    }
-
-    void createGridView (int row, int col, int caseSize, String designFolder) {
-        cadre = new Box(BoxLayout.Y_AXIS);
-        cadre.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        cadre.add(Box.createVerticalGlue());
-        cadre.add(Box.createHorizontalGlue());
-
-        int width = (col * (caseSize)); //pour expert : 480
-        int height = (row * (caseSize)); //pour expert :280
-
-        yAxis = new Rule(1, col);
-        Dimension dim_y = new Dimension(width + 20, 7);
-        yAxis.setPreferredSize(dim_y);
-        yAxis.setMinimumSize(dim_y);
-        yAxis.setMaximumSize(dim_y);
-        yAxis.setLayout(new GridLayout(1, col));
-
-        xAxis = new Rule(0, row);
-        Dimension dim_x = new Dimension(10, height);
-        xAxis.setPreferredSize(dim_x);
-        xAxis.setMinimumSize(dim_x);
-        xAxis.setMaximumSize(dim_x);
-        xAxis.setLayout(new GridLayout(row, 1));
-
-        containterField = new JPanel(new GridBagLayout());
-        Dimension dim_container = new Dimension(width + 40, height + 30);
-        containterField.setMaximumSize(dim_container);
-        containterField.setMinimumSize(dim_container);
-        containterField.setPreferredSize(dim_container);
-        //containterField.setBackground(Color.red);
-
-
-        GLOBAL.addItem(containterField, yAxis, 1, 0, 0, 7, GridBagConstraints.NORTHWEST);
-
-        GLOBAL.addItem(containterField, xAxis, 0, 1, 0, 7, GridBagConstraints.WEST);
-
-
-        gv = new GridView(row, col, width, height, caseSize, designFolder);
-        gv.setBackground(new Color(0x33383D));
-
-        GLOBAL.addItem(containterField, gv, 1, 2, 0, 0, GridBagConstraints.CENTER);
-
-
-        Dimension dim_cadre = new Dimension(width + 30, height + 30);
-        cadre.setPreferredSize(dim_cadre);
-        cadre.setMaximumSize(dim_cadre);
-        cadre.setMaximumSize(dim_cadre);
-
-
-        cadre.add(containterField);
-        cadre.add(Box.createVerticalGlue());
-        cadre.add(Box.createHorizontalGlue());
-
-        add(cadre, BorderLayout.CENTER);
-    }
-
-    private void linkMVC () {
-        gv.setGrid(grid);
-        gridController = new GridControllerImpl(grid, gv, flagRemaining);
-        gv.setController(gridController);
-        gv.repaint();
-    }
-
-
 }

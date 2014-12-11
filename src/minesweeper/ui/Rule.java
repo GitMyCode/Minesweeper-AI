@@ -17,22 +17,22 @@ import java.awt.*;
  */
 class Rule extends JPanel {
     private JLabel[] indicateurs;
-        public Rule(int xOry,int length){
+        public Rule(int xOry, int length){
             super();
-            indicateurs=null;
+            indicateurs = null;
             if(xOry == 1){
                 JLabel placeholder = new JLabel();
-                placeholder.setText("x-y");
+                placeholder.setText("y-x");
                 placeholder.setForeground(Color.BLACK);
-                placeholder.setFont(new Font("Arial",Font.BOLD,8));
+                placeholder.setFont(new Font("Arial", Font.BOLD, 9));
                 add(placeholder);
             }
-            indicateurs=  new JLabel[length];
-            for(int i=0;i<length;i++){
+            indicateurs = new JLabel[length];
+            for(int i=0; i < length; i++){
                 JLabel num = new JLabel();
                 num.setText(Integer.toString(i));
                 num.setForeground(Color.BLUE);
-                num.setFont(new Font("Serif", Font.PLAIN,10));
+                num.setFont(new Font("Serif", Font.PLAIN, 10));
                 indicateurs[i] = num;
                 add(num);
             }
