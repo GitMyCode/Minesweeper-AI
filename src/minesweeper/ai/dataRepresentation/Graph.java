@@ -57,7 +57,7 @@ public class Graph {
         for (Integer i = 0; i < grid.length; i++) {
             if (Case.isIndicatorCase(grid[i])) {
                 if (gameGrid.getUndiscoveredneighbours(i).size() == 8) {
-                    deactivatedNode.add(i);
+                    //deactivatedNode.add(i);
                 }
             }
         }
@@ -115,7 +115,7 @@ public class Graph {
             }
 
             //Pour une frontiere acceptable il faut au moins 2 indices (sinon on peut pas vraiment faire de probabilité)
-            if (hintNodes.size() > 1) {
+            if (hintNodes.size() >= 1) {
                 allHintNode.add(new ArrayList<HintNode>(hintNodes));
             } else {
                 fringesToRemove.add(l);
