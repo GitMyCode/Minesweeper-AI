@@ -26,7 +26,7 @@ public class GridControllerImpl implements GridController {
     private GridView gridView;
     private final JLabel flagRemain;
 
-    public GridControllerImpl(Grid gm, GridView gv,JLabel refFlagRemain){
+    public GridControllerImpl(Grid gm, GridView gv, JLabel refFlagRemain){
         gridBoard = gm;
         gridView = gv;
         flagRemain = refFlagRemain;
