@@ -46,18 +46,17 @@ public class GridView extends JPanel {
 
 
 
-    public GridView(int nbligne,int nbcol,int width, int height,int caseSize,String designFolder){
+    public GridView(int nbligne, int nbcol, int width, int height, int caseSize, String designFolder){
         this.nbcol = nbcol;
         this.nbligne = nbligne;
         this.caseSize = caseSize;
         this.cases = new Image[Case.values().length];
         this.designFolder = designFolder;
 
-        grid = new Grid(nbligne,nbcol,20);
+        grid = new Grid(nbligne, nbcol, 20);
 
-
-        setLayout(new GridLayout(nbligne,nbcol));
-        Dimension dim_grid = new Dimension(width ,height);
+        setLayout(new GridLayout(nbligne, nbcol));
+        Dimension dim_grid = new Dimension(width, height);
         setPreferredSize(dim_grid);
         setMaximumSize(dim_grid);
         setMinimumSize(dim_grid);
