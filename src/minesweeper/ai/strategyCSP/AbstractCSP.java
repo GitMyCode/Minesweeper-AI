@@ -62,7 +62,7 @@ public abstract class AbstractCSP implements StrategyCSP {
         int nbFlagsAssigned = 0;
         for (FringeNode fn : fringeNodes) {
             if (fn.state == FLAGED) {
-                fn.combinationsUsed.add(indexFrontiere);
+                fn.combinationsUsed.add(nbValidAssignations);
                 fn.nbFlagsHit++;
                 nbFlagsAssigned += 1;
             }
