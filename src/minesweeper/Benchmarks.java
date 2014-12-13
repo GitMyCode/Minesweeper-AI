@@ -10,10 +10,9 @@ import minesweeper.ai.*;
 public final class Benchmarks {
 
     public static final int NB_PARTIES = 400;
-    public static final int GRID_ROWS = 16;
-    public static final int GRID_COLUMNS = 30;
-    public static final int NB_MINES = 99;
-
+    public static final int[] GRIDS_COLUMNS = { 30 };
+    public static final int[] GRIDS_ROWS    = { 16 };
+    public static final double[] MINE_RATIOS  = { 0.15, 0.25, 0.30 };
     public static final ArtificialPlayer[] JOUEURS = {
             new RandomArtificialPlayer(),
             new SafeOrRandomAI(),
@@ -38,43 +37,56 @@ public final class Benchmarks {
 
     public static void main(final String[] args) {
 
-        for (ArtificialPlayer ai: JOUEURS) {
-            nbVictoires = 0;
-            timeToSolutionList = new ArrayList<Long>();
-            trivialMoveRateList = new ArrayList<Double>();
-            safeMoveRateList = new ArrayList<Double>();
-            uncertainMoveRateList = new ArrayList<Double>();
-            nbProbabilitySuccess = 0;
-            nbProbabilityFails = 0;
-
-
-            for (int i = 0; i < NB_PARTIES; ++i) {
-                startTime = System.currentTimeMillis();
-                Grid grille = new Grid(GRID_ROWS, GRID_COLUMNS, NB_MINES);
-
-                while (!grille.gameIsFinished()) {
-                    Set<Move> moves = ai.getNextMoves(grille, Integer.MAX_VALUE);
-                    for (Move m : moves) {
-                        grille.play(m.index, m.coup);
-                    }
+        for (int i = 0; i < MINE_RATIOS.length; i++) {
+            System.out.println("###################");
+            System.out.println("# RATIO MINE "+ formatter.format(MINE_RATIOS[i]) +" #");
+            System.out.println("###################");
+            System.out.println();
+            for (int j = 0; j < GRIDS_COLUMNS.length; j++) {
+                for (ArtificialPlayer ai : JOUEURS) {
+                    benchGame(ai, GRIDS_ROWS[j], GRIDS_COLUMNS[j], MINE_RATIOS[i]);
                 }
-
-                if (grille.gameWon) {
-                    nbVictoires++;
-                    endTime = System.currentTimeMillis();
-                    timeToSolutionList.add(endTime - startTime);
-                }
-
-                trivialMoveRateList.add(((Benchmarkable) ai).getTrivialMoveRate());
-                safeMoveRateList.add(((Benchmarkable) ai).getCSPMoveRate());
-                uncertainMoveRateList.add(((Benchmarkable) ai).getUncertainMoveRate());
-                nbProbabilitySuccess += ((Benchmarkable) ai).getNbProbabilitySuccess();
-                nbProbabilityFails += ((Benchmarkable) ai).getNbProbabilityFails();
             }
-
-            printResult(ai);
         }
 
+    }
+
+    private static void benchGame(ArtificialPlayer ai, int grid_rows, int grid_columns, double mine_ratio) {
+        int nb_mines = (int) ((grid_rows * grid_columns) * mine_ratio);
+        nbVictoires = 0;
+        timeToSolutionList = new ArrayList<Long>();
+        trivialMoveRateList = new ArrayList<Double>();
+        safeMoveRateList = new ArrayList<Double>();
+        uncertainMoveRateList = new ArrayList<Double>();
+        nbProbabilitySuccess = 0;
+        nbProbabilityFails = 0;
+
+
+        for (int i = 0; i < NB_PARTIES; ++i) {
+            startTime = System.currentTimeMillis();
+            Grid grille = new Grid(grid_rows, grid_columns, nb_mines);
+
+            while (!grille.gameIsFinished()) {
+                Set<Move> moves = ai.getNextMoves(grille, Integer.MAX_VALUE);
+                for (Move m : moves) {
+                    grille.play(m.index, m.coup);
+                }
+            }
+
+            if (grille.gameWon) {
+                nbVictoires++;
+                endTime = System.currentTimeMillis();
+                timeToSolutionList.add(endTime - startTime);
+            }
+
+            trivialMoveRateList.add(((Benchmarkable) ai).getTrivialMoveRate());
+            safeMoveRateList.add(((Benchmarkable) ai).getCSPMoveRate());
+            uncertainMoveRateList.add(((Benchmarkable) ai).getUncertainMoveRate());
+            nbProbabilitySuccess += ((Benchmarkable) ai).getNbProbabilitySuccess();
+            nbProbabilityFails += ((Benchmarkable) ai).getNbProbabilityFails();
+        }
+
+        printResult(ai);
     }
 
     public static double getMeanTimeToSolution() {
