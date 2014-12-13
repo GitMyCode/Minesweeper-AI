@@ -26,7 +26,7 @@ public class RandomArtificialPlayer implements ArtificialPlayer, Benchmarkable {
     protected int nbProbabilitySuccess = 0;
 
     @Override
-    public Set<Move> getNextMoves (Grid grid, int delay) {
+    public Set<Move> getNextMoves(Grid grid, int delay) {
 
         gameGrid = grid;
         Case[] myView = grid.getCpyPlayerView();

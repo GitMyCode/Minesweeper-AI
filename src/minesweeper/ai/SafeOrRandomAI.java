@@ -15,10 +15,10 @@ import static minesweeper.Case.UNDISCOVERED;
 
 public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
 
-    private final int LIMITE = 10;
+    private static final int LIMITE = 10;
     private long timer;
     private long remain;
-    private boolean END = false;
+    private boolean timerEnded = false;
 
     protected Grid gameGrid;
     protected Graph graph;
@@ -56,10 +56,11 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     }
 
     private boolean isTimeUp() {
-        END = (timeRemaining() < LIMITE) ? true : END;
-        return END;
+        if (timeRemaining() < LIMITE) {
+            return true;
+        }
+        return timerEnded;
     }
-
 
     protected void addMovesToPlay(Grid grid, Case[] gridCopy) {
         if (this.movesToPlay.isEmpty()) {
@@ -115,7 +116,7 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     }
 
     private void startTimer(int delai) {
-        END = false;
+        timerEnded = false;
         timer = System.currentTimeMillis();
         remain = delai;
     }
@@ -159,10 +160,14 @@ public class SafeOrRandomAI implements ArtificialPlayer, Benchmarkable {
     }
 
     @Override
-    public int getNbProbabilitySuccess() { return this.nbProbabilitySuccess; }
+    public int getNbProbabilitySuccess() {
+        return this.nbProbabilitySuccess;
+    }
 
     @Override
-    public int getNbProbabilityFails() { return this.nbProbabilityFails; }
+    public int getNbProbabilityFails() {
+        return this.nbProbabilityFails;
+    }
 
     @Override
     public double getTrivialMoveRate() {

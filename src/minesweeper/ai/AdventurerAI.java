@@ -1,6 +1,5 @@
 package minesweeper.ai;
 
-import minesweeper.Case;
 import minesweeper.Coup;
 import minesweeper.Grid;
 import minesweeper.Move;
@@ -49,8 +48,8 @@ public class AdventurerAI extends ProbabilisticAI {
         double probabiliteExterieur = 100.0;
 
         if (nbCasesSurFrontiere > 0 && graph.gameGrid.getNbUndiscoveredCases() - nbCasesSurFrontiere > 0) {
-            probabiliteExterieur = ((double)graph.gameGrid.getNbFlagsRemaining() - (double)nbMinimumMinesInFrontieres) / 
-                                    (graph.gameGrid.getNbUndiscoveredCases() - nbCasesSurFrontiere);
+            probabiliteExterieur = ((double) graph.gameGrid.getNbFlagsRemaining() - (double) nbMinimumMinesInFrontieres)
+                    / (graph.gameGrid.getNbUndiscoveredCases() - nbCasesSurFrontiere);
         }
 
         if (probabiliteExterieur <= 0.0) {
@@ -83,5 +82,8 @@ public class AdventurerAI extends ProbabilisticAI {
     }
 
     @Override
-    public String getName() { return "Adventurer AI"; }
+    public String getName() {
+        return "Adventurer AI";
+    }
+
 }

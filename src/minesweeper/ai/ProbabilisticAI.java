@@ -71,8 +71,8 @@ public class ProbabilisticAI extends SafeOrRandomAI {
         }
         System.out.println("###########################################");
     }
-
     @Override
-    public String getName() { return "Probabilistic AI"; }
-
+    public String getName() {
+        return "Probabilistic AI";
+    }
 }

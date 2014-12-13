@@ -13,7 +13,6 @@ import java.util.Set;
 /**
  * Projet de joueur artificiel de Minesweeper avec différents algorithmes
  * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)
- * <p/>
  * Automne 2014
  * Par l'équipe:
  * Martin Bouchard
