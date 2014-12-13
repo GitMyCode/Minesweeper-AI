@@ -23,6 +23,7 @@ public final class Benchmarks {
     private static long startTime = 0;
     private static long endTime = 0;
     private static int nbVictoires;
+    private static int nbMortsRapides = 0;
     private static ArrayList<Long> timeToSolutionList;
     private static ArrayList<Double> trivialMoveRateList;
     private static ArrayList<Double> safeMoveRateList;
@@ -54,6 +55,7 @@ public final class Benchmarks {
     private static void benchGame(ArtificialPlayer ai, int grid_rows, int grid_columns, double mine_ratio) {
         int nb_mines = (int) ((grid_rows * grid_columns) * mine_ratio);
         nbVictoires = 0;
+        nbMortsRapides = 0;
         timeToSolutionList = new ArrayList<Long>();
         trivialMoveRateList = new ArrayList<Double>();
         safeMoveRateList = new ArrayList<Double>();
@@ -80,7 +82,7 @@ public final class Benchmarks {
             }
 
             if (grille.length - grille.getNbUndiscoveredCases() < 5){
-                System.out.println("Mort super rapidement!!");
+                nbMortsRapides++;
             }
 
             trivialMoveRateList.add(((Benchmarkable) ai).getTrivialMoveRate());
@@ -114,6 +116,10 @@ public final class Benchmarks {
 
     public static double getVictoryRate() {
         return ((double) nbVictoires / NB_PARTIES) * 100;
+    }
+
+    public static double getMortsRapidesRate() {
+        return ((double) nbMortsRapides / NB_PARTIES) * 100;
     }
 
     public static double getLossRate() {
@@ -167,6 +173,7 @@ public final class Benchmarks {
         System.out.println("Nombre de victoires : " + nbVictoires);
         System.out.println("% de victoires : " + formatter.format(getVictoryRate()) + "%");
         System.out.println("% de défaites : " + formatter.format(getLossRate()) + "%");
+        System.out.println("% de morts rapides : " + formatter.format(getMortsRapidesRate()) + "%");
         System.out.println("Temps de résolution moyen : " + formatter.format(getMeanTimeToSolution()) + "ms");
         System.out.println("Taux de réussite moyen sous incertitude : " + formatter.format(getAverageProbabilitySuccessRate()) + "%");
         System.out.println("Taux moyen de coups triviaux : " + formatter.format(getAverageTrivialMoveRate()) + "%");

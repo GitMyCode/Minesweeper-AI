@@ -42,12 +42,10 @@ public class CrazyGeniusAI extends ProbabilisticAI {
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int totalValidAssignations = graph.nbValidAssignationsPerFrontier.get(frontierIndex);
             double priorMineProbability = this.gameGrid.priorMineProbability();
-            //System.out.println("priorMineProbability = " + priorMineProbability);
             double [] probabiliteCombinaisons = new double [graph.nbValidAssignationsPerFrontier.get(frontierIndex)];
 
             for (int i = 0; i < graph.nbValidAssignationsPerFrontier.get(frontierIndex); ++i) {
                 double proba = probabiliteCombinaison(fringeNodes, i, gameGrid.priorMineProbability());
-                System.out.println("probaFrontiere = " + proba);
                 probabiliteCombinaisons[i] = proba;
             }
 
@@ -65,9 +63,7 @@ public class CrazyGeniusAI extends ProbabilisticAI {
                     }
                 }
 
-                System.out.println("probaMine = " + probaMine);
                 probaMine = probaMine / alpha;
-                System.out.println("probaMine = " + (float) probaMine);
                 fn.probabilityMine = (float) probaMine;
 
                 if (fn.isObviousMine()) {
