@@ -65,7 +65,7 @@ public class CrazyGeniusAI extends ProbabilisticAI {
                     }
                 }
 
-                //System.out.println("probaMine = " + probaMine);
+                System.out.println("probaMine = " + probaMine);
                 probaMine = probaMine / alpha;
                 System.out.println("probaMine = " + (float) probaMine);
                 fn.probabilityMine = (float) probaMine;
