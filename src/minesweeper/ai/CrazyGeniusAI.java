@@ -47,7 +47,7 @@ public class CrazyGeniusAI extends ProbabilisticAI {
 
             for (int i = 0; i < graph.nbValidAssignationsPerFrontier.get(frontierIndex); ++i) {
                 double proba = probabiliteCombinaison(fringeNodes, i, gameGrid.priorMineProbability());
-                //System.out.println("probaFrontiere = " + proba);
+                System.out.println("probaFrontiere = " + proba);
                 probabiliteCombinaisons[i] = proba;
             }
 
@@ -55,8 +55,6 @@ public class CrazyGeniusAI extends ProbabilisticAI {
             for (double valeurCombinaison : probabiliteCombinaisons) {
                 alpha += valeurCombinaison;
             }
-
-            //System.out.println("valeur de alpha = " + alpha);
 
             for (FringeNode fn : fringeNodes) {
 
@@ -69,7 +67,7 @@ public class CrazyGeniusAI extends ProbabilisticAI {
 
                 //System.out.println("probaMine = " + probaMine);
                 probaMine = probaMine / alpha;
-                //System.out.println("probaMine = " + probaMine);
+                System.out.println("probaMine = " + (float) probaMine);
                 fn.probabilityMine = (float) probaMine;
 
                 if (fn.isObviousMine()) {
@@ -81,6 +79,26 @@ public class CrazyGeniusAI extends ProbabilisticAI {
                 }
                 allProbabilities.offer(fn);
 
+            }
+
+            double probabiliteExterieur = 100.0;
+
+            if (nbCasesSurFrontiere > 0 && graph.gameGrid.getNbUndiscoveredCases() - nbCasesSurFrontiere > 0) {
+                probabiliteExterieur = ((double) graph.gameGrid.getNbFlagsRemaining() - (double) nbMinimumMinesInFrontieres)
+                        / (graph.gameGrid.getNbUndiscoveredCases() - nbCasesSurFrontiere);
+            }
+
+            if (probabiliteExterieur <= 0.0) {
+                ArrayList<Integer> undiscoveredIndexes = graph.gameGrid.getUndiscoveredCases();
+                for (int i : undiscoveredIndexes) {
+                    movesToPlay.add(new Move(i, Coup.SHOW));
+                }
+            }
+
+
+            if (movesToPlay.isEmpty() && !allProbabilities.isEmpty()) {
+                Move safestMove = getSafestMove(allProbabilities, probabiliteExterieur);
+                this.movesToPlay.add(safestMove);
             }
         }
 
