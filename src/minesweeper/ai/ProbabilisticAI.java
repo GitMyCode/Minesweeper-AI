@@ -6,16 +6,12 @@ import minesweeper.Grid;
 import minesweeper.Move;
 import minesweeper.ai.dataRepresentation.FringeNode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.Random;
 
 public class ProbabilisticAI extends SafeOrRandomAI {
-
-    @Override
-    public Set<Move> getNextMoves(Grid grid, int delay) {
-        return super.getNextMoves(grid, delay);
-    }
 
     @Override
     protected void addMovesToPlay(Grid grid, Case[] gridCopy) {
@@ -28,6 +24,11 @@ public class ProbabilisticAI extends SafeOrRandomAI {
             }
             addUncertainMoveToStats(move);
         }
+    }
+
+    protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities) {
+        ArrayList<FringeNode> safestMoves = getSafestMoves(allProbabilities);
+        return getRandomMove(safestMoves);
     }
 
     protected void addMovesWithProbabilities() {
@@ -56,23 +57,31 @@ public class ProbabilisticAI extends SafeOrRandomAI {
             this.movesToPlay.add(safestMove);
         }
     }
+    private ArrayList<FringeNode> getSafestMoves(PriorityQueue<FringeNode> allProbabilities) {
+        ArrayList<FringeNode> safestMoves = new ArrayList<FringeNode>();
+        float safestProbability = allProbabilities.peek().probabilityMine;
 
-    protected Move getSafestMove(PriorityQueue<FringeNode> allProbabilities) {
-        FringeNode safestNode = allProbabilities.poll();
-        Move safestMove = new Move(safestNode.indexInGrid, Coup.SHOW);
-        addUncertainMoveToStats(safestMove);
-        return safestMove;
-    }
-
-    private void printProbabilities(PriorityQueue<FringeNode> allProbabilities) {
-        System.out.println("###########################################");
-        while (!allProbabilities.isEmpty()) {
-            System.out.println(allProbabilities.poll().toString());
+        while (!allProbabilities.isEmpty()
+                && safestProbability == allProbabilities.peek().probabilityMine) {
+            FringeNode safestMove = allProbabilities.poll();
+            safestMoves.add(safestMove);
         }
-        System.out.println("###########################################");
+
+        return safestMoves;
     }
+
+    private Move getRandomMove(ArrayList<FringeNode> movesList) {
+        Random random = new Random();
+        int randomIndex = random.nextInt(movesList.size());
+        FringeNode randomNode = movesList.get(randomIndex);
+        Move move = new Move(randomNode.indexInGrid, Coup.SHOW);
+        addUncertainMoveToStats(move);
+
+        return move;
+    }
+
     @Override
     public String getName() {
-        return "Probabilistic AI";
+        return "ProbabilisticAI";
     }
 }

@@ -18,7 +18,6 @@ public final class Benchmarks {
             new RandomArtificialPlayer(),
             new SafeOrRandomAI(),
             new ProbabilisticAI(),
-            new ProbabilisticAIwithRandomSelection(),
             new AdventurerAI()
     };
 
@@ -71,8 +70,6 @@ public final class Benchmarks {
                 uncertainMoveRateList.add(((Benchmarkable) ai).getUncertainMoveRate());
                 nbProbabilitySuccess += ((Benchmarkable) ai).getNbProbabilitySuccess();
                 nbProbabilityFails += ((Benchmarkable) ai).getNbProbabilityFails();
-                //System.out.println("nbProbabilitySuccess : " + nbProbabilitySuccess);
-                //System.out.println("nbProbabilityFails : " + nbProbabilityFails);
             }
 
             printResult(ai);
