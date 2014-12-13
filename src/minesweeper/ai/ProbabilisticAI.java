@@ -36,6 +36,7 @@ public class ProbabilisticAI extends SafeOrRandomAI {
 
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
+
             int totalValidAssignations = graph.nbValidAssignationsPerFrontier.get(frontierIndex);
 
             for (FringeNode fn : fringeNodes) {

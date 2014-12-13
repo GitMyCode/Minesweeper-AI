@@ -10,13 +10,27 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-public class AdventurerAI extends ProbabilisticAI {
+public class CrazyGeniusAI extends ProbabilisticAI {
 
     @Override
     public Set<Move> getNextMoves(Grid grid, int delay) {
         return super.getNextMoves(grid, delay);
     }
 
+    private double probabiliteCombinaison(List<FringeNode> fringeNodes, int indexCombinaison, double priorMineProbability) {
+
+        double reponse = 1.0;
+        for (FringeNode fn : fringeNodes) {
+            if (fn.combinationsUsed.contains(indexCombinaison)) {
+                reponse *= priorMineProbability;
+            } else {
+                reponse *= 1.0 - priorMineProbability;
+            }
+        }
+
+        return reponse;
+
+    }
     protected void addMovesWithProbabilities() {
         PriorityQueue<FringeNode> allProbabilities = new PriorityQueue<FringeNode>();
 
@@ -27,13 +41,37 @@ public class AdventurerAI extends ProbabilisticAI {
 
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
             int totalValidAssignations = graph.nbValidAssignationsPerFrontier.get(frontierIndex);
-            ArrayList<Double> probabiliteCombinaisons = new ArrayList<Double>();
+            double priorMineProbability = this.gameGrid.priorMineProbability();
+            //System.out.println("priorMineProbability = " + priorMineProbability);
+            double [] probabiliteCombinaisons = new double [graph.nbValidAssignationsPerFrontier.get(frontierIndex)];
 
-            nbCasesSurFrontiere += fringeNodes.size();
-            nbMinimumMinesInFrontieres += graph.nbMinimalAssignementsPerFrontier.get(frontierIndex);
+            for (int i = 0; i < graph.nbValidAssignationsPerFrontier.get(frontierIndex); ++i) {
+                double proba = probabiliteCombinaison(fringeNodes, i, gameGrid.priorMineProbability());
+                //System.out.println("probaFrontiere = " + proba);
+                probabiliteCombinaisons[i] = proba;
+            }
+
+            double alpha = 0.0;
+            for (double valeurCombinaison : probabiliteCombinaisons) {
+                alpha += valeurCombinaison;
+            }
+
+            //System.out.println("valeur de alpha = " + alpha);
 
             for (FringeNode fn : fringeNodes) {
-                fn.computeMineProbability(totalValidAssignations);
+
+                double probaMine = 0.0;
+                for (int i = 0; i < graph.nbValidAssignationsPerFrontier.get(frontierIndex); ++i) {
+                    if (fn.combinationsUsed.contains(i)) {
+                        probaMine += probabiliteCombinaisons[i];
+                    }
+                }
+
+                //System.out.println("probaMine = " + probaMine);
+                probaMine = probaMine / alpha;
+                //System.out.println("probaMine = " + probaMine);
+                fn.probabilityMine = (float) probaMine;
+
                 if (fn.isObviousMine()) {
                     this.movesToPlay.add(new Move(fn.indexInGrid, Coup.FLAG));
                     addCSPMoveToStats();
@@ -84,7 +122,7 @@ public class AdventurerAI extends ProbabilisticAI {
 
     @Override
     public String getName() {
-        return "Adventurer AI";
+        return "Crazy Genius AI";
     }
 
 }

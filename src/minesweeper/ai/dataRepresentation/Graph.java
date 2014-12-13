@@ -26,6 +26,7 @@ public class Graph {
     public Case[] caseGrille;
 
     public Graph(Grid gameGrid) {
+
         this.gameGrid = gameGrid;
         caseGrille = gameGrid.getCpyPlayerView();
 
@@ -211,6 +212,5 @@ public class Graph {
         return hintNodes;
 
     }
-
 
 }

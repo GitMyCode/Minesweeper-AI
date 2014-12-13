@@ -4,17 +4,19 @@ import minesweeper.Case;
 
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 import static minesweeper.Case.UNDISCOVERED;
 
 public class FringeNode extends Node implements Comparable {
+
     public float probabilityMine = 0.5f;
     public int nbFlagsHit = 0;
     public LinkedHashSet<HintNode> hintNodes;
     public LinkedList<FringeNode> fringeNeighbor;
     public Case state = UNDISCOVERED;
     public boolean isDeactivated = false;
-
+    public TreeSet<Integer> combinationsUsed = new TreeSet<Integer>();
 
     public FringeNode(int index) {
         super(index);

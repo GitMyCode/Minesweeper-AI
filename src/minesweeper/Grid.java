@@ -176,6 +176,10 @@ public class Grid {
         return reponse;
     }
 
+    public double priorMineProbability() {
+        return (double) this.getNbFlagsRemaining() / (double) this.getNbUndiscoveredCases();
+    }
+
     public boolean isAFringeNode(int index) {
 
         if (this.gridPlayerView[index] == Case.UNDISCOVERED) {
