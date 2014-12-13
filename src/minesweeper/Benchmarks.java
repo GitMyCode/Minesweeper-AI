@@ -79,6 +79,10 @@ public final class Benchmarks {
                 timeToSolutionList.add(endTime - startTime);
             }
 
+            if (grille.length - grille.getNbUndiscoveredCases() < 5){
+                System.out.println("Mort super rapidement!!");
+            }
+
             trivialMoveRateList.add(((Benchmarkable) ai).getTrivialMoveRate());
             safeMoveRateList.add(((Benchmarkable) ai).getCSPMoveRate());
             uncertainMoveRateList.add(((Benchmarkable) ai).getUncertainMoveRate());
