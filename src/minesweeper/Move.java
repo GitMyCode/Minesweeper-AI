@@ -36,15 +36,8 @@ public class Move {
 
         Move move = (Move) o;
 
-        if (this.index != move.index) {
-            return false;
-        }
+        return (this.index == move.index && this.coup == move.coup);
 
-        if (this.coup != move.coup) {
-            return false;
-        }
-
-        return true;
     }
 
     @Override

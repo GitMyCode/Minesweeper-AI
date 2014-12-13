@@ -9,12 +9,12 @@ import minesweeper.ai.*;
 
 public final class Benchmarks {
 
-    public final static int NB_PARTIES = 400;
-    public final static int GRID_ROWS = 16;
-    public final static int GRID_COLUMNS = 30;
-    public final static int NB_MINES = 99;
+    public static final int NB_PARTIES = 400;
+    public static final int GRID_ROWS = 16;
+    public static final int GRID_COLUMNS = 30;
+    public static final int NB_MINES = 99;
 
-    public final static ArtificialPlayer[] JOUEURS = {
+    public static final ArtificialPlayer[] JOUEURS = {
             new RandomArtificialPlayer(),
             new SafeOrRandomAI(),
             new ProbabilisticAI(),
@@ -49,13 +49,13 @@ public final class Benchmarks {
             nbProbabilityFails = 0;
 
 
-            for(int i=0; i<NB_PARTIES; ++i) {
+            for (int i = 0; i < NB_PARTIES; ++i) {
                 startTime = System.currentTimeMillis();
                 Grid grille = new Grid(GRID_ROWS, GRID_COLUMNS, NB_MINES);
 
-                while(!grille.gameIsFinished()) {
+                while (!grille.gameIsFinished()) {
                     Set<Move> moves = ai.getNextMoves(grille, Integer.MAX_VALUE);
-                    for(Move m : moves){
+                    for (Move m : moves) {
                         grille.play(m.index, m.coup);
                     }
                 }
@@ -66,9 +66,9 @@ public final class Benchmarks {
                     timeToSolutionList.add(endTime - startTime);
                 }
 
-                trivialMoveRateList.add(((Benchmarkable)ai).getTrivialMoveRate());
-                safeMoveRateList.add(((Benchmarkable)ai).getCSPMoveRate());
-                uncertainMoveRateList.add(((Benchmarkable)ai).getUncertainMoveRate());
+                trivialMoveRateList.add(((Benchmarkable) ai).getTrivialMoveRate());
+                safeMoveRateList.add(((Benchmarkable) ai).getCSPMoveRate());
+                uncertainMoveRateList.add(((Benchmarkable) ai).getUncertainMoveRate());
                 nbProbabilitySuccess += ((Benchmarkable) ai).getNbProbabilitySuccess();
                 nbProbabilityFails += ((Benchmarkable) ai).getNbProbabilityFails();
                 //System.out.println("nbProbabilitySuccess : " + nbProbabilitySuccess);
@@ -99,7 +99,10 @@ public final class Benchmarks {
         return (1 - total) * 100;
     }
 
-    public static double getVictoryRate() { return ((double) nbVictoires / NB_PARTIES) * 100; }
+    public static double getVictoryRate() {
+        return ((double) nbVictoires / NB_PARTIES) * 100;
+    }
+
     public static double getLossRate() {
         return ((double) (NB_PARTIES - nbVictoires) / NB_PARTIES) * 100;
     }

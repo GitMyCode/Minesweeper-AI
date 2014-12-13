@@ -15,12 +15,11 @@ import java.util.List;
  */
 public class BenchmarksCSP {
 
-    public final static StrategyCSP[] CSPS = {
+    public static final StrategyCSP[] CSPS = {
             new SimpleCSP(),
             new ForwardCheckCSP()
 
     };
-
 
     public static void main(String[] args) {
 
