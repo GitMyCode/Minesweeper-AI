@@ -48,7 +48,6 @@ class GameRunner implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("start gamerunner");
         do {
             Set<Move> aiMoves = ai.getNextMoves(grid, thinkLimit);
             controller.movesSetPlay(aiMoves);
