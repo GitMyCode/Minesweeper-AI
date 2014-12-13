@@ -6,9 +6,6 @@ import minesweeper.ai.dataRepresentation.HintNode;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by MB on 11/29/2014.
- */
 public class SimpleCSP extends AbstractCSP {
 
 

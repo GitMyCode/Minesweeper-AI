@@ -72,7 +72,7 @@ public class ForwardCheckCSP extends AbstractCSP {
     @Override
     protected void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
-            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
+            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]); //On utilise les combinaisons comme des index
             fringeToFlag.state = FLAGED;
         }
         deactivateFringe(undiscoveredFringe);

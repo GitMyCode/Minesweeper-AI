@@ -23,20 +23,20 @@ public abstract class AbstractCSP implements StrategyCSP {
     public void executeCSPonGraph(Graph graph) {
         this.graph = graph;
         optionalActionBeforeCSPonFrontiers();
-        CSPonAllFrontiers();
+        cspOnAllFrontiers();
 
     }
 
     /*
     * Pour permettre au classe herité d'utiliser cette method pour
     * faire des operations customs avant de lancé la recursion CSP sur toute
-    * les frontieres sans avoir a override CSPonAllFrontiers
+    * les frontieres sans avoir a override cspOnAllFrontiers
     * */
     protected void optionalActionBeforeCSPonFrontiers() {
 
     }
 
-    protected void CSPonAllFrontiers() {
+    protected void cspOnAllFrontiers() {
         for (int i = 0; i < graph.allHintNode.size(); i++) {
             long time = System.currentTimeMillis();
             List<HintNode> hintBorder = graph.allHintNode.get(i);
@@ -92,7 +92,7 @@ public abstract class AbstractCSP implements StrategyCSP {
 
     protected void addFlagsToUndiscoveredFringe(List<FringeNode> undiscoveredFringe, int[] oneCombination, int nbFlagToPlaceHere) {
         for (int i = 0; i < nbFlagToPlaceHere; i++) {
-            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]);//On utilise les combinaisons comme des index
+            FringeNode fringeToFlag = undiscoveredFringe.get(oneCombination[i]); //On utilise les combinaisons comme des index
             fringeToFlag.state = FLAGED;
         }
     }
