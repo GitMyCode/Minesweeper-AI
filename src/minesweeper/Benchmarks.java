@@ -9,15 +9,16 @@ import minesweeper.ai.*;
 
 public final class Benchmarks {
 
-    public static final int NB_PARTIES = 400;
-    public static final int[] GRIDS_COLUMNS = { 30 };
-    public static final int[] GRIDS_ROWS    = { 16 };
-    public static final double[] MINE_RATIOS  = { 0.15, 0.25, 0.30 };
+    public static final int NB_PARTIES = 1000;
+    public static final int[] GRIDS_COLUMNS = { 9, 16, 30, 100, 300 };
+    public static final int[] GRIDS_ROWS    = { 9, 16, 16, 150, 400 };
+    public static final double[] MINE_RATIOS  = { 0.15, 0.20, 0.25 };
     public static final ArtificialPlayer[] JOUEURS = {
             new RandomArtificialPlayer(),
             new SafeOrRandomAI(),
             new ProbabilisticAI(),
-            new AdventurerAI()
+            new AdventurerAI(),
+            new CrazyGeniusAI()
     };
 
     private static long startTime = 0;
@@ -40,10 +41,14 @@ public final class Benchmarks {
 
         for (int i = 0; i < MINE_RATIOS.length; i++) {
             System.out.println("###################");
-            System.out.println("# RATIO MINE "+ formatter.format(MINE_RATIOS[i]) +" #");
+            System.out.println("# RATIO MINE "+ formatter.format(MINE_RATIOS[i]) + "  #");
             System.out.println("###################");
             System.out.println();
             for (int j = 0; j < GRIDS_COLUMNS.length; j++) {
+                System.out.println("###################");
+                System.out.println("# TAILLE  " + GRIDS_COLUMNS[j] + "x" + GRIDS_ROWS[j] + "  #");
+                System.out.println("###################");
+                System.out.println();
                 for (ArtificialPlayer ai : JOUEURS) {
                     benchGame(ai, GRIDS_ROWS[j], GRIDS_COLUMNS[j], MINE_RATIOS[i]);
                 }
