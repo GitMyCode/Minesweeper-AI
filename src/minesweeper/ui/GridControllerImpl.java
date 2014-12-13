@@ -26,15 +26,15 @@ public class GridControllerImpl implements GridController {
     private GridView gridView;
     private final JLabel flagRemain;
 
-    public GridControllerImpl(Grid gm, GridView gv, JLabel refFlagRemain){
+    public GridControllerImpl(Grid gm, GridView gv, JLabel refFlagRemain) {
         gridBoard = gm;
         gridView = gv;
         flagRemain = refFlagRemain;
     }
 
     @Override
-    public void caseClicked (int ligne, int colonne) {
-        int index = ligne* gridBoard.nbCols + colonne;
+    public void caseClicked(int ligne, int colonne) {
+        int index = ligne * gridBoard.nbCols + colonne;
 
         gridBoard.play(index, Coup.SHOW);
         flagRemain.setText(String.valueOf(gridBoard.nbFlagsRemaining));
@@ -43,14 +43,13 @@ public class GridControllerImpl implements GridController {
     }
 
     @Override
-    public synchronized void caseClicked (int indexCase) {
-
+    public synchronized void caseClicked(int indexCase) {
         System.out.println("case cliquée");
     }
 
     @Override
-    public synchronized void movesSetPlay (Set<Move> moves) {
-        for(Move m : moves){
+    public synchronized void movesSetPlay(Set<Move> moves) {
+        for (Move m : moves) {
             gridBoard.play(m.index, m.coup);
         }
         flagRemain.setText(String.valueOf(gridBoard.getNbFlagsRemaining()));
@@ -58,24 +57,24 @@ public class GridControllerImpl implements GridController {
     }
 
     @Override
-    public synchronized void movePlay (Move move) {
+    public synchronized void movePlay(Move move) {
         gridBoard.play(move.index, move.coup);
         flagRemain.setText(String.valueOf(gridBoard.getNbFlagsRemaining()));
         updateView();
     }
 
-    public synchronized void updateView(){
+    public synchronized void updateView() {
 
             Runnable codeToRun = new Runnable() {
                 @Override
-                public void run () {
+                public void run() {
                     gridView.repaint();
                 }
             };
 
-            if(SwingUtilities.isEventDispatchThread()){
+            if (SwingUtilities.isEventDispatchThread()) {
                 codeToRun.run();
-            }else {
+            } else {
                 try {
                     SwingUtilities.invokeAndWait(codeToRun);
                 } catch (InterruptedException e) {
@@ -86,10 +85,10 @@ public class GridControllerImpl implements GridController {
             }
     }
 
-    public void setGridModel(Grid g){
+    public void setGridModel(Grid g) {
         gridBoard = g;
     }
-    public void setGridView(GridView gv){
+    public void setGridView(GridView gv) {
         gridView = gv;
     }
 

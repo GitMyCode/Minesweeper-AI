@@ -1,7 +1,5 @@
 package minesweeper.ui;
 
-import minesweeper.Move;
-
 /**
  * Projet de joueur artificiel de Minesweeper avec différents algorithmes
  * Dans le cadre du 3e TP en Intelligence Artificielle (INF4230)

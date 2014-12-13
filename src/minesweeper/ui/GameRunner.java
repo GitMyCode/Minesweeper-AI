@@ -21,7 +21,7 @@ class GameRunner implements Runnable {
 
     private final ArtificialPlayer ai;
 
-    private OutputObserver outputObserver= null;
+    private OutputObserver outputObserver = null;
 
     private final Grid grid;
     private final GridController controller;
@@ -33,11 +33,11 @@ class GameRunner implements Runnable {
         running = false;
     }
 
-    public boolean isRunning(){
+    public boolean isRunning() {
         return running;
     }
 
-    public GameRunner(ArtificialPlayer ai,Grid g,GridController controller,int delay,int thinkLimit){
+    public GameRunner(ArtificialPlayer ai, Grid g, GridController controller, int delay, int thinkLimit) {
         running = true;
         this.ai = ai;
         this.grid = g;
@@ -47,39 +47,39 @@ class GameRunner implements Runnable {
     }
 
     @Override
-    public void run () {
+    public void run() {
         System.out.println("start gamerunner");
-        do{
+        do {
             Set<Move> aiMoves = ai.getNextMoves(grid, thinkLimit);
             controller.movesSetPlay(aiMoves);
             System.gc();
-            try{
-                if(delayTime != 0 && !Thread.currentThread().isInterrupted()){
+            try {
+                if (delayTime != 0 && !Thread.currentThread().isInterrupted()) {
                     Thread.sleep(delayTime);
                 }
-            }catch(InterruptedException ie){
+            } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
                 return;
             }
-            if(outputObserver ==null){
+            if (outputObserver == null) {
                 System.out.println("observer null");
             }
 
-        } while(!grid.gameIsFinished() && running && outputObserver!=null);
+        } while (!grid.gameIsFinished() && running && outputObserver != null);
 
 
         /*After game*/
-        if(grid.gameLost){
-            SendMsg("Perdu!");
+        if (grid.gameLost) {
+            sendMsg("Perdu!");
             outputObserver.updateLost();
-        }else if(grid.gameWon){
-            SendMsg("Gagne!");
+        } else if (grid.gameWon) {
+            sendMsg("Gagne!");
             outputObserver.updateWins();
         }
-        if(!Thread.currentThread().isInterrupted()){
-            try{
+        if (!Thread.currentThread().isInterrupted()) {
+            try {
                 Thread.sleep(200);
-            }catch(InterruptedException ie){
+            } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
                 outputObserver.callback();
                 return;
@@ -89,11 +89,11 @@ class GameRunner implements Runnable {
         outputObserver.callback();
     }
 
-    private synchronized void SendMsg(String msg){
+    private synchronized void sendMsg(String msg) {
         outputObserver.message(msg);
     }
 
-    public void setOutputObserver(OutputObserver outputObserver){
+    public void setOutputObserver(OutputObserver outputObserver) {
         this.outputObserver = outputObserver;
     }
 

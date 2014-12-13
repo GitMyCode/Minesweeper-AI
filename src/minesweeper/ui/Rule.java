@@ -17,10 +17,10 @@ import java.awt.*;
  */
 class Rule extends JPanel {
     private JLabel[] indicateurs;
-        public Rule(int xOry, int length){
+        public Rule(int xOry, int length) {
             super();
             indicateurs = null;
-            if(xOry == 1){
+            if (xOry == 1) {
                 JLabel placeholder = new JLabel();
                 placeholder.setText("y-x");
                 placeholder.setForeground(Color.BLACK);
@@ -28,7 +28,7 @@ class Rule extends JPanel {
                 add(placeholder);
             }
             indicateurs = new JLabel[length];
-            for(int i=0; i < length; i++){
+            for (int i = 0; i < length; i++) {
                 JLabel num = new JLabel();
                 num.setText(Integer.toString(i));
                 num.setForeground(Color.BLUE);

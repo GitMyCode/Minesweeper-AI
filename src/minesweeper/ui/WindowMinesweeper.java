@@ -9,8 +9,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
 
@@ -67,7 +65,7 @@ public class WindowMinesweeper extends JFrame {
     private List<Class<?>> aiList;
     private List<String> designsList;
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         // Création de la fenêtre principale
         WindowMinesweeper f = new WindowMinesweeper();
     }
@@ -143,14 +141,14 @@ public class WindowMinesweeper extends JFrame {
 
         aiComboBox = new JComboBox<String>();
         aiList = ClassFinder.find("minesweeper.ai");
-        for(Class<?> c : aiList){
+        for (Class<?> c : aiList) {
             String name = c.getSimpleName();
             aiComboBox.addItem(name);
         }
 
         designComboBox = new JComboBox<String>();
         designsList = ClassFinder.findFolder("minesweeper.ui.design");
-        for(String d : designsList){
+        for (String d : designsList) {
             designComboBox.addItem(d);
         }
 
@@ -173,7 +171,7 @@ public class WindowMinesweeper extends JFrame {
         sizeCasesSpinner.setEditor(sizeCasesEditor);
     }
 
-    void createBoard(){
+    void createBoard() {
         System.gc();
         new Thread(
                 (new Runnable() {
@@ -197,7 +195,7 @@ public class WindowMinesweeper extends JFrame {
         System.gc();
     }
 
-    void loadGridToBoard(){
+    void loadGridToBoard() {
         System.out.println("Charger une grille");
         System.gc();
         Thread t = new Thread(
@@ -214,7 +212,7 @@ public class WindowMinesweeper extends JFrame {
                                 build();
                         bv.setVisible(true);
                         bv.setLocationRelativeTo(null);
-                        bv.message("Chargement du fichier: "+savedGridToPlay.getName());
+                        bv.message("Chargement du fichier: " + savedGridToPlay.getName());
                     }
                 })
         );
@@ -235,30 +233,30 @@ public class WindowMinesweeper extends JFrame {
 
     }
 
-    void readFile(File f){
+    void readFile(File f) {
         savedGridToPlay = f;
     }
 
-    void updateGrilleSettings(){
+    void updateGrilleSettings() {
         updateMines();
         // Grille settings
-        nbLines = (Integer)nbLinesSpinner.getValue();
-        nbColumns = (Integer)nbColumnsSpinner.getValue();
+        nbLines = (Integer) nbLinesSpinner.getValue();
+        nbColumns = (Integer) nbColumnsSpinner.getValue();
         // Joueur artificiel settings
-        selectedAi = (String)aiComboBox.getSelectedItem();
-        timeDelay = (Integer)delaiSpinner.getValue();
-        limiteReflexion = (Integer)limiteReflexionSpinner.getValue();
+        selectedAi = (String) aiComboBox.getSelectedItem();
+        timeDelay = (Integer) delaiSpinner.getValue();
+        limiteReflexion = (Integer) limiteReflexionSpinner.getValue();
         // Design settings
-        selectedDesign = (String)designComboBox.getSelectedItem();
-        caseSize = (Integer)sizeCasesSpinner.getValue();
+        selectedDesign = (String) designComboBox.getSelectedItem();
+        caseSize = (Integer) sizeCasesSpinner.getValue();
     }
 
-    void updateMines(){
-        Integer nbLinesText = (Integer)nbLinesSpinner.getValue();
-        Integer nbColumnsText = (Integer)nbColumnsSpinner.getValue();
-        float minePercentage = (Integer)percentMinesSpinner.getValue();
+    void updateMines() {
+        Integer nbLinesText = (Integer) nbLinesSpinner.getValue();
+        Integer nbColumnsText = (Integer) nbColumnsSpinner.getValue();
+        float minePercentage = (Integer) percentMinesSpinner.getValue();
 
-        nbMines = (int)((nbLinesText * nbColumnsText) * (minePercentage / 100));
+        nbMines = (int) ((nbLinesText * nbColumnsText) * (minePercentage / 100));
         nbMinesLabel.setText("Nombre de mines: " + nbMines);
     }
 }
