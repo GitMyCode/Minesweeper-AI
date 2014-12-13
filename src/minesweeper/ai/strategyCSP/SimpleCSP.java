@@ -9,7 +9,7 @@ import java.util.List;
 public class SimpleCSP extends AbstractCSP {
 
 
-    protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
+    protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index, int indexFrontiere) {
 
         if (!allFlagsOkay(hintNodes, index)) {
             return false;
@@ -17,7 +17,7 @@ public class SimpleCSP extends AbstractCSP {
 
         if (solutionFound(index, hintNodes)) {
             int indexDernier = graph.nbMinimalAssignementsPerFrontier.size() - 1;
-            int nbFlags = computeFlagHits(fringeNodes);
+            int nbFlags = computeFlagHits(fringeNodes, indexFrontiere);
             int minimum = Math.min(graph.nbMinimalAssignementsPerFrontier.get(indexDernier), nbFlags);
             graph.nbMinimalAssignementsPerFrontier.set(indexDernier, minimum);
             nbValidAssignations++;
@@ -31,7 +31,7 @@ public class SimpleCSP extends AbstractCSP {
             return false;
         }
         if (variableToSatisfy.isSatisfied()) {
-            return recurseCSP(hintNodes, fringeNodes, index + 1);
+            return recurseCSP(hintNodes, fringeNodes, index + 1, indexFrontiere);
         }
 
         List<FringeNode> undiscoveredFringe = variableToSatisfy.getUndiscoveredFringe();
@@ -42,7 +42,7 @@ public class SimpleCSP extends AbstractCSP {
             int nbFlagToPlaceHere = variableToSatisfy.nbFlagToPlace;
 
             addFlagsToUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
-            recurseCSP(hintNodes, fringeNodes, index + 1);
+            recurseCSP(hintNodes, fringeNodes, index + 1, indexFrontiere);
             removeFlagsFromUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
         }
 

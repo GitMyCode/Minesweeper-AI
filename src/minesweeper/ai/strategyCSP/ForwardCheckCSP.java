@@ -13,16 +13,15 @@ import static minesweeper.Case.*;
  */
 public class ForwardCheckCSP extends AbstractCSP {
 
-
     @Override
     public String strategyToString() {
         return "Foward checking";
     }
 
     @Override
-    protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
+    protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index, int indexFrontiere) {
         if (solutionFound(index, hintNodes)) {
-            computeFlagHits(fringeNodes);
+            computeFlagHits(fringeNodes, indexFrontiere);
             nbValidAssignations++;
             return true;
         }
@@ -36,7 +35,7 @@ public class ForwardCheckCSP extends AbstractCSP {
         if (variableToSatisfy.isSatisfied()) {
             List<FringeNode> fringe = variableToSatisfy.getUndiscoveredFringe();
             deactivateFringe(fringe);
-            recurseCSP(hintNodes, fringeNodes, index + 1);
+            recurseCSP(hintNodes, fringeNodes, index + 1, indexFrontiere);
             activateFringe(fringe);
             return true;
         }
@@ -51,7 +50,7 @@ public class ForwardCheckCSP extends AbstractCSP {
             addFlagsToUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
             variableToSatisfy.updateSurroundingAwareness();
             if (neighbourhoodOkey(variableToSatisfy)) {
-                recurseCSP(hintNodes, fringeNodes, index + 1);
+                recurseCSP(hintNodes, fringeNodes, index + 1, indexFrontiere);
             }
             removeFlagsFromUndiscoveredFringe(undiscoveredFringe, combination, nbFlagToPlaceHere);
             variableToSatisfy.updateSurroundingAwareness();

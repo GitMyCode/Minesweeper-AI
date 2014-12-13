@@ -43,13 +43,13 @@ public abstract class AbstractCSP implements StrategyCSP {
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(i);
             nbValidAssignations = 0;
             graph.nbMinimalAssignementsPerFrontier.add(Integer.MAX_VALUE);
-            recurseCSP(hintBorder, fringeNodes, 0);
+            recurseCSP(hintBorder, fringeNodes, 0, i);
             graph.nbValidAssignationsPerFrontier.add(nbValidAssignations);
             addLineToExecutionLog("frontiere (" + i + ") :" + (System.currentTimeMillis() - time) + " ms");
         }
     }
 
-    protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index) {
+    protected boolean recurseCSP(List<HintNode> hintNodes, List<FringeNode> fringeNodes, int index, int indexFrontiere) {
 
         return false;
     }
@@ -58,10 +58,11 @@ public abstract class AbstractCSP implements StrategyCSP {
         return (index >= hintNodes.size());
     }
 
-    protected int computeFlagHits(List<FringeNode> fringeNodes) {
+    protected int computeFlagHits(List<FringeNode> fringeNodes, int indexFrontiere) {
         int nbFlagsAssigned = 0;
         for (FringeNode fn : fringeNodes) {
             if (fn.state == FLAGED) {
+                fn.combinationsUsed.add(indexFrontiere);
                 fn.nbFlagsHit++;
                 nbFlagsAssigned += 1;
             }

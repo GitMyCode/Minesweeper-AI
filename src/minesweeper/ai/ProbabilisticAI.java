@@ -30,11 +30,13 @@ public class ProbabilisticAI extends SafeOrRandomAI {
         }
     }
 
+
     protected void addMovesWithProbabilities() {
         PriorityQueue<FringeNode> allProbabilities = new PriorityQueue<FringeNode>();
 
         for (int frontierIndex = 0; frontierIndex < graph.nbFrontiere; frontierIndex++) {
             List<FringeNode> fringeNodes = graph.allFringeNodes.get(frontierIndex);
+
             int totalValidAssignations = graph.nbValidAssignationsPerFrontier.get(frontierIndex);
 
             for (FringeNode fn : fringeNodes) {
