@@ -16,13 +16,8 @@ public class Node {
             * Permet de comparer un Node avec un Integer
             * */
         if (obj.getClass() == Integer.class) {
-            if (indexInGrid == (Integer) obj) {
-                return true;
-            } else {
-                return false;
-            }
+            return (indexInGrid == (Integer) obj);
         }
-
 
         Node other = (Node) obj;
 

@@ -7,9 +7,6 @@ import java.util.LinkedList;
 
 import static minesweeper.Case.UNDISCOVERED;
 
-/**
- * Created by MB on 11/29/2014.
- */
 public class FringeNode extends Node implements Comparable {
     public float probabilityMine = 0.5f;
     public int nbFlagsHit = 0;
@@ -50,8 +47,11 @@ public class FringeNode extends Node implements Comparable {
     @Override
     public int compareTo(Object o) {
         FringeNode other = (FringeNode) o;
-        if (this.probabilityMine < other.probabilityMine) return -1;
-        else if (this.probabilityMine > other.probabilityMine) return 1;
+        if (this.probabilityMine < other.probabilityMine) {
+            return -1;
+        } else if (this.probabilityMine > other.probabilityMine) {
+            return 1;
+        }
         return 0;
     }
 

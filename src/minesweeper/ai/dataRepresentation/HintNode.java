@@ -57,7 +57,9 @@ public class HintNode extends Node {
             return;
         }
         int start = 0;
-        if (index > 0) start = combinaison[index - 1] + 1;
+        if (index > 0) {
+            start = combinaison[index - 1] + 1;
+        }
         for (int i = start; i < nbCase; i++) {
             combinaison[index] = i;
             generateFlagCombinations(index + 1, nbFlag, nbCase, combinaison, listeC);
@@ -75,8 +77,7 @@ public class HintNode extends Node {
 
     public boolean isUnsatisfiable() {
         updateSurroundingAwareness();
-        return ((this.nbFlagToPlace < 0) ||
-                (nbUndiscoveredNeighbors < nbFlagToPlace));
+        return ((this.nbFlagToPlace < 0) || (nbUndiscoveredNeighbors < nbFlagToPlace));
     }
 
     public boolean isSatisfied() {

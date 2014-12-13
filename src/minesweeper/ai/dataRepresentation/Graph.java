@@ -9,9 +9,6 @@ import static minesweeper.Direction.*;
 
 import java.util.*;
 
-/**
- * Created by martin on 17/11/14.
- */
 public class Graph {
 
     public int nbFrontiere = 0;
@@ -41,26 +38,10 @@ public class Graph {
         nbValidAssignationsPerFrontier = new ArrayList<Integer>();
         nbMinimalAssignementsPerFrontier = new ArrayList<Integer>();
 
-        lookForInvalidFringeNode(caseGrille);
         findFrontier(caseGrille);
 
         nbFrontiere = allHintNode.size();
 
-    }
-
-
-    /*
-    * Va chercher les case qui sont entouré de case non-decouvert
-    * C'est juste pour eviter que les frontieres fassent des détours
-    * */
-    void lookForInvalidFringeNode(Case[] grid) {
-        for (Integer i = 0; i < grid.length; i++) {
-            if (Case.isIndicatorCase(grid[i])) {
-                if (gameGrid.getUndiscoveredneighbours(i).size() == 8) {
-                    //deactivatedNode.add(i);
-                }
-            }
-        }
     }
 
     /*
@@ -176,20 +157,18 @@ public class Graph {
     Set<Direction> getPossibleDirection(Case[] grid, int index) {
         Set<Direction> directions = new LinkedHashSet<Direction>();
 
-        for (Direction D : HUIT_DIRECTIONS) {
-            int next = index + gameGrid.step(D);
+        for (Direction dir : HUIT_DIRECTIONS) {
+            int next = index + gameGrid.step(dir);
 
 
-            if (gameGrid.isStepThisDirInGrid(D, index) &&
-                    !knownFringeNodes.containsKey(next) &&
-                    gameGrid.isAFringeNode(next)) {
+            if (gameGrid.isStepThisDirInGrid(dir, index) && !knownFringeNodes.containsKey(next) && gameGrid.isAFringeNode(next)) {
                 Collection<Integer> indiceNeirboursCurrentNode = getIndiceNeirbours(grid, index);
                 Collection<Integer> indiceNeirboursNextNode = getIndiceNeirbours(grid, next);
 
                 //Check si les deux noeud partage un indice (Et donc s'influence)
                 if (!Collections.disjoint(indiceNeirboursCurrentNode, indiceNeirboursNextNode)) {
 
-                    directions.add(D);
+                    directions.add(dir);
                 }
 
             }
