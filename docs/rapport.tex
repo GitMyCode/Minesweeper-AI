@@ -195,6 +195,13 @@ tests par algorithme et permet d’extraire les données suivantes:
 
 De plus, nous comparons les temps de résolution de 10 grilles selon le nombre de 
 frontières qu’elles contiennent, pour l’algorithme CSP simple, et celui avec forward-checking.
+Le graphique ci-dessous démontre que l’heuristique forward-checking permet toujours de 
+résoudre plus rapidement un grille de démineur que le simple CSP:
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[scale=.5]{./vitesse.png}
+\end{figure}
 
 \section{Répartition des tâches}
 \begin{enumerate}
@@ -211,10 +218,19 @@ Les différentes études en Intelligence Artificielle visant à résoudre le jeu
 
 Cette dernière remarque nous amène à parler des améliorations possibles que nous aurions souhaité apporter à notre programme:
 \begin{enumerate}
-        \item Modifier la façon dont la grille est générée afin de permettre à notre programme de prendre une grille en entrée, ce qui nous aurait permis d’avoir des grilles fixes lors des mises à l’essai, et donc de meilleures comparaisons entre les différents algorithmes;
-        \item Le calcul des probabilités dans CrazyAI pourrait tenir compte des autres cases, et donc la probabilité qu’une case soit minée ne serait pas fixe;
-        \item L’heuristique des coins (commencer par les cases dans les coins puisqu’elles ont moins de chance d’être adjacentes à une mine et tendent à révéler des régions complètes) aurait pu être implémentée afin d’améliorer la performance de notre joueur artificiel;
-        \item L’heuristique MCV (Most Constrained Value) aurait pu être implémentée dans le CSP : notre joueur artificiel assumerait que chaque case non-découverte est minée et l’étiqueterait d’un drapeau. Par la suite, il vérifierait si les contraintes sont satisfaites. Lorsqu’il trouverait qu’une contrainte est insatisfaite (car il y aurait plusieurs drapeaux consécutifs qui totaliseraient plus de mines possibles que les chiffres correspondants), il utiliserait l’heuristique MCV pour retirer des drapeaux:
+        \item Modifier la façon dont la grille est générée afin de permettre à notre programme 
+              de prendre une grille en entrée, ce qui nous aurait permis d’avoir des grilles fixes 
+              lors des mises à l’essai, et donc de meilleures comparaisons entre les différents algorithmes;
+        \item Le calcul des probabilités dans CrazyAI pourrait tenir compte des autres cases, 
+              et donc la probabilité qu’une case soit minée ne serait pas fixe;
+        \item L’heuristique des coins (commencer par les cases dans les coins puisqu’elles ont 
+              moins de chance d’être adjacentes à une mine et tendent à révéler des régions complètes) 
+              aurait pu être implémentée afin d’améliorer la performance de notre joueur artificiel;
+        \item L’heuristique MCV (Most Constrained Value) aurait pu être implémentée dans le CSP : notre joueur 
+              artificiel assumerait que chaque case non-découverte est minée et l’étiqueterait d’un drapeau. 
+              Par la suite, il vérifierait si les contraintes sont satisfaites. Lorsqu’il trouverait qu’une 
+              contrainte est insatisfaite (car il y aurait plusieurs drapeaux consécutifs qui totaliseraient 
+              plus de mines possibles que les chiffres correspondants), il utiliserait l’heuristique MCV pour retirer des drapeaux:
 
 \begin{figure}[h!]
   \centering
