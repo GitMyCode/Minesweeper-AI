@@ -9,10 +9,10 @@ import minesweeper.ai.*;
 
 public final class Benchmarks {
 
-    public static final int NB_PARTIES = 400;
-    public static final int[] GRIDS_COLUMNS = { 30 };
-    public static final int[] GRIDS_ROWS    = { 16 };
-    public static final double[] MINE_RATIOS  = { 0.15, 0.25, 0.30 };
+    public static final int NB_PARTIES = 1000;
+    public static final int[] GRIDS_COLUMNS = { 9, 16, 30, 100 };
+    public static final int[] GRIDS_ROWS    = { 9, 16, 16, 150 };
+    public static final double[] MINE_RATIOS  = { 0.20, 0.25 };
     public static final ArtificialPlayer[] JOUEURS = {
             new RandomArtificialPlayer(),
             new SafeOrRandomAI(),
@@ -20,6 +20,7 @@ public final class Benchmarks {
             new AdventurerAI()
     };
 
+    private static int nbMortsRapides = 0;
     private static long startTime = 0;
     private static long endTime = 0;
     private static int nbVictoires;
@@ -43,6 +44,10 @@ public final class Benchmarks {
             System.out.println("###################");
             System.out.println();
             for (int j = 0; j < GRIDS_COLUMNS.length; j++) {
+                System.out.println("###################");
+                System.out.println("# TAILLE "+ GRIDS_COLUMNS[j] +"x"+ GRIDS_ROWS[j]);
+                System.out.println("###################");
+                System.out.println();
                 for (ArtificialPlayer ai : JOUEURS) {
                     benchGame(ai, GRIDS_ROWS[j], GRIDS_COLUMNS[j], MINE_RATIOS[i]);
                 }
@@ -54,6 +59,7 @@ public final class Benchmarks {
     private static void benchGame(ArtificialPlayer ai, int grid_rows, int grid_columns, double mine_ratio) {
         int nb_mines = (int) ((grid_rows * grid_columns) * mine_ratio);
         nbVictoires = 0;
+        nbMortsRapides = 0;
         timeToSolutionList = new ArrayList<Long>();
         trivialMoveRateList = new ArrayList<Double>();
         safeMoveRateList = new ArrayList<Double>();
@@ -77,6 +83,10 @@ public final class Benchmarks {
                 nbVictoires++;
                 endTime = System.currentTimeMillis();
                 timeToSolutionList.add(endTime - startTime);
+            }
+
+            if (grille.length - grille.getNbUndiscoveredCases() < 5){
+                nbMortsRapides++;
             }
 
             trivialMoveRateList.add(((Benchmarkable) ai).getTrivialMoveRate());
@@ -163,6 +173,7 @@ public final class Benchmarks {
         System.out.println("Nombre de victoires : " + nbVictoires);
         System.out.println("% de victoires : " + formatter.format(getVictoryRate()) + "%");
         System.out.println("% de défaites : " + formatter.format(getLossRate()) + "%");
+        System.out.println("% de morts rapides : " + formatter.format(getMortsRapidesRate()) + "%");
         System.out.println("Temps de résolution moyen : " + formatter.format(getMeanTimeToSolution()) + "ms");
         System.out.println("Taux de réussite moyen sous incertitude : " + formatter.format(getAverageProbabilitySuccessRate()) + "%");
         System.out.println("Taux moyen de coups triviaux : " + formatter.format(getAverageTrivialMoveRate()) + "%");
@@ -170,4 +181,7 @@ public final class Benchmarks {
         System.out.println("Taux moyen de coups incertains : " + formatter.format(getAverageUncertainMoveRate()) + "%");
         System.out.println();
     }
+    public static double getMortsRapidesRate() {
+        return ((double) nbMortsRapides / NB_PARTIES) * 100;
+     }
 }
