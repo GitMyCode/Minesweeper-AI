@@ -10,6 +10,12 @@ Geneviève Lalonde, LALG08568204
 Nilovna Bascunan-Vasquez, BASN22518900
 
 
+Exécution
+---------
+Dans le dossier Exécutable, il y a un fichier jar qui permet de lancer le jeu. Il suffit d'inscrire dans une console supportant Java :
+java -jar Minesweeper-AI.jar
+
+
 Références
 ----------
 
